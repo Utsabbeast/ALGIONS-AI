@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 
-{% block title %}Sign In — comet{% endblock %}
+{% block title %}Sign In — COMET{% endblock %}
 
 {% block content %}
 <div class="max-w-md mx-auto px-4 py-16 flex flex-col items-center">
 
     <!-- Interactive Animated Login Form (From Uiverse.io by Novaxlo) — Sharp -->
-    <form method="POST" class="uiverse-login-form mb-8 shadow-xl" onsubmit="showGlobalLoader('Authenticating with comet...')">
+    <form method="POST" class="uiverse-login-form mb-8 shadow-xl" onsubmit="showGlobalLoader('Authenticating with COMET...')">
         {% csrf_token %}
         <div id="login-area">
-            <p class="title font-casta">COMET ACCESS</p>
+            <p class="title font-casta"><span class="text-red-500 font-normal">C</span>OMET ACCESS</p>
         </div>
         
         <div id="email-area">

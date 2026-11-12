@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}comet — Editorial Cinema Ticket Reservation{% endblock %}</title>
+    <title>{% block title %}COMET — Editorial Cinema Ticket Reservation{% endblock %}</title>
     
-    <!-- Favicon using icon.png -->
-    <link rel="icon" type="image/png" href="{% static 'img/icon.png' %}">
+    <!-- Favicon using icon.jpg -->
+    <link rel="icon" type="image/jpeg" href="{% static 'img/icon.jpg' %}">
     
     <!-- Inline Theme Initializer (prevents flash of white/dark) -->
     <script>
@@ -81,7 +81,7 @@
             <div class="shadow"></div>
             <div class="shadow"></div>
         </div>
-        <p class="text-[11px] uppercase tracking-[0.25em] text-brand-600 dark:text-brand-400 font-bold mt-6 font-mono">Connecting to comet Engine...</p>
+        <p class="text-[11px] uppercase tracking-[0.25em] text-neutral-400 font-bold mt-6 font-mono">Connecting to <span class="text-red-600 font-black">C</span>OMET Engine...</p>
     </div>
 
     <!-- Top Assessment Reviewer Quick Switcher Bar (Sharp Hairline) -->
@@ -111,13 +111,15 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 
-                <!-- Brand Logo (icon.png) & City Selector -->
+                <!-- Brand Logo (icon.jpg) & City Selector -->
                 <div class="flex items-center space-x-6">
                     <a href="{% url 'cinema:home' %}" class="flex items-center space-x-3 group">
-                        <div class="w-8 h-8 rounded-none border border-neutral-300 dark:border-neutral-700 p-0.5 group-hover:border-brand-500 transition duration-300">
-                            <img src="{% static 'img/icon.png' %}" alt="comet" class="w-full h-full object-cover">
+                        <div class="w-8 h-8 rounded-none border border-neutral-300 dark:border-neutral-700 p-0.5 group-hover:border-red-600 transition duration-300">
+                            <img src="{% static 'img/icon.jpg' %}" alt="COMET" class="w-full h-full object-cover">
                         </div>
-                        <span class="text-3xl font-light tracking-wider text-neutral-900 dark:text-white group-hover:text-brand-500 transition font-casta lowercase">comet</span>
+                        <span class="text-3xl font-light tracking-wider text-neutral-900 dark:text-white transition font-casta uppercase">
+                            <span class="text-red-600 font-bold">C</span>OMET
+                        </span>
                     </a>
 
                     <!-- City Selector Dropdown (Sharp) -->
@@ -241,9 +243,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
                 <div>
-                    <div class="flex items-center space-x-2.5 text-neutral-900 dark:text-white font-light text-2xl mb-3 font-casta lowercase">
-                        <img src="{% static 'img/icon.png' %}" alt="comet" class="w-6 h-6 object-cover border border-neutral-300 dark:border-neutral-700">
-                        <span>comet</span>
+                    <div class="flex items-center space-x-2.5 text-neutral-900 dark:text-white font-light text-2xl mb-3 font-casta uppercase">
+                        <img src="{% static 'img/icon.jpg' %}" alt="COMET" class="w-6 h-6 object-cover border border-neutral-300 dark:border-neutral-700">
+                        <span><span class="text-red-600 font-bold">C</span>OMET</span>
                     </div>
                     <p class="text-neutral-500 dark:text-neutral-400 text-xs leading-relaxed font-sans">
                         Architectural cinema ticketing engineered for high concurrency, temporary seat holds, ACID transaction safety, and cryptographic QR gates.
@@ -282,7 +284,7 @@
                 </div>
             </div>
             <div class="border-t border-neutral-200 dark:border-neutral-800 pt-6 flex flex-col sm:flex-row items-center justify-between text-neutral-400 dark:text-neutral-600 font-mono text-[11px]">
-                <p>&copy; 2026 comet. All rights reserved.</p>
+                <p>&copy; 2026 COMET. All rights reserved.</p>
                 <p class="mt-2 sm:mt-0 tracking-wider">SHARP EDGES • POLYGLOT PERSISTENCE • ZERO DOUBLE-BOOKINGS</p>
             </div>
         </div>

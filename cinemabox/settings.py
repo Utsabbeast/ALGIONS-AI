@@ -138,7 +138,7 @@ REST_FRAMEWORK = {
 
 # Spectacular OpenAPI / Swagger Configuration
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'comet Cinema Ticket Booking API',
+    'TITLE': 'COMET Cinema Ticket Booking API',
     'DESCRIPTION': 'RESTful API documentation for Cinema Hall Ticket Booking System with temporary seat locks, QR code issuance, entry scanner, and occupancy analytics.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,

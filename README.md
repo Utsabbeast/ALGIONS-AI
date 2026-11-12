@@ -1,4 +1,4 @@
-# comet — Cinema Hall Ticket Booking System
+# COMET — Cinema Hall Ticket Booking System
 
 [![Python](https://img.shields.io/badge/Python-3.13-blue.svg)](https://www.python.org/)
 [![Django](https://img.shields.io/badge/Django-5.1-092E20.svg)](https://www.djangoproject.com/)
@@ -7,20 +7,20 @@
 [![Tests](https://img.shields.io/badge/Tests-12%2F12%20Passing-brightgreen.svg)]()
 
 > **Full-Stack Web Development Advanced Assessment Project**  
-> Candidate Project: **comet** — Cinema Hall Ticket Booking System ("BookMyShow" style application)  
+> Candidate Project: **COMET** — Cinema Hall Ticket Booking System ("BookMyShow" style application)  
 > Assigned by: **ALGIONS AI LABS PRIVATE LIMITED**
 
 ---
 
 ## 📌 Executive Summary & Architecture
 
-**comet** is a high-concurrency, responsive full-stack cinema ticket reservation platform modeled after industry leaders like BookMyShow. It features temporary seat locks with TTL expiry, duplicate booking prevention via ACID database transactions, cryptographic QR code ticket issuance, operational gate entry scanning, and live occupancy reconciliation.
+**COMET** is a high-concurrency, responsive full-stack cinema ticket reservation platform modeled after industry leaders like BookMyShow. It features temporary seat locks with TTL expiry, duplicate booking prevention via ACID database transactions, cryptographic QR code ticket issuance, operational gate entry scanning, and live occupancy reconciliation.
 
 ### Polyglot Persistence Architecture (Relational + NoSQL)
 
 ```
                             ┌─────────────────────────────────────────┐
-                            │                 comet UI                │
+                            │                 COMET UI                │
                             │   (Tailwind / Casta / Light & Dark)     │
                             └────────────────────┬────────────────────┘
                                                  │
@@ -110,7 +110,7 @@ For quick evaluation, convenient **1-click demo login buttons** are available at
 
 ## 🌐 Deploying to Render.com (Zero-Cost Hosting)
 
-comet is 100% pre-configured for **Render Web Service** deployment with Gunicorn and Whitenoise:
+COMET is 100% pre-configured for **Render Web Service** deployment with Gunicorn and Whitenoise:
 
 1. **Push your code to GitHub / GitLab**.
 2. **Create New Web Service on Render**:

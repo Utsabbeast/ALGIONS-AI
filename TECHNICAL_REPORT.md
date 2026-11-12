@@ -15,7 +15,7 @@ Cinema hall ticket booking platforms encounter extreme traffic spikes during blo
 3. **Contactless Single-Use Gate Entry:** Validating tickets at cinema auditorium doors, ensuring a ticket can only be scanned once.
 4. **Inventory & Revenue Reconciliation:** Accurately reflecting booking conversions, holds, and cancellations in occupancy reports.
 
-To solve this, comet is architected as a **modular monolith** employing **Polyglot Persistence**: combining an ACID relational database (Django ORM with SQLite/PostgreSQL) with a document-oriented NoSQL persistence layer (MongoDB / PyMongo).
+To solve this, COMET is architected as a **modular monolith** employing **Polyglot Persistence**: combining an ACID relational database (Django ORM with SQLite/PostgreSQL) with a document-oriented NoSQL persistence layer (MongoDB / PyMongo).
 
 ---
 
