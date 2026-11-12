@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en" class="h-full bg-slate-950 text-slate-100">
 <head>
@@ -28,6 +29,10 @@
     </script>
     <!-- Font Awesome / Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom UI Elements, Casta Font & Uiverse Animations -->
+    <link rel="stylesheet" href="{% static 'css/uiverse_custom.css' %}">
+
     <style>
         @media print {
             body * { visibility: hidden; }
@@ -45,6 +50,20 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body class="flex flex-col min-h-screen bg-slate-950 selection:bg-brand-500 selection:text-white">
+
+    <!-- Global Interactive Page Loader Overlay (Uiverse.io by mobinkakei) -->
+    <div id="global-page-loader" class="global-loader-overlay">
+        <!-- From Uiverse.io by mobinkakei --> 
+        <div class="wrapper">
+            <div class="circle"></div>
+            <div class="circle"></div>
+            <div class="circle"></div>
+            <div class="shadow"></div>
+            <div class="shadow"></div>
+            <div class="shadow"></div>
+        </div>
+        <p class="text-xs uppercase tracking-widest text-brand-300 font-bold mt-5 font-mono">Securing Cinema Seats...</p>
+    </div>
 
     <!-- Top Assessment Reviewer Quick Switcher Bar -->
     <div class="bg-slate-900 border-b border-slate-800 text-xs py-1.5 px-4">
@@ -79,7 +98,7 @@
                         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-rose-400 flex items-center justify-center text-white shadow-lg shadow-brand-500/25 group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-film text-lg"></i>
                         </div>
-                        <span class="text-xl font-black tracking-tight text-white group-hover:text-brand-400 transition">Cinema<span class="text-brand-500">Box</span></span>
+                        <span class="text-2xl font-black tracking-tight text-white group-hover:text-brand-400 transition font-casta">Cinema<span class="text-brand-500">Box</span></span>
                     </a>
 
                     <!-- City Selector Dropdown -->
@@ -131,7 +150,7 @@
                         <!-- Profile Dropdown -->
                         <div class="flex items-center space-x-2 pl-2 border-l border-slate-800">
                             <div class="text-right hidden sm:block">
-                                <div class="text-xs font-semibold text-white leading-tight">{{ user.get_full_name|default:user.username }}</div>
+                                <div class="text-xs font-semibold text-white leading-tight font-casta">{{ user.get_full_name|default:user.username }}</div>
                                 <div class="text-[10px] text-slate-400 capitalize">{{ user.get_role_display }}</div>
                             </div>
                             <a href="{% url 'cinema:logout' %}" class="p-2 text-slate-400 hover:text-rose-400 transition" title="Logout">
@@ -148,20 +167,43 @@
         </div>
     </header>
 
-    <!-- Global Toast / Message Alerts -->
+    <!-- Global Toast / Message Alerts (From Uiverse.io by xerith_8140) -->
     {% if messages %}
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 w-full">
-            {% for message in messages %}
-                <div class="p-3 mb-2 rounded-xl text-sm flex items-center justify-between border {% if message.tags == 'error' %}bg-rose-950/80 text-rose-200 border-rose-800{% elif message.tags == 'warning' %}bg-amber-950/80 text-amber-200 border-amber-800{% else %}bg-emerald-950/80 text-emerald-200 border-emerald-800{% endif %}">
-                    <div class="flex items-center space-x-2">
-                        <i class="fa-solid {% if message.tags == 'error' %}fa-circle-exclamation{% elif message.tags == 'warning' %}fa-triangle-exclamation{% else %}fa-circle-check{% endif %}"></i>
-                        <span>{{ message }}</span>
+        <div class="max-w-4xl mx-auto px-4 mt-4 w-full">
+            <ul class="notification-container">
+                {% for message in messages %}
+                <li class="notification-item {% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'info' %}info{% else %}success{% endif %}">
+                    <div class="notification-content">
+                        <div class="notification-icon">
+                            {% if message.tags == 'error' %}
+                            <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 9-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path>
+                            </svg>
+                            {% elif message.tags == 'warning' %}
+                            <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13V8m0 8h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path>
+                            </svg>
+                            {% elif message.tags == 'info' %}
+                            <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path>
+                            </svg>
+                            {% else %}
+                            <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path>
+                            </svg>
+                            {% endif %}
+                        </div>
+                        <div class="notification-text">{{ message }}</div>
                     </div>
-                    <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white text-xs ml-4">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-            {% endfor %}
+                    <div class="notification-icon notification-close" onclick="this.closest('.notification-item').remove()">
+                        <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"></path>
+                        </svg>
+                    </div>
+                    <div class="notification-progress-bar"></div>
+                </li>
+                {% endfor %}
+            </ul>
         </div>
     {% endif %}
 
@@ -175,7 +217,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-6">
                 <div>
-                    <div class="flex items-center space-x-2 text-white font-bold text-base mb-2">
+                    <div class="flex items-center space-x-2 text-white font-bold text-lg mb-2 font-casta">
                         <i class="fa-solid fa-film text-brand-500"></i>
                         <span>CinemaBox</span>
                     </div>
@@ -184,16 +226,17 @@
                     </p>
                 </div>
                 <div>
-                    <h4 class="text-white font-semibold mb-2">Technical Architecture</h4>
+                    <h4 class="text-white font-semibold mb-2 font-casta text-sm">Technical Architecture</h4>
                     <ul class="space-y-1">
                         <li>• Framework: Django 5.1 (Python 3.13)</li>
+                        <li>• Font Typography: Casta Series</li>
                         <li>• NoSQL: MongoDB / Embedded Document Store</li>
                         <li>• API: Django REST Framework & OpenAPI 3.0</li>
                         <li>• Hosting Target: Render Cloud Platform</li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-white font-semibold mb-2">Verified Acceptance Tests</h4>
+                    <h4 class="text-white font-semibold mb-2 font-casta text-sm">Verified Acceptance Tests</h4>
                     <ul class="space-y-1">
                         <li>• Concurrency Safe Temporary Holds</li>
                         <li>• Double-Booking Prevention (ACID)</li>
@@ -203,7 +246,7 @@
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-white font-semibold mb-2">Submission & Attribution</h4>
+                    <h4 class="text-white font-semibold mb-2 font-casta text-sm">Submission & Attribution</h4>
                     <p class="mb-2">ALGIONS AI LABS Full-Stack Web Development assessment project.</p>
                     <div class="flex space-x-3 mt-3">
                         <a href="{% url 'api:swagger-ui' %}" class="hover:text-brand-400"><i class="fa-solid fa-file-code"></i> API Docs</a>
@@ -213,12 +256,25 @@
             </div>
             <div class="border-t border-slate-800/80 pt-4 flex flex-col sm:flex-row items-center justify-between text-slate-500">
                 <p>&copy; 2026 CinemaBox Booking System. Built for ALGIONS Assessment.</p>
-                <p class="mt-2 sm:mt-0">Render Ready • NoSQL Integrated • RBAC Secured</p>
+                <p class="mt-2 sm:mt-0">Render Ready • NoSQL Integrated • Custom Casta Typography</p>
             </div>
         </div>
     </footer>
 
+    <!-- Global Loader Helper Script -->
+    <script>
+        function showGlobalLoader(msg) {
+            const loader = document.getElementById('global-page-loader');
+            if (msg) {
+                const textEl = loader.querySelector('p');
+                if (textEl) textEl.innerText = msg;
+            }
+            loader.classList.add('active');
+        }
+        function hideGlobalLoader() {
+            document.getElementById('global-page-loader').classList.remove('active');
+        }
+    </script>
     {% block extra_scripts %}{% endblock %}
 </body>
 </html>
-

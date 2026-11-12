@@ -1,0 +1,1214 @@
+/* ==========================================================================
+   CinemaBox Custom UI Elements & Styles
+   Powered by Casta Font & Custom Interactive Animations
+   ========================================================================== */
+
+/* 1. Global Casta Font Integration */
+@font-face {
+  font-family: 'Casta';
+  src: url('/static/fonts/Casta-Thin.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Casta';
+  src: url('/static/fonts/Casta-ThinSlanted.otf') format('opentype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --font-casta: 'Casta', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  font-family: var(--font-casta);
+  letter-spacing: 0.02em;
+}
+
+h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
+  font-family: 'Casta', serif, sans-serif;
+  letter-spacing: 0.04em;
+}
+
+/* ==========================================================================
+   2. Page Loader Animation (From Uiverse.io by mobinkakei)
+   ========================================================================== */
+.global-loader-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 15, 25, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.global-loader-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.wrapper {
+  width: 200px;
+  height: 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.circle {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  border-radius: 50%;
+  background-color: #f43f5e;
+  left: 15%;
+  transform-origin: 50%;
+  animation: circle7124 .5s alternate infinite ease;
+}
+
+@keyframes circle7124 {
+  0% {
+    top: 60px;
+    height: 5px;
+    border-radius: 50px 50px 25px 25px;
+    transform: scaleX(1.7);
+  }
+
+  40% {
+    height: 20px;
+    border-radius: 50%;
+    transform: scaleX(1);
+  }
+
+  100% {
+    top: 0%;
+  }
+}
+
+.circle:nth-child(2) {
+  left: 45%;
+  background-color: #fb7185;
+  animation-delay: .2s;
+}
+
+.circle:nth-child(3) {
+  left: auto;
+  right: 15%;
+  background-color: #fff;
+  animation-delay: .3s;
+}
+
+.shadow {
+  width: 20px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: rgba(0,0,0,0.9);
+  position: absolute;
+  top: 62px;
+  transform-origin: 50%;
+  z-index: -1;
+  left: 15%;
+  filter: blur(1px);
+  animation: shadow046 .5s alternate infinite ease;
+}
+
+@keyframes shadow046 {
+  0% {
+    transform: scaleX(1.5);
+  }
+
+  40% {
+    transform: scaleX(1);
+    opacity: .7;
+  }
+
+  100% {
+    transform: scaleX(.2);
+    opacity: .4;
+  }
+}
+
+.shadow:nth-child(4) {
+  left: 45%;
+  animation-delay: .2s;
+}
+
+.shadow:nth-child(5) {
+  left: auto;
+  right: 15%;
+  animation-delay: .3s;
+}
+
+/* ==========================================================================
+   3. Buttons
+   ========================================================================== */
+
+/* a) Pay Button (From Uiverse.io by vinodjangid07) */
+.Btn {
+  width: 160px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0f0f0f;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+  transition-duration: .3s;
+}
+
+.Btn .svgIcon {
+  width: 18px;
+  height: 18px;
+}
+
+.Btn .svgIcon path {
+  fill: white;
+}
+
+.Btn::before {
+  width: 160px;
+  height: 160px;
+  position: absolute;
+  content: "";
+  background-color: #f43f5e;
+  border-radius: 50%;
+  left: -100%;
+  top: 0;
+  transition-duration: .4s;
+  mix-blend-mode: difference;
+}
+
+.Btn:hover::before {
+  transition-duration: .4s;
+  transform: translate(100%,-50%);
+  border-radius: 0;
+}
+
+.Btn:active {
+  transform: translate(3px,3px);
+  transition-duration: .2s;
+}
+
+/* b) Fancy Buy Tickets Button (From Uiverse.io by cssbuttons-io) */
+.fancy {
+  background-color: rgba(15, 23, 42, 0.7);
+  border: 2px solid #e11d48;
+  border-radius: 8px;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin: 0;
+  outline: none;
+  overflow: visible;
+  padding: 0.85em 1.75em;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  text-transform: none;
+  transition: all 0.3s ease-in-out;
+  user-select: none;
+  font-size: 12px;
+}
+
+.fancy::before {
+  content: " ";
+  width: 1.5625rem;
+  height: 2px;
+  background: #f43f5e;
+  top: 50%;
+  left: 1.2em;
+  position: absolute;
+  transform: translateY(-50%);
+  transform-origin: center;
+  transition: background 0.3s linear, width 0.3s linear;
+}
+
+.fancy .text {
+  font-size: 1.1em;
+  line-height: 1.33333em;
+  padding-left: 2em;
+  display: block;
+  text-align: left;
+  transition: all 0.3s ease-in-out;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.fancy .top-key {
+  height: 2px;
+  width: 1.5625rem;
+  top: -2px;
+  left: 0.625rem;
+  position: absolute;
+  background: #f43f5e;
+  transition: width 0.5s ease-out, left 0.3s ease-out;
+}
+
+.fancy .bottom-key-1 {
+  height: 2px;
+  width: 1.5625rem;
+  right: 1.875rem;
+  bottom: -2px;
+  position: absolute;
+  background: #f43f5e;
+  transition: width 0.5s ease-out, right 0.3s ease-out;
+}
+
+.fancy .bottom-key-2 {
+  height: 2px;
+  width: 0.625rem;
+  right: 0.625rem;
+  bottom: -2px;
+  position: absolute;
+  background: #f43f5e;
+  transition: width 0.5s ease-out, right 0.3s ease-out;
+}
+
+.fancy:hover {
+  color: white;
+  background: #e11d48;
+  border-color: #f43f5e;
+  box-shadow: 0 0 20px rgba(225, 29, 72, 0.4);
+}
+
+.fancy:hover::before {
+  width: 0.9375rem;
+  background: white;
+}
+
+.fancy:hover .text {
+  color: white;
+  padding-left: 1.5em;
+}
+
+.fancy:hover .top-key {
+  left: -2px;
+  width: 0px;
+}
+
+.fancy:hover .bottom-key-1,
+.fancy:hover .bottom-key-2 {
+  right: 0;
+  width: 0;
+}
+
+/* c) Polygon Clip Button (From Uiverse.io by doniaskima) */
+.btn-31,
+.btn-31 *,
+.btn-31 :after,
+.btn-31 :before,
+.btn-31:after,
+.btn-31:before {
+  border: 0 solid;
+  box-sizing: border-box;
+}
+
+.btn-31 {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-appearance: button;
+  background-color: #0b0f19;
+  background-image: none;
+  color: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.5;
+  margin: 0;
+  -webkit-mask-image: -webkit-radial-gradient(#000, #fff);
+  padding: 0;
+  border: 1px solid #e11d48;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 0.75rem 1.5rem;
+  position: relative;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-31:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.btn-31:before {
+  --progress: 100%;
+  background: #e11d48;
+  -webkit-clip-path: polygon(
+    100% 0,
+    var(--progress) var(--progress),
+    0 100%,
+    100% 100%
+  );
+  clip-path: polygon(
+    100% 0,
+    var(--progress) var(--progress),
+    0 100%,
+    100% 100%
+  );
+  content: "";
+  inset: 0;
+  position: absolute;
+  transition: -webkit-clip-path 0.25s ease;
+  transition: clip-path 0.25s ease;
+}
+
+.btn-31:hover:not(:disabled):before {
+  --progress: 0%;
+}
+
+.btn-31 .text-container {
+  display: block;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.btn-31 .text {
+  display: block;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  position: relative;
+}
+
+.btn-31:hover:not(:disabled) .text {
+  -webkit-animation: move-up-alternate 0.3s ease forwards;
+  animation: move-up-alternate 0.3s ease forwards;
+}
+
+@-webkit-keyframes move-up-alternate {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(80%); }
+  51% { transform: translateY(-80%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes move-up-alternate {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(80%); }
+  51% { transform: translateY(-80%); }
+  to { transform: translateY(0); }
+}
+
+/* ==========================================================================
+   4. Holographic Ticket Card (From Uiverse.io by dexter-st)
+   ========================================================================== */
+.card {
+  --width: 220px;
+  --height: 380px;
+  --perforation-size: 14px;
+  --cutouts-adjust: 85px;
+
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 1rem;
+  grid-template-areas:
+    "header"
+    "body"
+    "footer";
+
+  width: var(--width);
+  height: var(--height);
+  padding: var(--perforation-size) 0;
+
+  font-family: inherit;
+  font-size: 1rem;
+  user-select: none;
+  overflow: hidden;
+  border-radius: 16px;
+
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4)) drop-shadow(0 10px 15px rgba(244, 63, 94, 0.2));
+  animation: hoverTicket 3s ease infinite;
+  will-change: transform, filter;
+}
+
+@keyframes hoverTicket {
+  50% {
+    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.5)) drop-shadow(0 20px 25px rgba(244, 63, 94, 0.3));
+    transform: translateY(-8px) scale(1.02);
+  }
+}
+
+.card .filter {
+  position: absolute;
+}
+
+.card .bg {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: #fff;
+  filter: url(#bump);
+  mask:
+    radial-gradient(circle at 50% 0, #fff0 calc(var(--perforation-size) - 5px), #000 calc(var(--perforation-size) - 4px)),
+    radial-gradient(circle at 50% 100%, #fff0 calc(var(--perforation-size) - 5px), #000 calc(var(--perforation-size) - 4px)),
+    radial-gradient(circle 8px at left center, #000 98%, #0000 100%),
+    radial-gradient(circle 8px at right center, #000 98%, #0000 100%),
+    repeating-linear-gradient(90deg, #000 10px, #000 15px, #0000 16px, #0000 24px);
+
+  mask-repeat: repeat-x, repeat-x, no-repeat, no-repeat, repeat-x;
+  mask-size:
+    calc(var(--perforation-size) * 2) 100%,
+    calc(var(--perforation-size) * 2) 100%,
+    16px 16px,
+    16px 16px,
+    10px 2px;
+  mask-position:
+    calc(0.5 * var(--perforation-size)) top,
+    calc(0.5 * var(--perforation-size)) bottom,
+    left var(--cutouts-adjust),
+    right var(--cutouts-adjust),
+    0 calc(var(--cutouts-adjust) + 7px);
+  mask-composite: intersect, exclude, add, add;
+}
+
+.card .holographic {
+  background-image: linear-gradient(to bottom, #fe58, 90%, #0002),
+    conic-gradient(
+      at 60% 50%,
+      #ccc,
+      #ff6bfe,
+      #00f9f8,
+      #ddd,
+      #0081fd,
+      #eef0bc,
+      #0081fd,
+      #ff6bfe,
+      #0002,
+      #0081fd,
+      #ddd,
+      #01fefb,
+      #ccc
+    );
+}
+
+.card .holographic::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at 70% 20%, #f0f, #0000),
+    repeating-radial-gradient(circle at 30% 80%, #fff, #f4a 48px, #eeeeee 150px);
+  mix-blend-mode: color-burn;
+}
+
+.card .holographic::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(to bottom, #f205, #f00, #0f0, #f205);
+  mix-blend-mode: difference;
+  animation: bg-pos 3s ease-in-out infinite alternate;
+  background-position: 0 0;
+  background-size: 100% 300%;
+  background-repeat: repeat;
+}
+
+@keyframes bg-pos {
+  to { background-position: 0 500px; }
+}
+
+.card .header {
+  position: relative;
+  grid-area: header;
+  margin: 0 8px;
+  text-align: center;
+  z-index: 1;
+  font-family: 'Casta', serif;
+  font-size: 2.2rem;
+  letter-spacing: 2px;
+  color: #ffffffef;
+  text-shadow: 0 0 10px rgba(0,0,0,0.8);
+}
+
+.card .body {
+  grid-area: body;
+  margin: 0 1em;
+  padding: 0.5em;
+  font-weight: 300;
+  z-index: 1;
+  color: #111827;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.card .footer {
+  grid-area: footer;
+  z-index: 1;
+  margin: 0 1em 1em 1em;
+}
+
+.card .number {
+  margin-bottom: 0.75rem;
+  text-align: center;
+  color: #000;
+  font-weight: 300;
+  font-size: 0.85rem;
+}
+
+.card .number .bold {
+  font-weight: 700;
+  color: #be123c;
+}
+
+.card .barcode {
+  justify-self: center;
+  width: 0;
+  height: 32px;
+  box-shadow:
+    0px 0 0 1px #000, 5px 0 0 1px #000, 7px 0 0 1px #000, 11px 0 0 1px #000,
+    15px 0 0 1px #000, 16px 0 0 1px #000, 22px 0 0 1px #000, 27px 0 0 1px #000,
+    30px 0 0 1px #000, 35px 0 0 1px #000, 36px 0 0 1px #000, 39px 0 0 1px #000,
+    43px 0 0 1px #000, 47px 0 0 1px #000, 50px 0 0 1px #000, 55px 0 0 1px #000,
+    59px 0 0 1px #000, 60px 0 0 1px #000, 64px 0 0 1px #000, 69px 0 0 1px #000,
+    70px 0 0 1px #000, 74px 0 0 1px #000;
+  transform: translateX(45px);
+}
+
+.card .symbol {
+  position: absolute;
+  top: 0.9em;
+  right: 6px;
+  rotate: 185deg;
+  font-size: 1.1em;
+  color: #fff;
+  opacity: 0.4;
+}
+
+.card .notes {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  font-size: 5rem;
+  color: #e7e7e7;
+  mix-blend-mode: color-burn;
+  transform: translateY(20%);
+  z-index: 1;
+}
+
+/* ==========================================================================
+   5. Rotary Printing Press Reel Animation (From Uiverse.io by preet_7613)
+   ========================================================================== */
+.press {
+  background: #0f172a;
+  position: relative;
+  width: 100%;
+  height: 260px;
+  overflow: hidden;
+  font-size: 12px;
+  color: #f43f5e;
+  border-radius: 16px;
+  border: 1px solid #1e293b;
+}
+
+.press * {
+  border: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.press .sheet {
+  overflow: hidden;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4em;
+  height: 6em;
+  transform: translate(-50%, -50%) rotateX(-45deg) rotateZ(-45deg);
+}
+
+.press .roll {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: #1e293b;
+  border-radius: 0.5em 0.5em 0.5em 0.5em / 1em 1em 1em 1em;
+  width: 8em;
+  height: 2em;
+}
+
+.press .sheet:before {
+  animation: printAnim 0.5s ease-in-out infinite;
+  background:
+    linear-gradient(#0000 5.2em, currentColor 5.2em 5.3em, #0000 5.3em 5.5em) 0.4em 0 / 3.2em 6em,
+    linear-gradient(#0000 5.5em, currentColor 5.5em 5.7em, #0000 5.7em) 0.6em 0 / 2.8em 6em,
+    linear-gradient(90deg, #334155 0.4em, #0000 0.4em 1.9em, #334155 1.9em 2.1em, #0000 2.1em 3.6em, #334155 3.6em) 0 0 / 4em 6em,
+    repeating-linear-gradient(#334155 0 0.4em, #0000 0.4em 5em, #334155 5em 6em, #0000 6em) 0 0 / 4em 6em,
+    linear-gradient(#0000 3.4em, currentColor 3.4em) 100% 0 / 50% 6em,
+    repeating-linear-gradient(currentColor 0 0.2em, #334155 0.2em 0.4em) 0 0 / 4em 6em;
+  background-repeat: repeat-y;
+  color: #f43f5e;
+  content: "";
+  display: block;
+  top: -6em;
+  left: 0;
+  width: 100%;
+  height: calc(100% + 6em);
+}
+
+.press .sheet:nth-child(1):before,
+.press .sheet:nth-child(5):before {
+  color: #fb7185;
+}
+
+.press .sheet:nth-child(1) {
+  height: 24em;
+  transform: translate(-50%, -50%) rotateX(-45deg) rotateZ(-45deg) translate(-17.4em, 9.4em) rotateX(-90deg);
+}
+.press .sheet:nth-child(3) {
+  transform: translate(-50%, -50%) rotateX(-45deg) rotateZ(-45deg) translate(-2.5em, -2.5em);
+}
+.press .sheet:nth-child(5) {
+  transform: translate(-50%, -50%) rotateX(-45deg) rotateZ(-45deg) translate(-0.5em, -0.7em) rotateX(-75deg);
+}
+.press .sheet:nth-child(7) {
+  transform: translate(-50%, -50%) rotateX(-45deg) rotateZ(-45deg) translate(1.7em, -1.85em) rotateX(-15deg);
+}
+.press .sheet:nth-child(7):before { background-position-y: 5.2em; }
+.press .sheet:nth-child(8) {
+  transform: translate(-50%, -50%) rotateX(-45deg) rotateZ(-45deg) translate(1.7em, -1.5em) rotateX(15deg);
+}
+.press .sheet:nth-child(8):before { background-position-y: 4.8em; }
+.press .sheet:nth-child(9) {
+  transform: translate(-50%, -50%) rotateX(-45deg) rotateZ(-45deg) translate(1.6em, -1.05em) rotateX(45deg);
+}
+.press .sheet:nth-child(9):before { background-position-y: 4.4em; }
+.press .sheet:nth-child(10) {
+  transform: translate(-50%, -50%) rotateX(-45deg) rotateZ(-45deg) translate(-0.5em, 1.95em) rotateX(75deg);
+}
+.press .sheet:nth-child(11) {
+  height: 18em;
+  transform: translate(-50%, -50%) rotateX(-45deg) rotateZ(-45deg) translate(-2.5em, 19.25em);
+}
+
+.press .roll:nth-child(2) {
+  transform: translate(-50%, -50%) rotateX(-45deg) rotateZ(-45deg) translate(-3em, -4.5em) skewX(-22.5deg);
+}
+.press .roll:nth-child(4) {
+  transform: translate(-50%, -50%) rotateX(-45deg) rotateZ(-45deg) translate(-2em, -0.5em) skewX(-22.5deg);
+}
+.press .roll:nth-child(6) {
+  transform: translate(-50%, -50%) rotateX(-45deg) rotateZ(-45deg) translate(1em, -1em) skewX(-22.5deg);
+}
+.press .roll:nth-child(12) {
+  transform: translate(-50%, -50%) rotateX(-45deg) rotateZ(-45deg) translate(-2em, 4.45em) skewX(-22.5deg);
+}
+
+@keyframes printAnim {
+  from { transform: translateY(0); }
+  to { transform: translateY(6em); }
+}
+
+/* ==========================================================================
+   6. Notification Toasts (From Uiverse.io by xerith_8140)
+   ========================================================================== */
+.notification-container {
+  --content-color: black;
+  --background-color: #f3f3f3;
+  --font-size-content: 0.85em;
+  --icon-size: 1.25em;
+
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+  list-style-type: none;
+  font-family: inherit;
+  color: var(--content-color);
+  padding: 0;
+  margin: 0;
+}
+
+.notification-item {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  gap: 1em;
+  overflow: hidden;
+  padding: 12px 18px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  background-color: var(--background-color);
+  transition: all 250ms ease;
+  z-index: 10;
+}
+
+.notification-item:hover {
+  transform: scale(1.01);
+}
+
+.notification-item .notification-close {
+  padding: 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all 250ms;
+}
+
+.notification-item .notification-close:hover {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.notification-container svg {
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
+
+.notification-content {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.75em;
+}
+
+.notification-text {
+  font-size: var(--font-size-content);
+  font-weight: 600;
+  user-select: none;
+}
+
+.notification-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--content-color);
+  width: 100%;
+  animation: progressBar 5s linear forwards;
+}
+
+@keyframes progressBar {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+.notification-item.success {
+  color: #064e3b;
+  background-color: #6ee7b7;
+}
+.notification-item.success svg { color: #064e3b; }
+.notification-item.success .notification-progress-bar { background-color: #064e3b; }
+
+.notification-item.info {
+  color: #1e3a8a;
+  background-color: #93c5fd;
+}
+.notification-item.info svg { color: #1e3a8a; }
+.notification-item.info .notification-progress-bar { background-color: #1e3a8a; }
+
+.notification-item.warning {
+  color: #78350f;
+  background-color: #fde047;
+}
+.notification-item.warning svg { color: #78350f; }
+.notification-item.warning .notification-progress-bar { background-color: #78350f; }
+
+.notification-item.error {
+  color: #7f1d1d;
+  background-color: #fca5a5;
+}
+.notification-item.error svg { color: #7f1d1d; }
+.notification-item.error .notification-progress-bar { background-color: #7f1d1d; }
+
+/* ==========================================================================
+   7. 3D Boarding Pass Ticket Card (From Uiverse.io by Cobp)
+   ========================================================================== */
+.container-cards-ticket {
+  perspective: 1000px;
+  display: inline-block;
+}
+
+.card-ticket {
+  position: relative;
+  height: 160px;
+  width: 340px;
+  display: flex;
+  color: #2d2d2d;
+  background-color: #ffffff;
+  border-radius: 1.25rem;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.25);
+  z-index: 10;
+  gap: 1rem;
+  animation: animation-card 10s infinite;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+}
+
+.card-ticket:hover {
+  animation-play-state: paused;
+  transform: translateY(-15px) scale(1.03);
+}
+
+.separator {
+  position: absolute;
+  top: 0;
+  left: 55px;
+  width: 16px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 10;
+}
+
+.separator .span-lines {
+  position: relative;
+  display: flex;
+  height: 100%;
+  border-left: 2px dashed #cbd5e1;
+}
+
+.separator .span-lines::after {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 16px;
+  background-color: #090d16;
+}
+
+.separator .span-lines::before {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 1rem;
+  background-color: #090d16;
+}
+
+.content-ticket {
+  position: relative;
+  justify-content: space-between;
+  width: 100%;
+  display: flex;
+}
+
+.content-ticket::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-image: linear-gradient(90deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8));
+  transform: translateX(200px) scale(1.5);
+  filter: blur(10px);
+  width: 200px;
+  height: 100%;
+  animation: shadow-card 10s infinite;
+}
+
+.content-ticket::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100px;
+  background-image: linear-gradient(90deg, rgba(0, 0, 0, 0), #ffffff, rgba(0, 0, 0, 0));
+  transform: translateX(-100px) scale(1.5) rotate(20deg);
+  width: 80px;
+  height: 100%;
+  animation: light-card 10s infinite;
+}
+
+.content-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  gap: 0.25rem;
+}
+
+.content-data .data-flex,
+.content-data .data-flex-col {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.25rem;
+}
+
+.content-data .data-flex-col {
+  padding-bottom: 0.25rem;
+  flex-direction: column;
+}
+
+.data {
+  font-size: 11px;
+  line-height: 13px;
+}
+
+.data .title {
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.data .subtitle {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.destination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.destination .dest {
+  display: flex;
+  flex-direction: column;
+}
+
+.destination .dest .country {
+  font-size: 10px;
+  line-height: 1;
+  color: #94a3b8;
+}
+
+.destination .dest .acronym {
+  font-weight: 800;
+  color: #0f172a;
+  font-size: 14px;
+}
+
+.destination .dest .hour {
+  font-size: 10px;
+  line-height: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #475569;
+}
+
+.container-icons {
+  width: fit-content;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  animation: color-card 10s infinite;
+  z-index: 1;
+}
+
+.container-icons .icon {
+  color: #ffffff;
+}
+
+@keyframes animation-card {
+  0% { transform: translateZ(0px); }
+  25% { transform: translateX(-8px) rotateY(-15deg); }
+  75% { transform: translateX(8px) rotateY(15deg); }
+  100% { transform: translateZ(0px); }
+}
+
+@keyframes light-card {
+  25% { transform: translateX(450px) scale(1.5) rotate(25deg); }
+  50% { transform: translateX(-100px) scale(1.5) rotate(25deg); }
+}
+
+@keyframes shadow-card {
+  35% { transform: translateX(200px) scale(1.5); }
+  75% { transform: translateX(0px) scale(1.5); }
+}
+
+@keyframes color-card {
+  0% { background-color: #e11d48; }
+  25% { background-color: #be123c; }
+  50% { background-color: #9f1239; }
+  75% { background-color: #e11d48; }
+  100% { background-color: #be123c; }
+}
+
+/* ==========================================================================
+   8. Interactive Animated Login Card (From Uiverse.io by Novaxlo)
+   ========================================================================== */
+.uiverse-login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #0f172a;
+  width: 100%;
+  max-width: 22em;
+  margin: 0 auto;
+  min-height: 25em;
+  border: 2px solid #e11d48;
+  border-bottom-left-radius: 1.5em;
+  border-top-right-radius: 1.5em;
+  box-shadow: -8px 0px 0px #e11d48, -10px 10px 25px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.uiverse-login-form #login-area,
+.uiverse-login-form #email-area,
+.uiverse-login-form #password-area,
+.uiverse-login-form #footer-area {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.uiverse-login-form #login-area {
+  height: 4em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  padding-top: 0.5em;
+}
+
+.uiverse-login-form #login-area p.title {
+  font-size: 1.6em;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  color: #fff;
+  z-index: 2;
+}
+
+.uiverse-login-form #email-area {
+  padding: 0 10%;
+  margin-top: 1.5em;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s ease;
+}
+
+.uiverse-login-form #email-area input {
+  width: 100%;
+  border: 2px solid #e11d48;
+  border-radius: 0.6em;
+  height: 2.8em;
+  padding-left: 1em;
+  font-size: 0.9em;
+  background-color: #1e293b;
+  color: #fff;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.uiverse-login-form #password-area {
+  padding: 0 10%;
+  margin-top: 1.25em;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  transition: all 0.25s ease;
+}
+
+.uiverse-login-form #password-area input {
+  width: 100%;
+  border: 2px solid #e11d48;
+  border-radius: 0.6em;
+  height: 2.8em;
+  padding-left: 1em;
+  font-size: 0.9em;
+  background-color: #1e293b;
+  color: #fff;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.uiverse-login-form #password-area a {
+  padding-top: 0.4em;
+  font-size: 0.75em;
+  font-weight: 600;
+  color: #fb7185;
+}
+
+.uiverse-login-form #footer-area {
+  padding: 0 10%;
+  margin-top: 1.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.uiverse-login-form #footer-area button {
+  width: 100%;
+  border: 2px solid #e11d48;
+  border-radius: 0.6em;
+  height: 2.8em;
+  font-size: 0.95em;
+  font-weight: 700;
+  color: white;
+  background-color: #e11d48;
+  box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.uiverse-login-form #footer-area button:hover {
+  background-color: #f43f5e;
+  border-color: #f43f5e;
+}
+
+.uiverse-login-form #text-inside {
+  padding-top: 0.75em;
+  display: flex;
+  font-size: 0.8em;
+  color: #94a3b8;
+  gap: 0.3em;
+}
+
+.uiverse-login-form #link {
+  color: #fb7185;
+  font-weight: bold;
+}
+
+.uiverse-login-form #background-color {
+  width: 100%;
+  height: 4em;
+  background-color: #e11d48;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  transition: all 0.5s ease;
+  box-shadow: inset 5px 0px #be123c;
+}
+
+.uiverse-login-form #whitefilter {
+  width: 3.5em;
+  height: 3.5em;
+  top: 2px;
+  right: 2px;
+  position: absolute;
+  z-index: 2;
+  border-top-right-radius: 1.25em;
+  box-shadow: 35px -35px 0px -1px #0f172a;
+}
