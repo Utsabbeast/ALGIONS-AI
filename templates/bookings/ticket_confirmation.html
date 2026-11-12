@@ -1,23 +1,23 @@
 {% extends 'base.html' %}
 
-{% block title %}Ticket Confirmed - {{ booking.booking_reference }} | comet{% endblock %}
+{% block title %}Ticket Confirmed — {{ booking.booking_reference }} | comet{% endblock %}
 
 {% block content %}
 <div class="max-w-4xl mx-auto px-4 py-8">
 
-    <!-- Success Header -->
-    <div class="text-center mb-8">
-        <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-500 dark:text-emerald-400 border border-emerald-500/40 flex items-center justify-center text-3xl mx-auto mb-3 shadow-lg shadow-emerald-500/20">
+    <!-- Success Header (Sharp) -->
+    <div class="text-center mb-8 pb-4 border-b border-neutral-200 dark:border-neutral-800">
+        <div class="w-14 h-14 bg-emerald-500/10 text-emerald-500 border border-emerald-500/40 flex items-center justify-center text-2xl mx-auto mb-3">
             <i class="fa-solid fa-check"></i>
         </div>
-        <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white font-casta">Booking Confirmed!</h1>
-        <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-1">Your e-ticket and entry QR pass have been generated on comet.</p>
+        <h1 class="text-4xl sm:text-5xl font-light text-neutral-900 dark:text-white font-casta">Reservation Confirmed</h1>
+        <p class="text-neutral-500 text-xs sm:text-sm font-mono mt-1">E-ticket pass and cryptographic QR token generated on comet.</p>
     </div>
 
-    <!-- Visual Presentation Showcase: 3D Boarding Pass & Holographic Ticket -->
+    <!-- Visual Presentation Showcase: 3D Boarding Pass & Holographic Ticket (Sharp) -->
     <div class="mb-10 flex flex-wrap items-center justify-center gap-8">
         
-        <!-- Element 4d: 3D Boarding Pass (From Uiverse.io by Cobp) -->
+        <!-- Element 4d: 3D Boarding Pass (From Uiverse.io by Cobp) — Sharp -->
         <div class="container-cards-ticket">
             <div class="card-ticket">
                 <!-- Barcode SVG Strip -->
@@ -48,36 +48,36 @@
                     <div class="content-data">
                         <div class="destination">
                             <div class="dest start">
-                                <p class="country">CITY</p>
+                                <p class="country">VENUE</p>
                                 <p class="acronym">{{ booking.showtime.screen.theatre.city|slice:":3"|upper }}</p>
                                 <p class="hour">
-                                    <i class="fa-solid fa-film text-[10px]"></i> {{ booking.showtime.start_time|date:"H:i" }}
+                                    <i class="fa-solid fa-film text-[9px]"></i> {{ booking.showtime.start_time|date:"H:i" }}
                                 </p>
                             </div>
-                            <i class="fa-solid fa-arrow-right-long text-slate-300"></i>
+                            <i class="fa-solid fa-arrow-right-long text-neutral-300"></i>
                             <div class="dest end">
-                                <p class="country">AUDI</p>
+                                <p class="country">SCREEN</p>
                                 <p class="acronym">{{ booking.showtime.screen.name|slice:":4"|upper }}</p>
                                 <p class="hour">
-                                    <i class="fa-regular fa-clock text-[10px]"></i> {{ booking.showtime.movie.duration_formatted }}
+                                    <i class="fa-regular fa-clock text-[9px]"></i> {{ booking.showtime.movie.duration_formatted }}
                                 </p>
                             </div>
                         </div>
-                        <div style="border-bottom: 2px solid #e8e8e8"></div>
+                        <div style="border-bottom: 1px solid #e2e8f0"></div>
                         <div class="data-flex-col">
-                            <div class="data-flex">
+                            <div class="data-flex font-mono">
                                 <div class="data">
                                     <p class="title">REF</p>
                                     <p class="subtitle">{{ booking.booking_reference|slice:":8" }}</p>
                                 </div>
                                 <div class="data passenger">
-                                    <p class="title">CUSTOMER</p>
+                                    <p class="title">AUDIENCE</p>
                                     <p class="subtitle">{{ booking.user.first_name|default:booking.user.username }}</p>
                                 </div>
                             </div>
-                            <div class="data-flex">
+                            <div class="data-flex font-mono">
                                 <div class="data">
-                                    <p class="title">MOVIE</p>
+                                    <p class="title">FILM</p>
                                     <p class="subtitle">{{ booking.showtime.movie.title|truncatechars:14 }}</p>
                                 </div>
                                 <div class="data">
@@ -89,7 +89,7 @@
                     </div>
                     <div class="container-icons">
                         <div class="icon plane">
-                            <i class="fa-solid fa-ticket text-xl"></i>
+                            <i class="fa-solid fa-ticket text-lg"></i>
                         </div>
                         <div class="icon uiverse">
                             <i class="fa-solid fa-clapperboard text-sm"></i>
@@ -99,7 +99,7 @@
             </div>
         </div>
 
-        <!-- Element 4a: Holographic Collectible Ticket Card (From Uiverse.io by dexter-st) -->
+        <!-- Element 4a: Holographic Collectible Ticket Card (From Uiverse.io by dexter-st) — Sharp -->
         <div class="card holographic">
             <div class="notes">♪♪♪♪♪</div>
             <div class="notes">♪♪♪♪</div>
@@ -114,7 +114,7 @@
                 {{ booking.showtime.start_time|date:"M jS Y" }} • {{ booking.showtime.start_time|date:"h:i A" }}<br />
                 {{ booking.showtime.screen.theatre.name }}
             </div>
-            <div class="footer">
+            <div class="footer font-mono">
                 <div class="number">Seats: <span class="bold">{{ booking.seat_codes_display }}</span></div>
                 <div class="barcode"></div>
             </div>
@@ -134,110 +134,103 @@
 
     </div>
 
-    <!-- Official Printable Ticket Pass -->
-    <div id="printable-ticket" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-3xl overflow-hidden shadow-2xl relative mb-6 transition-colors">
+    <!-- Official Printable Ticket Pass (Sharp Architectural Structure) -->
+    <div id="printable-ticket" class="bg-white dark:bg-[#0e0e12] border border-neutral-300 dark:border-neutral-800 shadow-xl relative mb-6 transition-colors">
         
-        <!-- Header Banner -->
-        <div class="relative bg-gradient-to-r from-brand-700 via-rose-700 to-slate-900 dark:from-brand-900 dark:via-rose-900 dark:to-slate-900 p-6 text-white border-b border-slate-200 dark:border-slate-800">
+        <!-- Header Banner (Sharp) -->
+        <div class="relative bg-neutral-900 text-white p-6 border-b border-neutral-800">
             <div class="flex items-start justify-between">
                 <div>
-                    <span class="text-[10px] uppercase font-bold tracking-widest text-brand-200 dark:text-brand-300 font-mono">Official E-Ticket Pass</span>
-                    <h2 class="text-2xl sm:text-3xl font-black mt-1 font-casta">{{ booking.showtime.movie.title }}</h2>
-                    <p class="text-xs text-rose-100 dark:text-slate-200 mt-0.5">
+                    <span class="text-[10px] uppercase font-mono tracking-[0.25em] text-brand-400 font-bold">OFFICIAL COMET E-TICKET PASS</span>
+                    <h2 class="text-3xl font-light mt-1 font-casta">{{ booking.showtime.movie.title }}</h2>
+                    <p class="text-xs text-neutral-400 font-mono mt-0.5">
                         {{ booking.showtime.language }} • {{ booking.showtime.experience }} • {{ booking.showtime.movie.certification }}
                     </p>
                 </div>
                 <div class="text-right">
-                    <span class="text-[10px] text-rose-100 dark:text-slate-300">Reference:</span>
-                    <div class="text-base font-black font-mono tracking-wider text-white">{{ booking.booking_reference }}</div>
-                    <span class="inline-block mt-1 px-2.5 py-0.5 rounded text-[10px] font-bold {% if booking.status == 'CONFIRMED' %}bg-emerald-500/20 text-emerald-300 border border-emerald-500/30{% else %}bg-rose-500/20 text-rose-300 border border-rose-500/30{% endif %}">
+                    <span class="text-[10px] text-neutral-400 font-mono uppercase">REFERENCE:</span>
+                    <div class="text-base font-bold font-mono tracking-wider text-white">{{ booking.booking_reference }}</div>
+                    <span class="inline-block mt-1 px-2.5 py-0.5 text-[9px] font-mono font-bold uppercase {% if booking.status == 'CONFIRMED' %}bg-emerald-950 text-emerald-300 border border-emerald-800{% else %}bg-rose-950 text-rose-300 border border-rose-800{% endif %}">
                         {{ booking.get_status_display }}
                     </span>
                 </div>
             </div>
         </div>
 
-        <!-- Cinema Venue Details -->
-        <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-slate-100 dark:border-slate-800 text-xs">
+        <!-- Cinema Venue Details (Sharp Grid) -->
+        <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-neutral-200 dark:border-neutral-800 text-xs">
             <div>
-                <span class="text-slate-500 dark:text-slate-400 block mb-0.5">Theatre & Screen:</span>
-                <div class="font-bold text-slate-900 dark:text-white text-base font-casta">{{ booking.showtime.screen.theatre.name }}</div>
-                <div class="text-slate-700 dark:text-slate-300 mt-0.5">{{ booking.showtime.screen.name }}</div>
-                <div class="text-slate-500 dark:text-slate-400 text-[11px] mt-0.5">{{ booking.showtime.screen.theatre.address }}</div>
+                <span class="text-neutral-500 font-mono uppercase text-[10px] block mb-0.5">AUDITORIUM VENUE:</span>
+                <div class="font-normal text-neutral-900 dark:text-white text-lg font-casta">{{ booking.showtime.screen.theatre.name }}</div>
+                <div class="text-neutral-700 dark:text-neutral-300 font-mono mt-0.5">{{ booking.showtime.screen.name }}</div>
+                <div class="text-neutral-500 text-[11px] font-mono mt-0.5">{{ booking.showtime.screen.theatre.address }}</div>
             </div>
             <div>
-                <span class="text-slate-500 dark:text-slate-400 block mb-0.5">Date & Showtime:</span>
-                <div class="font-bold text-slate-900 dark:text-white text-base font-casta">{{ booking.showtime.start_time|date:"l, d F Y" }}</div>
-                <div class="text-brand-600 dark:text-brand-400 font-bold text-lg mt-0.5 font-mono">{{ booking.showtime.start_time|date:"h:i A" }}</div>
-                <div class="text-slate-500 dark:text-slate-400 text-[11px] mt-0.5">Doors open 15 minutes before showtime</div>
+                <span class="text-neutral-500 font-mono uppercase text-[10px] block mb-0.5">DATE & TIMING:</span>
+                <div class="font-normal text-neutral-900 dark:text-white text-lg font-casta">{{ booking.showtime.start_time|date:"l, d F Y" }}</div>
+                <div class="text-brand-600 dark:text-brand-400 font-bold text-base mt-0.5 font-mono">{{ booking.showtime.start_time|date:"h:i A" }}</div>
+                <div class="text-neutral-500 text-[11px] font-mono mt-0.5">Gates open 15 minutes prior to screening</div>
             </div>
         </div>
 
-        <!-- Seats, QR Code, and Token Section -->
-        <div class="p-6 bg-slate-50 dark:bg-slate-950/60 flex flex-col sm:flex-row items-center justify-between gap-6 transition-colors">
+        <!-- Seats, QR Code, and Token Section (Sharp) -->
+        <div class="p-6 bg-neutral-50 dark:bg-[#121217] flex flex-col sm:flex-row items-center justify-between gap-6 transition-colors">
             
             <div class="flex-1 text-center sm:text-left">
-                <span class="text-xs text-slate-500 dark:text-slate-400 block mb-1">Assigned Seats ({{ booking.seat_count }}):</span>
-                <div class="text-3xl font-black text-emerald-600 dark:text-emerald-400 tracking-wider font-mono">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-neutral-500 block mb-1">ASSIGNED SEATS ({{ booking.seat_count }}):</span>
+                <div class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 tracking-wider font-mono">
                     {{ booking.seat_codes_display }}
                 </div>
-                <div class="text-xs text-slate-600 dark:text-slate-400 mt-2">
-                    Booked by: <strong class="text-slate-900 dark:text-white">{{ booking.user.get_full_name|default:booking.user.username }}</strong>
+                <div class="text-xs text-neutral-600 dark:text-neutral-400 font-mono mt-2.5">
+                    RESERVED FOR: <strong class="text-neutral-900 dark:text-white">{{ booking.user.get_full_name|default:booking.user.username }}</strong>
                 </div>
-                <div class="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                    Amount Paid: <strong class="text-slate-900 dark:text-white">₹{{ booking.total_amount }}</strong> ({{ booking.payment_method }})
+                <div class="text-xs text-neutral-600 dark:text-neutral-400 font-mono mt-0.5">
+                    AMOUNT PAID: <strong class="text-neutral-900 dark:text-white font-mono">₹{{ booking.total_amount }}</strong> ({{ booking.payment_method }})
                 </div>
                 {% if booking.is_validated %}
-                <div class="mt-3 inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 text-xs font-semibold">
+                <div class="mt-3 inline-flex items-center space-x-1.5 px-3 py-1 bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800 text-xs font-mono font-bold">
                     <i class="fa-solid fa-circle-check"></i>
-                    <span>Scanned & Checked in at {{ booking.validated_at|date:"h:i A" }}</span>
+                    <span>SCANNED & VALIDATED AT GATE ({{ booking.validated_at|date:"h:i A" }})</span>
                 </div>
                 {% endif %}
             </div>
 
-            <!-- QR Code Box -->
-            <div class="flex flex-col items-center bg-white p-3 rounded-2xl shadow-md border border-slate-200 dark:border-transparent">
+            <!-- QR Code Box (Sharp) -->
+            <div class="flex flex-col items-center bg-white p-3 border border-neutral-300 dark:border-neutral-700 shadow-sm">
                 <img src="{{ qr_image_base64 }}" alt="Gate QR Token" class="w-36 h-36">
-                <span class="text-[9px] font-mono text-slate-800 font-bold mt-1 tracking-tight">SCAN AT GATE</span>
+                <span class="text-[9px] font-mono text-neutral-900 font-bold mt-1 tracking-widest uppercase">SCAN AT GATE</span>
             </div>
 
         </div>
 
-        <!-- Perforated Ticket Divider Dots -->
-        <div class="flex justify-between items-center px-2 -my-2">
-            <span class="w-4 h-4 rounded-full bg-slate-50 dark:bg-slate-950 -ml-4 border-r border-slate-200 dark:border-slate-700"></span>
-            <div class="flex-1 border-t-2 border-dashed border-slate-200 dark:border-slate-800 mx-2"></div>
-            <span class="w-4 h-4 rounded-full bg-slate-50 dark:bg-slate-950 -mr-4 border-l border-slate-200 dark:border-slate-700"></span>
-        </div>
-
-        <!-- Token Footer -->
-        <div class="p-4 bg-slate-100 dark:bg-slate-900 text-center border-t border-slate-200 dark:border-slate-800/80 transition-colors">
-            <div class="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
-                Security Token: <span class="text-slate-800 dark:text-slate-200 select-all">{{ booking.qr_token }}</span>
+        <!-- Token Footer (Sharp) -->
+        <div class="p-3 bg-neutral-100 dark:bg-[#0e0e12] text-center border-t border-neutral-200 dark:border-neutral-800 transition-colors">
+            <div class="text-[11px] text-neutral-500 font-mono">
+                SECURITY TOKEN: <span class="text-neutral-900 dark:text-neutral-200 select-all font-bold">{{ booking.qr_token }}</span>
             </div>
         </div>
 
     </div>
 
-    <!-- Actions & Assessment Tester Links -->
+    <!-- Actions & Assessment Tester Links (Sharp) -->
     <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
-        <button onclick="window.print()" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-white text-xs font-semibold px-5 py-3 rounded-xl border border-slate-300 dark:border-slate-700 transition">
+        <button onclick="window.print()" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-mono uppercase tracking-wider px-6 py-3 border border-neutral-700 transition">
             <i class="fa-solid fa-print"></i>
-            <span>Print or Download Ticket</span>
+            <span>Print / Save Pass</span>
         </button>
 
         <div class="flex items-center space-x-2 w-full sm:w-auto">
-            <a href="{% url 'bookings:my-bookings' %}" class="flex-1 sm:flex-none text-center bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-white text-xs font-semibold px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 transition">
-                View All Bookings
+            <a href="{% url 'bookings:my-bookings' %}" class="flex-1 sm:flex-none text-center bg-white dark:bg-[#0e0e12] hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-900 dark:text-white text-xs font-mono uppercase tracking-wider px-5 py-3 border border-neutral-300 dark:border-neutral-700 transition">
+                My Bookings
             </a>
             
             <!-- Quick Reviewer Shortcut: Validate at Gate -->
             <form method="POST" action="{% url 'bookings:gate-scanner' %}" class="flex-1 sm:flex-none">
                 {% csrf_token %}
                 <input type="hidden" name="token" value="{{ booking.qr_token }}">
-                <button type="submit" class="w-full inline-flex items-center justify-center space-x-1.5 bg-amber-50 dark:bg-amber-950/80 hover:bg-amber-100 dark:hover:bg-amber-900 border border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-300 text-xs font-semibold px-4 py-3 rounded-xl transition" title="Test gate scanner check-in directly">
+                <button type="submit" class="w-full inline-flex items-center justify-center space-x-1.5 bg-amber-50 dark:bg-amber-950/80 hover:bg-amber-100 dark:hover:bg-amber-900 border border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-300 text-xs font-mono uppercase tracking-wider px-5 py-3 transition" title="Test gate scanner check-in directly">
                     <i class="fa-solid fa-qrcode text-xs"></i>
-                    <span>Simulate Gate Scan</span>
+                    <span>Simulate Scan</span>
                 </button>
             </form>
         </div>

@@ -1,80 +1,82 @@
 {% extends 'base.html' %}
 
-{% block title %}Checkout & Payment - {{ showtime.movie.title }} | comet{% endblock %}
+{% block title %}Checkout & Payment — {{ showtime.movie.title }} | comet{% endblock %}
 
 {% block content %}
 <div class="max-w-4xl mx-auto px-4 py-8">
 
-    <!-- Top Hold Countdown Alert -->
-    <div class="bg-amber-50 dark:bg-amber-950/70 border border-amber-300 dark:border-amber-600/70 rounded-2xl p-4 mb-6 flex items-center justify-between shadow-lg transition-colors">
-        <div class="flex items-center space-x-3 text-amber-800 dark:text-amber-200">
+    <!-- Top Hold Countdown Alert (Sharp) -->
+    <div class="bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-700/80 p-4 mb-6 flex items-center justify-between shadow-sm transition-colors">
+        <div class="flex items-center space-x-3 text-amber-900 dark:text-amber-200">
             <i class="fa-solid fa-stopwatch text-2xl text-amber-600 dark:text-amber-400 animate-pulse"></i>
             <div>
-                <h4 class="font-bold text-sm text-slate-900 dark:text-white font-casta">Seats Temporarily Locked</h4>
-                <p class="text-xs text-amber-700 dark:text-amber-300">Complete payment before your reservation hold expires.</p>
+                <h4 class="font-normal text-base text-neutral-900 dark:text-white font-casta">Seats Temporarily Locked</h4>
+                <p class="text-xs text-amber-700 dark:text-amber-400 font-mono">Complete simulated payment before your 10-minute hold expires.</p>
             </div>
         </div>
         <div class="text-right">
-            <div class="text-[10px] uppercase font-bold text-amber-600 dark:text-amber-400 font-mono">Time Remaining</div>
-            <div id="countdown-display" class="text-2xl font-black text-slate-900 dark:text-white font-mono">10:00</div>
+            <div class="text-[9px] uppercase font-bold text-amber-700 dark:text-amber-400 font-mono tracking-widest">Time Remaining</div>
+            <div id="countdown-display" class="text-2xl font-bold text-neutral-900 dark:text-white font-mono">10:00</div>
         </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         
-        <!-- Left: Payment Simulation Options (2 cols) -->
+        <!-- Left: Payment Simulation Options (2 cols, Sharp) -->
         <div class="md:col-span-2 space-y-6">
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xl transition-colors">
-                <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-2 flex items-center space-x-2 font-casta">
-                    <i class="fa-solid fa-credit-card text-brand-500"></i>
-                    <span>Simulated Payment Gateway</span>
-                </h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">
-                    This is an isolated sandbox environment. No actual money will be charged.
-                </p>
+            <div class="bg-white dark:bg-[#0e0e12] border border-neutral-200 dark:border-neutral-800 p-6 shadow-sm transition-colors">
+                <div class="pb-3 border-b border-neutral-100 dark:border-neutral-800 mb-4">
+                    <h3 class="text-2xl font-light text-neutral-900 dark:text-white flex items-center space-x-2 font-casta">
+                        <i class="fa-solid fa-credit-card text-brand-500 text-base"></i>
+                        <span>Simulated Payment Gateway</span>
+                    </h3>
+                    <p class="text-xs text-neutral-500 font-mono mt-0.5">
+                        Test gateway sandbox. Real money will not be billed.
+                    </p>
+                </div>
 
-                <form method="POST" id="checkout-form" class="space-y-4">
+                <form method="POST" id="checkout-form" class="space-y-3">
                     {% csrf_token %}
                     
                     <div class="space-y-2.5">
-                        <label class="flex items-center justify-between p-3.5 rounded-xl border border-brand-500/50 bg-brand-50/50 dark:bg-slate-800/80 cursor-pointer transition">
+                        <label class="flex items-center justify-between p-4 border border-brand-500/80 bg-brand-50/30 dark:bg-brand-950/20 cursor-pointer transition">
                             <div class="flex items-center space-x-3">
                                 <input type="radio" name="payment_method" value="SIMULATED_UPI" checked class="text-brand-600 focus:ring-brand-500">
                                 <div>
-                                    <div class="text-sm font-semibold text-slate-900 dark:text-white">Instant UPI (GPay / PhonePe / Paytm)</div>
-                                    <div class="text-xs text-slate-500 dark:text-slate-400">Simulated immediate webhook confirmation</div>
+                                    <div class="text-xs font-bold font-mono uppercase tracking-wider text-neutral-900 dark:text-white">Instant UPI (GPay / PhonePe / Paytm)</div>
+                                    <div class="text-[11px] text-neutral-500 font-sans">Simulated instant webhook confirmation</div>
                                 </div>
                             </div>
                             <i class="fa-solid fa-mobile-screen-button text-brand-500"></i>
                         </label>
 
-                        <label class="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/40 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition">
+                        <label class="flex items-center justify-between p-4 border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-[#141419] hover:border-neutral-400 dark:hover:border-neutral-700 cursor-pointer transition">
                             <div class="flex items-center space-x-3">
                                 <input type="radio" name="payment_method" value="SIMULATED_CREDIT_CARD" class="text-brand-600 focus:ring-brand-500">
                                 <div>
-                                    <div class="text-sm font-semibold text-slate-900 dark:text-white">Credit / Debit Card</div>
-                                    <div class="text-xs text-slate-500 dark:text-slate-400">Visa, Mastercard, RuPay</div>
+                                    <div class="text-xs font-bold font-mono uppercase tracking-wider text-neutral-900 dark:text-white">Credit / Debit Card</div>
+                                    <div class="text-[11px] text-neutral-500 font-sans">Visa, Mastercard, RuPay, Amex</div>
                                 </div>
                             </div>
-                            <i class="fa-solid fa-credit-card text-slate-400"></i>
+                            <i class="fa-solid fa-credit-card text-neutral-400"></i>
                         </label>
 
-                        <label class="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/40 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition">
+                        <label class="flex items-center justify-between p-4 border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-[#141419] hover:border-neutral-400 dark:hover:border-neutral-700 cursor-pointer transition">
                             <div class="flex items-center space-x-3">
                                 <input type="radio" name="payment_method" value="SIMULATED_NET_BANKING" class="text-brand-600 focus:ring-brand-500">
                                 <div>
-                                    <div class="text-sm font-semibold text-slate-900 dark:text-white">Net Banking</div>
-                                    <div class="text-xs text-slate-500 dark:text-slate-400">HDFC, ICICI, SBI, Axis</div>
+                                    <div class="text-xs font-bold font-mono uppercase tracking-wider text-neutral-900 dark:text-white">Net Banking</div>
+                                    <div class="text-[11px] text-neutral-500 font-sans">HDFC, ICICI, SBI, Axis, Kotak</div>
                                 </div>
                             </div>
-                            <i class="fa-solid fa-building-columns text-slate-400"></i>
+                            <i class="fa-solid fa-building-columns text-neutral-400"></i>
                         </label>
                     </div>
 
-                    <!-- From Uiverse.io by vinodjangid07 (.Btn) -->
-                    <div class="mt-6 pt-5 border-t border-slate-200 dark:border-slate-800 flex justify-center">
-                        <button type="submit" id="pay-submit-btn" class="Btn !w-full !h-14 !text-base shadow-xl">
-                            <span>Pay ₹{{ grand_total|floatformat:2 }} & Confirm</span>
+                    <!-- From Uiverse.io by vinodjangid07 (.Btn) — Sharp Full Width -->
+                    <div class="mt-6 pt-5 border-t border-neutral-100 dark:border-neutral-800 flex justify-center">
+                        <button type="submit" id="pay-submit-btn" class="Btn !w-full !h-14 !text-sm !font-bold tracking-widest shadow-lg">
+                            <span>PAY ₹{{ grand_total|floatformat:2 }} & CONFIRM</span>
                             <svg class="svgIcon" viewBox="0 0 576 512">
                                 <path d="M512 80c8.8 0 16 7.2 16 16v32H48V96c0-8.8 7.2-16 16-16H512zm16 144V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V224H528zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm56 304c-13.3 0-24 10.7-24 24s10.7 24 24 24h48c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24H360c13.3 0 24-10.7 24-24s-10.7-24-24-24H248z"></path>
                             </svg>
@@ -84,51 +86,51 @@
             </div>
         </div>
 
-        <!-- Right: Order Summary (1 col) -->
+        <!-- Right: Order Summary (1 col, Sharp) -->
         <div>
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sticky top-24 shadow-xl transition-colors">
-                <h4 class="font-bold text-slate-900 dark:text-white text-base mb-4 pb-2 border-b border-slate-100 dark:border-slate-800 flex items-center space-x-2 font-casta">
-                    <i class="fa-solid fa-receipt text-brand-500"></i>
-                    <span>Booking Summary</span>
+            <div class="bg-white dark:bg-[#0e0e12] border border-neutral-200 dark:border-neutral-800 p-5 sticky top-24 shadow-sm transition-colors">
+                <h4 class="font-normal text-neutral-900 dark:text-white text-base mb-4 pb-2 border-b border-neutral-100 dark:border-neutral-800 flex items-center space-x-2 font-casta">
+                    <i class="fa-solid fa-receipt text-brand-500 text-xs"></i>
+                    <span>Reservation Summary</span>
                 </h4>
 
                 <div class="flex space-x-3 mb-4">
-                    <img src="{{ showtime.movie.poster_url }}" alt="{{ showtime.movie.title }}" class="w-16 h-22 object-cover rounded-lg shadow">
+                    <img src="{{ showtime.movie.poster_url }}" alt="{{ showtime.movie.title }}" class="w-16 h-22 object-cover border border-neutral-200 dark:border-neutral-800">
                     <div>
-                        <h5 class="font-bold text-slate-900 dark:text-white text-base leading-snug font-casta">{{ showtime.movie.title }}</h5>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{{ showtime.language }} ({{ showtime.experience }})</p>
-                        <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 font-medium">{{ showtime.screen.theatre.name }}</p>
+                        <h5 class="font-normal text-neutral-900 dark:text-white text-base leading-snug font-casta">{{ showtime.movie.title }}</h5>
+                        <p class="text-xs text-neutral-500 font-mono mt-0.5">{{ showtime.language }} ({{ showtime.experience }})</p>
+                        <p class="text-xs text-neutral-700 dark:text-neutral-300 mt-1 font-mono font-medium">{{ showtime.screen.theatre.name }}</p>
                     </div>
                 </div>
 
-                <div class="text-xs text-slate-500 dark:text-slate-400 space-y-1.5 py-3 border-y border-slate-100 dark:border-slate-800">
+                <div class="text-xs text-neutral-500 font-mono space-y-2 py-3 border-y border-neutral-100 dark:border-neutral-800">
                     <div class="flex justify-between">
-                        <span>Auditorium:</span>
-                        <span class="text-slate-800 dark:text-slate-200 font-semibold">{{ showtime.screen.name }}</span>
+                        <span>AUDI:</span>
+                        <span class="text-neutral-900 dark:text-white font-bold">{{ showtime.screen.name }}</span>
                     </div>
                     <div class="flex justify-between">
-                        <span>Showtime:</span>
-                        <span class="text-slate-800 dark:text-slate-200 font-semibold">{{ showtime.start_time|date:"d M, h:i A" }}</span>
+                        <span>SHOWTIME:</span>
+                        <span class="text-neutral-900 dark:text-white font-bold">{{ showtime.start_time|date:"d M, h:i A"|upper }}</span>
                     </div>
                     <div class="flex justify-between">
-                        <span>Seats ({{ seats|length }}):</span>
+                        <span>SEATS ({{ seats|length }}):</span>
                         <span class="text-emerald-600 dark:text-emerald-400 font-bold">{{ seat_codes }}</span>
                     </div>
                 </div>
 
-                <!-- Price Breakdown -->
-                <div class="text-xs space-y-2 pt-3">
-                    <div class="flex justify-between text-slate-500 dark:text-slate-400">
-                        <span>Ticket Subtotal:</span>
-                        <span class="text-slate-800 dark:text-slate-200 font-medium">₹{{ subtotal|floatformat:2 }}</span>
+                <!-- Price Breakdown (Sharp) -->
+                <div class="text-xs space-y-2 pt-3 font-mono">
+                    <div class="flex justify-between text-neutral-500">
+                        <span>Ticket Price:</span>
+                        <span class="text-neutral-900 dark:text-white">₹{{ subtotal|floatformat:2 }}</span>
                     </div>
-                    <div class="flex justify-between text-slate-500 dark:text-slate-400">
+                    <div class="flex justify-between text-neutral-500">
                         <span>Convenience Fee:</span>
-                        <span class="text-slate-800 dark:text-slate-200 font-medium">₹{{ convenience_fee|floatformat:2 }}</span>
+                        <span class="text-neutral-900 dark:text-white">₹{{ convenience_fee|floatformat:2 }}</span>
                     </div>
-                    <div class="flex justify-between text-sm font-black text-slate-900 dark:text-white pt-2 border-t border-slate-100 dark:border-slate-800">
-                        <span>Total Payable:</span>
-                        <span class="text-emerald-600 dark:text-emerald-400 text-lg font-mono">₹{{ grand_total|floatformat:2 }}</span>
+                    <div class="flex justify-between text-sm font-bold text-neutral-900 dark:text-white pt-2.5 border-t border-neutral-200 dark:border-neutral-800">
+                        <span>TOTAL PAYABLE:</span>
+                        <span class="text-emerald-600 dark:text-emerald-400 text-lg">₹{{ grand_total|floatformat:2 }}</span>
                     </div>
                 </div>
             </div>

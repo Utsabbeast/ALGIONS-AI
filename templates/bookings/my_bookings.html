@@ -1,74 +1,74 @@
 {% extends 'base.html' %}
 
-{% block title %}My Bookings - comet{% endblock %}
+{% block title %}My Tickets — comet{% endblock %}
 
 {% block content %}
 <div class="max-w-5xl mx-auto px-4 py-8">
 
-    <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 mb-6 transition-colors">
+    <div class="flex items-center justify-between pb-4 border-b border-neutral-200 dark:border-neutral-800 mb-8 transition-colors">
         <div>
-            <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight font-casta">Your Booking History</h1>
-            <p class="text-slate-500 dark:text-slate-400 text-xs mt-1">Review your tickets, check-in status, and cancellation history on comet.</p>
+            <span class="text-[10px] font-mono uppercase tracking-widest text-brand-600 dark:text-brand-400 font-bold block mb-1">AUDIENCE PORTAL</span>
+            <h1 class="text-3xl sm:text-4xl font-light text-neutral-900 dark:text-white tracking-tight font-casta">Ticket Reservation History</h1>
         </div>
-        <span class="text-xs bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300">
-            Total Bookings: {{ bookings|length }}
+        <span class="text-xs font-mono bg-neutral-100 dark:bg-[#141419] px-3 py-1.5 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300">
+            TOTAL: {{ bookings|length }}
         </span>
     </div>
 
     {% if bookings %}
     <div class="space-y-4">
         {% for b in bookings %}
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 hover:border-slate-300 dark:hover:border-slate-700 transition shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+        <div class="bg-white dark:bg-[#0e0e12] border border-neutral-200 dark:border-neutral-800 p-6 hover:border-neutral-400 dark:hover:border-neutral-700 transition duration-300 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             
-            <div class="flex items-start space-x-4">
-                <img src="{{ b.showtime.movie.poster_url }}" alt="{{ b.showtime.movie.title }}" class="w-16 h-24 object-cover rounded-xl shadow border border-slate-200 dark:border-slate-800 flex-shrink-0">
+            <div class="flex items-start space-x-5">
+                <img src="{{ b.showtime.movie.poster_url }}" alt="{{ b.showtime.movie.title }}" class="w-16 h-24 object-cover border border-neutral-200 dark:border-neutral-800 flex-shrink-0">
                 <div>
                     <div class="flex items-center space-x-2">
-                        <span class="text-xs font-mono text-slate-500 dark:text-slate-400">{{ b.booking_reference }}</span>
-                        <span class="text-[10px] px-2 py-0.5 rounded font-bold uppercase {% if b.status == 'CONFIRMED' %}bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800{% else %}bg-rose-50 dark:bg-rose-950 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-800{% endif %}">
+                        <span class="text-xs font-mono text-neutral-500">{{ b.booking_reference }}</span>
+                        <span class="text-[9px] font-mono uppercase px-2 py-0.5 font-bold {% if b.status == 'CONFIRMED' %}bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800{% else %}bg-rose-50 dark:bg-rose-950 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-800{% endif %}">
                             {{ b.get_status_display }}
                         </span>
                         {% if b.is_validated %}
-                        <span class="text-[10px] px-2 py-0.5 rounded font-bold bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800">
-                            ✓ Gate Validated
+                        <span class="text-[9px] font-mono uppercase px-2 py-0.5 font-bold bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800">
+                            ✓ Scanned at Gate
                         </span>
                         {% endif %}
                     </div>
 
-                    <h3 class="text-base font-bold text-slate-900 dark:text-white mt-1 font-casta">{{ b.showtime.movie.title }}</h3>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    <h3 class="text-xl font-normal text-neutral-900 dark:text-white mt-1.5 font-casta">{{ b.showtime.movie.title }}</h3>
+                    <p class="text-xs text-neutral-500 font-mono mt-0.5">
                         {{ b.showtime.screen.theatre.name }} • {{ b.showtime.screen.name }}
                     </p>
-                    <p class="text-xs text-slate-700 dark:text-slate-300 mt-0.5 font-medium">
-                        {{ b.showtime.start_time|date:"D, d M Y, h:i A" }}
+                    <p class="text-xs text-neutral-700 dark:text-neutral-300 mt-1 font-mono">
+                        {{ b.showtime.start_time|date:"D, d M Y, h:i A"|upper }}
                     </p>
 
-                    <div class="mt-2 text-xs">
-                        <span class="text-slate-500 dark:text-slate-400">Seats:</span>
-                        <strong class="text-emerald-600 dark:text-emerald-400 font-bold ml-1 font-mono">{{ b.seat_codes_display }}</strong>
-                        <span class="text-slate-400 dark:text-slate-500 mx-1.5">|</span>
-                        <span class="text-slate-500 dark:text-slate-400">Total:</span>
-                        <strong class="text-slate-900 dark:text-white ml-1 font-mono">₹{{ b.total_amount }}</strong>
+                    <div class="mt-2.5 text-xs font-mono">
+                        <span class="text-neutral-500">SEATS:</span>
+                        <strong class="text-emerald-600 dark:text-emerald-400 font-bold ml-1">{{ b.seat_codes_display }}</strong>
+                        <span class="text-neutral-300 dark:text-neutral-700 mx-2">/</span>
+                        <span class="text-neutral-500">TOTAL:</span>
+                        <strong class="text-neutral-900 dark:text-white ml-1 font-bold">₹{{ b.total_amount }}</strong>
                     </div>
 
                     {% if b.status == 'CANCELLED' %}
-                    <div class="mt-2 text-xs text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 p-2 rounded-lg">
+                    <div class="mt-2.5 text-xs font-mono text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 p-2.5">
                         <span>Cancelled on {{ b.cancelled_at|date:"d M H:i" }}. Refund: <strong>₹{{ b.refund_amount }}</strong> ({{ b.refund_status }})</span>
                     </div>
                     {% endif %}
                 </div>
             </div>
 
-            <!-- Actions -->
-            <div class="flex flex-row md:flex-col items-end gap-2 w-full md:w-auto justify-end border-t md:border-t-0 pt-3 md:pt-0 border-slate-100 dark:border-slate-800">
-                <a href="{% url 'bookings:booking-confirmation' reference=b.booking_reference %}" class="inline-flex items-center space-x-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-white text-xs font-semibold px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700 transition">
-                    <i class="fa-solid fa-qrcode"></i>
-                    <span>View Ticket & QR</span>
+            <!-- Actions (Sharp) -->
+            <div class="flex flex-row md:flex-col items-end gap-2.5 w-full md:w-auto justify-end border-t md:border-t-0 pt-3 md:pt-0 border-neutral-100 dark:border-neutral-800">
+                <a href="{% url 'bookings:booking-confirmation' reference=b.booking_reference %}" class="inline-flex items-center space-x-1.5 bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-mono uppercase tracking-wider px-4 py-2.5 border border-neutral-700 transition">
+                    <i class="fa-solid fa-qrcode text-xs"></i>
+                    <span>Ticket & QR</span>
                 </a>
 
                 {% if b.status == 'CONFIRMED' and not b.is_validated %}
-                <button type="button" onclick="openCancelModal('{{ b.booking_reference }}', '{{ b.showtime.movie.title }}', '{{ b.total_amount }}')" class="inline-flex items-center space-x-1.5 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 text-xs font-semibold px-4 py-2 rounded-xl border border-rose-200 dark:border-rose-800/80 transition">
-                    <i class="fa-solid fa-ban text-[11px]"></i>
+                <button type="button" onclick="openCancelModal('{{ b.booking_reference }}', '{{ b.showtime.movie.title }}', '{{ b.total_amount }}')" class="inline-flex items-center space-x-1.5 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 text-xs font-mono uppercase tracking-wider px-4 py-2.5 border border-rose-200 dark:border-rose-800/80 transition">
+                    <i class="fa-solid fa-ban text-[10px]"></i>
                     <span>Cancel Ticket</span>
                 </button>
                 {% endif %}
@@ -78,49 +78,49 @@
         {% endfor %}
     </div>
     {% else %}
-    <div class="text-center py-16 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
-        <i class="fa-solid fa-ticket-simple text-4xl text-slate-400 dark:text-slate-600 mb-3"></i>
-        <h3 class="text-base font-bold text-slate-900 dark:text-white font-casta">No Bookings Yet</h3>
-        <p class="text-slate-500 dark:text-slate-400 text-xs mt-1 mb-4">You have not booked any cinema tickets yet on comet.</p>
-        <a href="{% url 'cinema:home' %}" class="bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-lg shadow-brand-600/30 transition">
-            Explore Movies Now
+    <div class="text-center py-20 bg-white dark:bg-[#0e0e12] border border-neutral-200 dark:border-neutral-800 shadow-sm">
+        <i class="fa-solid fa-ticket-simple text-4xl text-neutral-400 mb-3"></i>
+        <h3 class="text-lg font-light text-neutral-900 dark:text-white font-casta">No Bookings Found</h3>
+        <p class="text-neutral-500 text-xs font-mono mt-1 mb-5">You have not reserved any tickets on comet yet.</p>
+        <a href="{% url 'cinema:home' %}" class="bg-brand-600 hover:bg-brand-500 text-white text-xs font-mono uppercase tracking-widest font-bold px-6 py-3 border border-brand-500 transition">
+            Explore Now Showing &rarr;
         </a>
     </div>
     {% endif %}
 
 </div>
 
-<!-- Cancellation Modal -->
+<!-- Cancellation Modal (Sharp) -->
 <div id="cancel-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl transition-colors">
-        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2 flex items-center space-x-2 font-casta">
-            <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+    <div class="bg-white dark:bg-[#0e0e12] border border-neutral-300 dark:border-neutral-700 max-w-md w-full p-6 shadow-2xl transition-colors">
+        <h3 class="text-xl font-normal text-neutral-900 dark:text-white mb-2 flex items-center space-x-2 font-casta">
+            <i class="fa-solid fa-triangle-exclamation text-rose-500 text-base"></i>
             <span>Cancel Ticket Booking</span>
         </h3>
-        <p class="text-xs text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">
-            Are you sure you want to cancel booking <strong id="modal-ref" class="text-slate-900 dark:text-white font-mono"></strong> for <span id="modal-movie" class="text-brand-600 dark:text-brand-300 font-semibold font-casta"></span>?
+        <p class="text-xs text-neutral-600 dark:text-neutral-300 mb-4 leading-relaxed font-sans">
+            Are you sure you want to cancel booking <strong id="modal-ref" class="text-neutral-900 dark:text-white font-mono"></strong> for <span id="modal-movie" class="text-brand-600 dark:text-brand-400 font-bold"></span>?
         </p>
 
-        <div class="bg-slate-50 dark:bg-slate-800/80 p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-400 space-y-1 mb-4">
-            <div class="font-semibold text-slate-900 dark:text-white mb-1">Simulated Refund Policy:</div>
-            <div>• Cancellations > 2 hours before show: 100% ticket price refunded.</div>
+        <div class="bg-neutral-50 dark:bg-[#141419] p-3 border border-neutral-200 dark:border-neutral-800 text-xs font-mono text-neutral-600 dark:text-neutral-400 space-y-1 mb-4">
+            <div class="font-bold text-neutral-900 dark:text-white mb-1 uppercase tracking-wider text-[10px]">Simulated Refund Policy:</div>
+            <div>• Cancellations > 2 hours before show: 100% refund.</div>
             <div>• Cancellations within 2 hours: 50% refund applied.</div>
-            <div>• Seats are immediately released back to real-time inventory.</div>
+            <div>• Seats are immediately released back to live inventory.</div>
         </div>
 
-        <form id="cancel-form" method="POST" action="" onsubmit="showGlobalLoader('Processing cancellation & inventory release...')">
+        <form id="cancel-form" method="POST" action="" onsubmit="showGlobalLoader('Processing cancellation & releasing seats...')">
             {% csrf_token %}
             <div class="mb-4">
-                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Reason for cancellation</label>
-                <input type="text" name="reason" value="Customer change of plans" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-brand-500">
+                <label class="block text-[10px] font-mono uppercase tracking-wider text-neutral-600 dark:text-neutral-400 mb-1">Cancellation Reason</label>
+                <input type="text" name="reason" value="Customer change of plans" class="w-full bg-white dark:bg-[#08080a] border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-xs px-3 py-2 focus:outline-none focus:border-brand-500">
             </div>
 
             <div class="flex items-center justify-end space-x-3">
-                <button type="button" onclick="closeCancelModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                <button type="button" onclick="closeCancelModal()" class="px-4 py-2 text-xs font-mono uppercase tracking-wider text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition">
                     Keep Ticket
                 </button>
-                <button type="submit" class="bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-lg shadow-rose-600/30 transition">
-                    Confirm Cancellation & Refund
+                <button type="submit" class="bg-rose-600 hover:bg-rose-500 text-white text-xs font-mono uppercase tracking-wider font-bold px-4 py-2 border border-rose-500 transition">
+                    Confirm Cancellation
                 </button>
             </div>
         </form>

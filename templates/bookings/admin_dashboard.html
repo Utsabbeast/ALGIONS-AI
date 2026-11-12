@@ -1,128 +1,128 @@
 {% extends 'base.html' %}
 
-{% block title %}Occupancy & Sales Analytics - Admin Dashboard | comet{% endblock %}
+{% block title %}Occupancy & Sales Analytics — Admin Dashboard | comet{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 gap-4 mb-6 transition-colors">
+    <!-- Header (Sharp) -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-neutral-200 dark:border-neutral-800 gap-4 mb-8 transition-colors">
         <div>
-            <div class="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-brand-50 dark:bg-brand-950 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800 mb-2">
-                <i class="fa-solid fa-crown text-[10px]"></i>
+            <div class="inline-flex items-center space-x-1.5 px-2.5 py-0.5 text-[9px] font-mono font-bold bg-brand-50 dark:bg-brand-950 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800 mb-2 uppercase tracking-widest">
+                <i class="fa-solid fa-crown text-[9px]"></i>
                 <span>Executive Management Portal</span>
             </div>
-            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center space-x-2 font-casta">
-                <i class="fa-solid fa-chart-line text-brand-500"></i>
+            <h1 class="text-3xl sm:text-4xl font-light text-neutral-900 dark:text-white tracking-tight flex items-center space-x-2 font-casta">
+                <i class="fa-solid fa-chart-line text-brand-500 text-2xl"></i>
                 <span>Occupancy, Revenue & Audit Reconciliation</span>
             </h1>
-            <p class="text-slate-500 dark:text-slate-400 text-xs mt-1">Real-time inventory occupancy matching confirmed bookings, holds, and cancellations on comet.</p>
+            <p class="text-neutral-500 text-xs font-mono mt-1">Real-time inventory reconciliation matching confirmed bookings, active holds, and cancellations.</p>
         </div>
 
-        <!-- Filter Form -->
+        <!-- Filter Form (Sharp) -->
         <form method="GET" class="flex flex-wrap items-center gap-2">
-            <select name="theatre_id" onchange="this.form.submit()" class="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs rounded-xl px-3 py-2 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-brand-500 transition">
+            <select name="theatre_id" onchange="this.form.submit()" class="bg-white dark:bg-[#141419] text-neutral-700 dark:text-neutral-300 text-xs px-3 py-2 border border-neutral-300 dark:border-neutral-700 focus:outline-none focus:border-brand-500 font-mono transition">
                 <option value="">All Theatres</option>
                 {% for t in theatres %}
                 <option value="{{ t.id }}" {% if selected_theatre_id == t.id %}selected{% endif %}>{{ t.name }} ({{ t.city }})</option>
                 {% endfor %}
             </select>
 
-            <select name="movie_id" onchange="this.form.submit()" class="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs rounded-xl px-3 py-2 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-brand-500 transition">
-                <option value="">All Movies</option>
+            <select name="movie_id" onchange="this.form.submit()" class="bg-white dark:bg-[#141419] text-neutral-700 dark:text-neutral-300 text-xs px-3 py-2 border border-neutral-300 dark:border-neutral-700 focus:outline-none focus:border-brand-500 font-mono transition">
+                <option value="">All Titles</option>
                 {% for m in movies %}
                 <option value="{{ m.id }}" {% if selected_movie_id == m.id %}selected{% endif %}>{{ m.title }}</option>
                 {% endfor %}
             </select>
 
             {% if selected_theatre_id or selected_movie_id %}
-            <a href="{% url 'bookings:admin-dashboard' %}" class="text-xs text-rose-500 dark:text-rose-400 hover:underline px-2">Reset</a>
+            <a href="{% url 'bookings:admin-dashboard' %}" class="text-xs font-mono uppercase tracking-wider text-rose-500 dark:text-rose-400 hover:underline px-2">Reset</a>
             {% endif %}
         </form>
     </div>
 
-    <!-- Diagnostic NoSQL Engine Status Widget -->
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 mb-8 shadow-xl transition-colors">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 gap-2 mb-3">
+    <!-- Diagnostic NoSQL Engine Status Widget (Sharp) -->
+    <div class="bg-white dark:bg-[#0e0e12] border border-neutral-200 dark:border-neutral-800 p-5 mb-8 shadow-sm transition-colors">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-neutral-100 dark:border-neutral-800 gap-2 mb-3">
             <div class="flex items-center space-x-2.5">
-                <span class="w-3 h-3 rounded-full {% if nosql_status.is_mongodb_connected %}bg-emerald-500{% else %}bg-blue-500{% endif %} animate-ping"></span>
-                <span class="text-xs font-bold text-slate-900 dark:text-white">NoSQL Persistence Layer:</span>
-                <span class="text-xs font-semibold px-2 py-0.5 rounded {% if nosql_status.is_mongodb_connected %}bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800{% else %}bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800{% endif %}">
+                <span class="w-2.5 h-2.5 {% if nosql_status.is_mongodb_connected %}bg-emerald-500{% else %}bg-blue-500{% endif %} animate-ping"></span>
+                <span class="text-xs font-bold text-neutral-900 dark:text-white font-mono uppercase tracking-wider">NoSQL Persistence Engine:</span>
+                <span class="text-xs font-semibold px-2 py-0.5 font-mono {% if nosql_status.is_mongodb_connected %}bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800{% else %}bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800{% endif %}">
                     {{ nosql_status.engine }}
                 </span>
             </div>
-            <div class="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
-                Database: <span class="text-slate-800 dark:text-slate-200 font-bold">{{ nosql_status.database_name }}</span>
+            <div class="text-[11px] text-neutral-500 font-mono">
+                DATABASE: <span class="text-neutral-900 dark:text-white font-bold">{{ nosql_status.database_name }}</span>
             </div>
         </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-            <div class="bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700/60 transition-colors">
-                <span class="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-bold">ticket_scans</span>
-                <span class="text-base font-extrabold text-slate-900 dark:text-white font-mono">{{ nosql_status.collections.ticket_scans }} docs</span>
+            <div class="bg-neutral-50 dark:bg-[#141419] p-3 border border-neutral-200 dark:border-neutral-800 font-mono">
+                <span class="text-neutral-500 block text-[9px] uppercase tracking-wider font-bold">ticket_scans</span>
+                <span class="text-base font-bold text-neutral-900 dark:text-white">{{ nosql_status.collections.ticket_scans }} docs</span>
             </div>
-            <div class="bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700/60 transition-colors">
-                <span class="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-bold">audit_events</span>
-                <span class="text-base font-extrabold text-slate-900 dark:text-white font-mono">{{ nosql_status.collections.audit_events }} docs</span>
+            <div class="bg-neutral-50 dark:bg-[#141419] p-3 border border-neutral-200 dark:border-neutral-800 font-mono">
+                <span class="text-neutral-500 block text-[9px] uppercase tracking-wider font-bold">audit_events</span>
+                <span class="text-base font-bold text-neutral-900 dark:text-white">{{ nosql_status.collections.audit_events }} docs</span>
             </div>
-            <div class="bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700/60 transition-colors">
-                <span class="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-bold">movie_reviews</span>
-                <span class="text-base font-extrabold text-slate-900 dark:text-white font-mono">{{ nosql_status.collections.movie_reviews }} docs</span>
+            <div class="bg-neutral-50 dark:bg-[#141419] p-3 border border-neutral-200 dark:border-neutral-800 font-mono">
+                <span class="text-neutral-500 block text-[9px] uppercase tracking-wider font-bold">movie_reviews</span>
+                <span class="text-base font-bold text-neutral-900 dark:text-white">{{ nosql_status.collections.movie_reviews }} docs</span>
             </div>
-            <div class="bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700/60 transition-colors">
-                <span class="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-bold">seat_matrix_cache</span>
-                <span class="text-base font-extrabold text-slate-900 dark:text-white font-mono">{{ nosql_status.collections.seat_matrix_cache }} docs</span>
+            <div class="bg-neutral-50 dark:bg-[#141419] p-3 border border-neutral-200 dark:border-neutral-800 font-mono">
+                <span class="text-neutral-500 block text-[9px] uppercase tracking-wider font-bold">seat_matrix_cache</span>
+                <span class="text-base font-bold text-neutral-900 dark:text-white">{{ nosql_status.collections.seat_matrix_cache }} docs</span>
             </div>
         </div>
     </div>
 
-    <!-- Summary KPI Cards -->
+    <!-- Summary KPI Cards (Sharp) -->
     <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-4 mb-8">
         
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-lg transition-colors">
-            <div class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Total Capacity</div>
-            <div class="text-2xl font-black text-slate-900 dark:text-white font-mono">{{ summary.total_capacity }} <span class="text-xs font-normal text-slate-500 dark:text-slate-400">seats</span></div>
-            <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Across {{ summary.total_shows }} active shows</div>
+        <div class="bg-white dark:bg-[#0e0e12] border border-neutral-200 dark:border-neutral-800 p-5 shadow-sm transition-colors">
+            <div class="text-[10px] font-mono font-bold text-neutral-500 uppercase tracking-widest mb-1">Total Capacity</div>
+            <div class="text-2xl font-bold text-neutral-900 dark:text-white font-mono">{{ summary.total_capacity }} <span class="text-xs font-normal text-neutral-500">seats</span></div>
+            <div class="text-[10px] text-neutral-500 font-mono mt-1">Across {{ summary.total_shows }} active shows</div>
         </div>
 
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-lg transition-colors">
-            <div class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Confirmed Occupancy</div>
-            <div class="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono">{{ summary.overall_occupancy_percentage }}%</div>
-            <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">{{ summary.total_confirmed_seats }} booked | {{ summary.total_active_holds }} holds</div>
+        <div class="bg-white dark:bg-[#0e0e12] border border-neutral-200 dark:border-neutral-800 p-5 shadow-sm transition-colors">
+            <div class="text-[10px] font-mono font-bold text-neutral-500 uppercase tracking-widest mb-1">Confirmed Occupancy</div>
+            <div class="text-2xl font-bold text-emerald-600 dark:text-emerald-400 font-mono">{{ summary.overall_occupancy_percentage }}%</div>
+            <div class="text-[10px] text-neutral-500 font-mono mt-1">{{ summary.total_confirmed_seats }} booked | {{ summary.total_active_holds }} holds</div>
         </div>
 
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-lg transition-colors">
-            <div class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Gross Revenue</div>
-            <div class="text-2xl font-black text-slate-900 dark:text-white font-mono">₹{{ summary.total_gross_revenue|floatformat:2 }}</div>
-            <div class="text-[11px] text-rose-500 dark:text-rose-400 mt-1">₹{{ summary.total_refunds|floatformat:2 }} refunds issued</div>
+        <div class="bg-white dark:bg-[#0e0e12] border border-neutral-200 dark:border-neutral-800 p-5 shadow-sm transition-colors">
+            <div class="text-[10px] font-mono font-bold text-neutral-500 uppercase tracking-widest mb-1">Gross Revenue</div>
+            <div class="text-2xl font-bold text-neutral-900 dark:text-white font-mono">₹{{ summary.total_gross_revenue|floatformat:2 }}</div>
+            <div class="text-[10px] text-rose-500 font-mono mt-1">₹{{ summary.total_refunds|floatformat:2 }} refunds issued</div>
         </div>
 
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-lg transition-colors">
-            <div class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Net Sales Revenue</div>
-            <div class="text-2xl font-black text-brand-600 dark:text-brand-400 font-mono">₹{{ summary.net_revenue|floatformat:2 }}</div>
-            <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">{{ summary.total_cancelled_bookings }} cancelled orders</div>
+        <div class="bg-white dark:bg-[#0e0e12] border border-neutral-200 dark:border-neutral-800 p-5 shadow-sm transition-colors">
+            <div class="text-[10px] font-mono font-bold text-neutral-500 uppercase tracking-widest mb-1">Net Sales Revenue</div>
+            <div class="text-2xl font-bold text-brand-600 dark:text-brand-400 font-mono">₹{{ summary.net_revenue|floatformat:2 }}</div>
+            <div class="text-[10px] text-neutral-500 font-mono mt-1">{{ summary.total_cancelled_bookings }} cancelled orders</div>
         </div>
 
     </div>
 
-    <!-- Detailed Showtime Reconciliation Table -->
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xl mb-8 transition-colors">
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="font-bold text-slate-900 dark:text-white text-base flex items-center space-x-2 font-casta">
-                <i class="fa-solid fa-table-list text-brand-500"></i>
+    <!-- Detailed Showtime Reconciliation Table (Sharp) -->
+    <div class="bg-white dark:bg-[#0e0e12] border border-neutral-200 dark:border-neutral-800 p-6 shadow-sm mb-8 transition-colors">
+        <div class="flex items-center justify-between mb-4 pb-2 border-b border-neutral-100 dark:border-neutral-800">
+            <h3 class="font-normal text-neutral-900 dark:text-white text-base flex items-center space-x-2 font-casta">
+                <i class="fa-solid fa-table-list text-brand-500 text-xs"></i>
                 <span>Showtime Inventory & Revenue Reconciliation</span>
             </h3>
-            <span class="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg border border-slate-200 dark:border-slate-700">
+            <span class="text-xs font-mono text-neutral-500 bg-neutral-100 dark:bg-[#141419] px-3 py-1 border border-neutral-200 dark:border-neutral-800">
                 Formula: Available = Capacity - (Confirmed + Holds)
             </span>
         </div>
 
         {% if shows %}
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs">
-                <thead class="text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 text-[10px] uppercase font-mono">
+            <table class="w-full text-left text-xs font-mono">
+                <thead class="text-neutral-500 border-b border-neutral-200 dark:border-neutral-800 text-[10px] uppercase">
                     <tr>
-                        <th class="pb-3">Movie & Theatre</th>
+                        <th class="pb-3">Title & Theatre</th>
                         <th class="pb-3">Showtime</th>
                         <th class="pb-3 text-center">Capacity</th>
                         <th class="pb-3 text-center">Confirmed</th>
@@ -134,40 +134,40 @@
                         <th class="pb-3 text-right">Net Rev</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60">
+                <tbody class="divide-y divide-neutral-100 dark:divide-neutral-800/60 text-[11px]">
                     {% for s in shows %}
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
+                    <tr class="hover:bg-neutral-50 dark:hover:bg-[#141419] transition">
                         <td class="py-3">
-                            <strong class="text-slate-900 dark:text-white text-sm block font-casta">{{ s.movie_title }}</strong>
-                            <span class="text-slate-500 dark:text-slate-400 text-xs">{{ s.theatre_name }} ({{ s.screen_name }})</span>
+                            <strong class="text-neutral-900 dark:text-white text-sm block font-casta">{{ s.movie_title }}</strong>
+                            <span class="text-neutral-500 text-xs font-sans">{{ s.theatre_name }} ({{ s.screen_name }})</span>
                         </td>
-                        <td class="py-3 text-slate-700 dark:text-slate-300 whitespace-nowrap">
+                        <td class="py-3 text-neutral-700 dark:text-neutral-300 whitespace-nowrap">
                             {{ s.start_time }}
                         </td>
-                        <td class="py-3 text-center font-bold text-slate-700 dark:text-slate-300 font-mono">
+                        <td class="py-3 text-center font-bold text-neutral-700 dark:text-neutral-300">
                             {{ s.total_capacity }}
                         </td>
-                        <td class="py-3 text-center font-bold text-emerald-600 dark:text-emerald-400 font-mono">
+                        <td class="py-3 text-center font-bold text-emerald-600 dark:text-emerald-400">
                             {{ s.confirmed_seats }}
                         </td>
-                        <td class="py-3 text-center font-bold text-amber-600 dark:text-amber-400 font-mono">
+                        <td class="py-3 text-center font-bold text-amber-600 dark:text-amber-400">
                             {{ s.active_holds }}
                         </td>
-                        <td class="py-3 text-center font-bold text-slate-700 dark:text-slate-300 font-mono">
+                        <td class="py-3 text-center font-bold text-neutral-700 dark:text-neutral-300">
                             {{ s.available_seats }}
                         </td>
                         <td class="py-3 text-center">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold font-mono {% if s.occupancy_percentage > 50 %}bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800{% else %}bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300{% endif %}">
+                            <span class="px-2 py-0.5 text-[9px] font-bold uppercase {% if s.occupancy_percentage > 50 %}bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800{% else %}bg-neutral-100 dark:bg-[#141419] text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700{% endif %}">
                                 {{ s.occupancy_percentage }}%
                             </span>
                         </td>
-                        <td class="py-3 text-right text-slate-700 dark:text-slate-200 font-mono">
+                        <td class="py-3 text-right text-neutral-700 dark:text-neutral-300">
                             ₹{{ s.gross_revenue|floatformat:2 }}
                         </td>
-                        <td class="py-3 text-right text-rose-500 dark:text-rose-400 font-mono">
+                        <td class="py-3 text-right text-rose-500 dark:text-rose-400">
                             ₹{{ s.refunds_issued|floatformat:2 }}
                         </td>
-                        <td class="py-3 text-right font-bold text-brand-600 dark:text-brand-400 font-mono">
+                        <td class="py-3 text-right font-bold text-brand-600 dark:text-brand-400">
                             ₹{{ s.net_revenue|floatformat:2 }}
                         </td>
                     </tr>
@@ -176,52 +176,52 @@
             </table>
         </div>
         {% else %}
-        <p class="text-xs text-slate-400 text-center py-6">No showtime records found matching criteria.</p>
+        <p class="text-xs text-neutral-400 text-center py-6 font-mono">No showtime records found matching criteria.</p>
         {% endif %}
     </div>
 
-    <!-- Material Business Actions Audit Trail from NoSQL -->
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xl transition-colors">
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="font-bold text-slate-900 dark:text-white text-base flex items-center space-x-2 font-casta">
-                <i class="fa-solid fa-clock-rotate-left text-brand-500"></i>
+    <!-- Material Business Actions Audit Trail from NoSQL (Sharp) -->
+    <div class="bg-white dark:bg-[#0e0e12] border border-neutral-200 dark:border-neutral-800 p-6 shadow-sm transition-colors">
+        <div class="flex items-center justify-between mb-4 pb-2 border-b border-neutral-100 dark:border-neutral-800">
+            <h3 class="font-normal text-neutral-900 dark:text-white text-base flex items-center space-x-2 font-casta">
+                <i class="fa-solid fa-clock-rotate-left text-brand-500 text-xs"></i>
                 <span>Material Business Actions Audit Trail</span>
             </h3>
-            <span class="text-[10px] bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800/60 px-2 py-0.5 rounded-full font-mono">
-                NoSQL collection: audit_events
+            <span class="text-[9px] bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 px-2 py-0.5 font-mono uppercase">
+                NoSQL: audit_events
             </span>
         </div>
 
         {% if audit_events %}
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs">
-                <thead class="text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 text-[10px] uppercase font-mono">
+            <table class="w-full text-left text-xs font-mono">
+                <thead class="text-neutral-500 border-b border-neutral-200 dark:border-neutral-800 text-[10px] uppercase">
                     <tr>
-                        <th class="pb-2">Timestamp</th>
-                        <th class="pb-2">Event Type</th>
-                        <th class="pb-2">Actor</th>
-                        <th class="pb-2">Target Entity</th>
-                        <th class="pb-2">Details Payload</th>
+                        <th class="pb-2.5">Timestamp</th>
+                        <th class="pb-2.5">Event Type</th>
+                        <th class="pb-2.5">Actor</th>
+                        <th class="pb-2.5">Target Entity</th>
+                        <th class="pb-2.5">Details Payload</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60 font-mono text-[11px]">
+                <tbody class="divide-y divide-neutral-100 dark:divide-neutral-800/60 text-[11px]">
                     {% for evt in audit_events %}
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
-                        <td class="py-2.5 text-slate-500 dark:text-slate-400 whitespace-nowrap">
+                    <tr class="hover:bg-neutral-50 dark:hover:bg-[#141419] transition">
+                        <td class="py-2.5 text-neutral-500 whitespace-nowrap">
                             {{ evt.timestamp|slice:":19" }}
                         </td>
                         <td class="py-2.5">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase {% if 'CONFIRMED' in evt.event_type %}bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800{% elif 'CANCELLED' in evt.event_type %}bg-rose-50 dark:bg-rose-950 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-800{% else %}bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300{% endif %}">
+                            <span class="px-2 py-0.5 text-[9px] font-bold uppercase {% if 'CONFIRMED' in evt.event_type %}bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800{% elif 'CANCELLED' in evt.event_type %}bg-rose-50 dark:bg-rose-950 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-800{% else %}bg-neutral-100 dark:bg-[#141419] text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700{% endif %}">
                                 {{ evt.event_type }}
                             </span>
                         </td>
-                        <td class="py-2.5 text-slate-700 dark:text-slate-300">
+                        <td class="py-2.5 text-neutral-800 dark:text-neutral-300">
                             {{ evt.actor }}
                         </td>
-                        <td class="py-2.5 text-slate-500 dark:text-slate-400">
+                        <td class="py-2.5 text-neutral-500">
                             {{ evt.entity_type }} ({{ evt.entity_id|truncatechars:15 }})
                         </td>
-                        <td class="py-2.5 text-slate-800 dark:text-slate-300 font-sans text-xs">
+                        <td class="py-2.5 text-neutral-800 dark:text-neutral-300 text-xs font-sans">
                             {{ evt.details }}
                         </td>
                     </tr>
@@ -230,7 +230,7 @@
             </table>
         </div>
         {% else %}
-        <p class="text-xs text-slate-400 text-center py-6">No audit records logged yet in NoSQL collection.</p>
+        <p class="text-xs text-neutral-400 text-center py-6 font-mono">No audit records logged yet in NoSQL collection.</p>
         {% endif %}
     </div>
 

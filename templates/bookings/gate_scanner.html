@@ -1,57 +1,57 @@
 {% extends 'base.html' %}
 
-{% block title %}Gate Entry Scanner - comet{% endblock %}
+{% block title %}Gate Entry Scanner — comet{% endblock %}
 
 {% block content %}
 <div class="max-w-4xl mx-auto px-4 py-8">
 
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 gap-3 mb-6 transition-colors">
+    <!-- Header (Sharp) -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-neutral-200 dark:border-neutral-800 gap-3 mb-6 transition-colors">
         <div>
-            <div class="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-800 mb-2">
+            <div class="inline-flex items-center space-x-1.5 px-2.5 py-0.5 text-[9px] font-mono font-bold bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-800 mb-2 uppercase tracking-widest">
                 <i class="fa-solid fa-shield-halved"></i>
-                <span>Operational Staff Access</span>
+                <span>Gate Staff Terminal</span>
             </div>
-            <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center space-x-2 font-casta">
-                <i class="fa-solid fa-qrcode text-brand-500"></i>
-                <span>Gate Scanner & Entry Validation</span>
+            <h1 class="text-3xl font-light text-neutral-900 dark:text-white tracking-tight flex items-center space-x-2 font-casta">
+                <i class="fa-solid fa-qrcode text-brand-500 text-xl"></i>
+                <span>Gate Entry Verification</span>
             </h1>
-            <p class="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Scan ticket QR codes or enter booking references to validate audience admission on comet.</p>
+            <p class="text-neutral-500 text-xs font-mono mt-0.5">Scan ticket QR tokens or enter booking references to validate admission.</p>
         </div>
 
-        <div class="text-left sm:text-right">
-            <span class="text-xs text-slate-500 dark:text-slate-400">Validator Terminal:</span>
-            <div class="text-xs font-bold text-slate-900 dark:text-white">{{ user.username }} ({{ user.get_role_display }})</div>
+        <div class="text-left sm:text-right font-mono text-xs">
+            <span class="text-neutral-400 text-[10px] uppercase block">TERMINAL OPERATOR:</span>
+            <div class="font-bold text-neutral-900 dark:text-white">{{ user.username }} ({{ user.get_role_display|upper }})</div>
         </div>
     </div>
 
-    <!-- Scan Input Form -->
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xl mb-8 transition-colors">
+    <!-- Scan Input Form (Sharp) -->
+    <div class="bg-white dark:bg-[#0e0e12] border border-neutral-200 dark:border-neutral-800 p-6 shadow-sm mb-8 transition-colors">
         <form method="POST" class="space-y-4" onsubmit="showGlobalLoader('Verifying single-use ticket cryptographic token...')">
             {% csrf_token %}
             <div>
-                <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                    Scan or Enter Ticket Token / Booking Reference
+                <label class="block text-[10px] font-mono uppercase tracking-wider text-neutral-600 dark:text-neutral-400 mb-1.5 font-bold">
+                    Scan or Input Ticket Token / Booking Reference
                 </label>
                 <div class="flex flex-col sm:flex-row gap-2">
                     <div class="relative flex-1">
-                        <i class="fa-solid fa-barcode absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
-                        <input type="text" name="token" required placeholder="e.g. TKT-3a8f... or BMS-20261112-X4K9..." autofocus class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white text-sm rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:border-brand-500 font-mono">
+                        <i class="fa-solid fa-barcode absolute left-3.5 top-3.5 text-neutral-400 text-sm"></i>
+                        <input type="text" name="token" required placeholder="e.g. TKT-3a8f... or BMS-20261112-X4K9..." autofocus class="w-full bg-neutral-50 dark:bg-[#141419] border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-xs pl-10 pr-4 py-3 focus:outline-none focus:border-brand-500 font-mono">
                     </div>
-                    <button type="submit" class="bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-brand-600/30 transition flex items-center justify-center space-x-2">
+                    <button type="submit" class="bg-brand-600 hover:bg-brand-500 text-white font-mono uppercase tracking-wider font-bold text-xs px-6 py-3 border border-brand-500 transition flex items-center justify-center space-x-2">
                         <i class="fa-solid fa-circle-check"></i>
-                        <span>Verify Entry</span>
+                        <span>Validate</span>
                     </button>
                 </div>
             </div>
         </form>
     </div>
 
-    <!-- Validation Result Card -->
+    <!-- Validation Result Card (Sharp) -->
     {% if validation_result %}
-    <div class="mb-8 rounded-2xl p-6 border shadow-2xl transition {% if validation_result.status == 'VALID_ENTRY' %}bg-emerald-950/80 border-emerald-600 text-emerald-100{% elif validation_result.status == 'ALREADY_USED' %}bg-amber-950/80 border-amber-500 text-amber-100{% else %}bg-rose-950/80 border-rose-600 text-rose-100{% endif %}">
+    <div class="mb-8 p-6 border shadow-lg transition {% if validation_result.status == 'VALID_ENTRY' %}bg-emerald-950/80 border-emerald-600 text-emerald-100{% elif validation_result.status == 'ALREADY_USED' %}bg-amber-950/80 border-amber-500 text-amber-100{% else %}bg-rose-950/80 border-rose-600 text-rose-100{% endif %}">
         <div class="flex items-start space-x-4">
-            <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0 {% if validation_result.status == 'VALID_ENTRY' %}bg-emerald-800 text-white{% elif validation_result.status == 'ALREADY_USED' %}bg-amber-700 text-white{% else %}bg-rose-800 text-white{% endif %}">
+            <div class="w-12 h-12 flex items-center justify-center text-2xl flex-shrink-0 {% if validation_result.status == 'VALID_ENTRY' %}bg-emerald-800 text-white{% elif validation_result.status == 'ALREADY_USED' %}bg-amber-700 text-white{% else %}bg-rose-800 text-white{% endif %}">
                 {% if validation_result.status == 'VALID_ENTRY' %}
                 <i class="fa-solid fa-check"></i>
                 {% elif validation_result.status == 'ALREADY_USED' %}
@@ -63,40 +63,40 @@
             
             <div class="flex-1">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-lg font-black tracking-wide uppercase font-casta">
+                    <h3 class="text-xl font-light tracking-wide uppercase font-casta">
                         {% if validation_result.status == 'VALID_ENTRY' %}
                         Entry Approved
                         {% elif validation_result.status == 'ALREADY_USED' %}
-                        Duplicate Scan Alert (Already Used)
+                        Duplicate Scan Alert (Already Admitted)
                         {% else %}
-                        Entry Denied
+                        Admission Denied
                         {% endif %}
                     </h3>
-                    <span class="text-xs font-mono px-2 py-0.5 rounded bg-black/40">
-                        Status: {{ validation_result.status }}
+                    <span class="text-[10px] font-mono px-2 py-0.5 bg-black/40">
+                        STATUS: {{ validation_result.status }}
                     </span>
                 </div>
 
-                <p class="text-sm mt-1 mb-3">
+                <p class="text-xs font-mono mt-1 mb-3">
                     {{ validation_result.message|default:validation_result.error }}
                 </p>
 
                 {% if validation_result.status == 'VALID_ENTRY' %}
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-emerald-900/40 p-3 rounded-xl text-xs border border-emerald-800/60">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-emerald-900/40 p-3 text-xs border border-emerald-800/60 font-mono">
                     <div>
-                        <span class="text-emerald-300 block text-[10px] uppercase font-bold">Customer</span>
+                        <span class="text-emerald-300 block text-[9px] uppercase font-bold">Audience</span>
                         <strong class="text-white">{{ validation_result.customer_name }}</strong>
                     </div>
                     <div>
-                        <span class="text-emerald-300 block text-[10px] uppercase font-bold">Seats</span>
-                        <strong class="text-emerald-300 font-bold text-sm font-mono">{{ validation_result.seats|join:", " }}</strong>
+                        <span class="text-emerald-300 block text-[9px] uppercase font-bold">Seats</span>
+                        <strong class="text-emerald-300 font-bold text-sm">{{ validation_result.seats|join:", " }}</strong>
                     </div>
                     <div>
-                        <span class="text-emerald-300 block text-[10px] uppercase font-bold">Screen</span>
+                        <span class="text-emerald-300 block text-[9px] uppercase font-bold">Screen</span>
                         <strong class="text-white">{{ validation_result.screen_name }}</strong>
                     </div>
                     <div>
-                        <span class="text-emerald-300 block text-[10px] uppercase font-bold">Showtime</span>
+                        <span class="text-emerald-300 block text-[9px] uppercase font-bold">Showtime</span>
                         <strong class="text-white">{{ validation_result.show_time }}</strong>
                     </div>
                 </div>
@@ -106,48 +106,48 @@
     </div>
     {% endif %}
 
-    <!-- NoSQL Audit Stream: Recent Gate Scans -->
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xl transition-colors">
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="font-bold text-slate-900 dark:text-white text-base flex items-center space-x-2 font-casta">
-                <i class="fa-solid fa-list-check text-brand-500"></i>
+    <!-- NoSQL Audit Stream: Recent Gate Scans (Sharp Table) -->
+    <div class="bg-white dark:bg-[#0e0e12] border border-neutral-200 dark:border-neutral-800 p-6 shadow-sm transition-colors">
+        <div class="flex items-center justify-between mb-4 pb-2 border-b border-neutral-100 dark:border-neutral-800">
+            <h3 class="font-normal text-neutral-900 dark:text-white text-base flex items-center space-x-2 font-casta">
+                <i class="fa-solid fa-list-check text-brand-500 text-xs"></i>
                 <span>Live Gate Validation Audit Trail</span>
             </h3>
-            <span class="text-[10px] bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800/60 px-2 py-0.5 rounded-full font-mono">
-                NoSQL collection: ticket_scans
+            <span class="text-[9px] bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 px-2 py-0.5 font-mono uppercase">
+                NoSQL: ticket_scans
             </span>
         </div>
 
         {% if scan_logs %}
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs">
-                <thead class="text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 text-[10px] uppercase font-mono">
+            <table class="w-full text-left text-xs font-mono">
+                <thead class="text-neutral-500 border-b border-neutral-200 dark:border-neutral-800 text-[10px] uppercase">
                     <tr>
-                        <th class="pb-2">Timestamp</th>
-                        <th class="pb-2">Status</th>
-                        <th class="pb-2">Booking Ref / Token</th>
-                        <th class="pb-2">Staff</th>
-                        <th class="pb-2">Audit Detail</th>
+                        <th class="pb-2.5">Timestamp</th>
+                        <th class="pb-2.5">Status</th>
+                        <th class="pb-2.5">Reference / Token</th>
+                        <th class="pb-2.5">Staff</th>
+                        <th class="pb-2.5">Audit Detail</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60">
+                <tbody class="divide-y divide-neutral-100 dark:divide-neutral-800/60 text-[11px]">
                     {% for scan in scan_logs %}
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
-                        <td class="py-2.5 text-slate-500 dark:text-slate-400 font-mono text-[11px] whitespace-nowrap">
+                    <tr class="hover:bg-neutral-50 dark:hover:bg-[#141419] transition">
+                        <td class="py-2.5 text-neutral-500 whitespace-nowrap">
                             {{ scan.timestamp|slice:":19" }}
                         </td>
                         <td class="py-2.5">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase {% if scan.status == 'VALID_ENTRY' %}bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800{% elif scan.status == 'ALREADY_USED' %}bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-800{% else %}bg-rose-50 dark:bg-rose-950 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-800{% endif %}">
+                            <span class="px-2 py-0.5 text-[9px] font-bold uppercase {% if scan.status == 'VALID_ENTRY' %}bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800{% elif scan.status == 'ALREADY_USED' %}bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-800{% else %}bg-rose-50 dark:bg-rose-950 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-800{% endif %}">
                                 {{ scan.status }}
                             </span>
                         </td>
-                        <td class="py-2.5 font-mono text-slate-800 dark:text-slate-300 text-[11px]">
+                        <td class="py-2.5 text-neutral-800 dark:text-neutral-300">
                             {{ scan.booking_reference|truncatechars:20 }}
                         </td>
-                        <td class="py-2.5 text-slate-600 dark:text-slate-400">
+                        <td class="py-2.5 text-neutral-500">
                             {{ scan.staff_username }}
                         </td>
-                        <td class="py-2.5 text-slate-700 dark:text-slate-300 text-xs">
+                        <td class="py-2.5 text-neutral-700 dark:text-neutral-300 text-xs font-sans">
                             {{ scan.message|truncatechars:50 }}
                         </td>
                     </tr>
@@ -156,7 +156,7 @@
             </table>
         </div>
         {% else %}
-        <p class="text-xs text-slate-400 text-center py-6">No scan records logged yet in NoSQL collection.</p>
+        <p class="text-xs text-neutral-400 text-center py-6 font-mono">No scan records logged yet in NoSQL collection.</p>
         {% endif %}
     </div>
 
