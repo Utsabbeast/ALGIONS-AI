@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Select Seats - {{ showtime.movie.title }} | CinemaBox{% endblock %}
+{% block title %}Select Seats - {{ showtime.movie.title }} | comet{% endblock %}
 
 {% block extra_head %}
 <style>
@@ -11,7 +11,7 @@
         transform: scale(1.18);
     }
     .screen-indicator {
-        background: linear-gradient(to bottom, rgba(244,63,94,0.3) 0%, rgba(244,63,94,0.02) 100%);
+        background: linear-gradient(to bottom, rgba(244,63,94,0.25) 0%, rgba(244,63,94,0.01) 100%);
         border-top: 3px solid #f43f5e;
         border-radius: 50% 50% 0 0 / 100% 100% 0 0;
     }
@@ -22,26 +22,26 @@
 <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
     <!-- Top Breadcrumb & Movie Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-4 mb-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 gap-4 mb-6 transition-colors">
         <div>
-            <div class="flex items-center space-x-2 text-xs text-slate-400 mb-1">
-                <a href="{% url 'cinema:home' %}" class="hover:text-white">Movies</a>
+            <div class="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400 mb-1">
+                <a href="{% url 'cinema:home' %}" class="hover:text-slate-900 dark:hover:text-white">Movies</a>
                 <span>/</span>
-                <a href="{% url 'cinema:movie-detail' slug=showtime.movie.slug %}" class="hover:text-white">{{ showtime.movie.title }}</a>
+                <a href="{% url 'cinema:movie-detail' slug=showtime.movie.slug %}" class="hover:text-slate-900 dark:hover:text-white">{{ showtime.movie.title }}</a>
                 <span>/</span>
-                <span class="text-brand-400 font-semibold">Seat Selection</span>
+                <span class="text-brand-600 dark:text-brand-400 font-semibold">Seat Selection</span>
             </div>
-            <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center space-x-3 font-casta">
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center space-x-3 font-casta">
                 <span>{{ showtime.movie.title }}</span>
-                <span class="text-xs px-2.5 py-0.5 rounded bg-brand-950 text-brand-300 border border-brand-800 font-sans">{{ showtime.experience }}</span>
+                <span class="text-xs px-2.5 py-0.5 rounded bg-brand-50 dark:bg-brand-950 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800 font-sans">{{ showtime.experience }}</span>
             </h1>
-            <p class="text-xs text-slate-400 mt-1">
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
                 {{ showtime.screen.theatre.name }} | {{ showtime.screen.name }} | {{ showtime.start_time|date:"D, d M Y, h:i A" }}
             </p>
         </div>
 
         <!-- Temporary Hold Expiry Banner -->
-        <div id="hold-timer-container" class="hidden items-center space-x-3 bg-amber-950/80 border border-amber-600/60 rounded-xl px-4 py-2 text-amber-200">
+        <div id="hold-timer-container" class="hidden items-center space-x-3 bg-amber-950/80 border border-amber-600/60 rounded-xl px-4 py-2 text-amber-200 shadow-md">
             <i class="fa-solid fa-clock-rotate-left text-lg text-amber-400 animate-spin-slow"></i>
             <div>
                 <div class="text-[10px] uppercase font-bold text-amber-400 font-mono">Temporary Seat Hold</div>
@@ -51,40 +51,40 @@
     </div>
 
     <!-- Tier Pricing Legend -->
-    <div class="flex flex-wrap items-center justify-between bg-slate-900/80 border border-slate-800 rounded-xl p-3.5 mb-8 text-xs gap-3">
+    <div class="flex flex-wrap items-center justify-between bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 mb-8 text-xs gap-3 shadow-sm transition-colors">
         <div class="flex flex-wrap items-center gap-4">
-            <span class="font-semibold text-slate-300 font-casta text-sm">Seat Tiers:</span>
+            <span class="font-semibold text-slate-800 dark:text-slate-300 font-casta text-sm">Seat Tiers:</span>
             {% for cat in categories %}
-            <span class="inline-flex items-center space-x-1.5 bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700">
+            <span class="inline-flex items-center space-x-1.5 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700">
                 <span class="w-2.5 h-2.5 rounded-sm {% if cat.category == 'VIP' %}bg-purple-500{% elif cat.category == 'PLATINUM' %}bg-blue-400{% elif cat.category == 'GOLD' %}bg-amber-400{% else %}bg-slate-400{% endif %}"></span>
-                <span class="font-medium text-slate-200">{{ cat.category }}</span>
-                <span class="text-emerald-400 font-bold font-mono">₹{{ cat.price }}</span>
+                <span class="font-medium text-slate-700 dark:text-slate-200">{{ cat.category }}</span>
+                <span class="text-emerald-600 dark:text-emerald-400 font-bold font-mono">₹{{ cat.price }}</span>
             </span>
             {% endfor %}
         </div>
 
         <!-- Availability Legend Status -->
-        <div class="flex items-center space-x-4 text-slate-400">
-            <span class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 rounded border border-slate-600 bg-slate-800"></span> <span>Available</span></span>
-            <span class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 rounded bg-emerald-500 border border-emerald-400"></span> <span class="text-emerald-300 font-medium">Selected</span></span>
-            <span class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 rounded bg-amber-600/70 border border-amber-500 flex items-center justify-center text-[8px] text-white"><i class="fa-solid fa-lock"></i></span> <span>Held</span></span>
-            <span class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 rounded bg-slate-800 border border-slate-700 opacity-40 line-through"></span> <span>Booked</span></span>
+        <div class="flex items-center space-x-4 text-slate-500 dark:text-slate-400">
+            <span class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 rounded border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-800"></span> <span>Available</span></span>
+            <span class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 rounded bg-emerald-500 border border-emerald-400"></span> <span class="text-emerald-600 dark:text-emerald-300 font-medium">Selected</span></span>
+            <span class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 rounded bg-amber-600/80 border border-amber-500 flex items-center justify-center text-[8px] text-white"><i class="fa-solid fa-lock"></i></span> <span>Held</span></span>
+            <span class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 rounded bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 opacity-40 line-through"></span> <span>Booked</span></span>
         </div>
     </div>
 
     <!-- Seat Layout Map Container -->
-    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 sm:p-10 mb-8 overflow-x-auto shadow-2xl">
+    <div class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-10 mb-8 overflow-x-auto shadow-xl transition-colors">
         <div class="min-w-[640px] max-w-3xl mx-auto">
             
             <!-- Rows & Seats Matrix -->
             <div class="space-y-3 mb-12">
                 {% for row in rows %}
                 <div class="flex items-center justify-center space-x-2">
-                    <span class="w-6 text-center text-xs font-bold text-slate-400 font-casta">{{ row.row_label }}</span>
+                    <span class="w-6 text-center text-xs font-bold text-slate-500 dark:text-slate-400 font-casta">{{ row.row_label }}</span>
                     <div class="flex items-center space-x-1.5 sm:space-x-2">
                         {% for seat in row.seats %}
                             {% if seat.status == 'BOOKED' %}
-                                <button type="button" disabled title="{{ seat.code }} - Booked" class="w-7 h-7 sm:w-8 sm:h-8 rounded bg-slate-800/60 border border-slate-800 text-slate-600 text-[10px] font-bold cursor-not-allowed line-through opacity-40">
+                                <button type="button" disabled title="{{ seat.code }} - Booked" class="w-7 h-7 sm:w-8 sm:h-8 rounded bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-600 text-[10px] font-bold cursor-not-allowed line-through opacity-40">
                                     {{ seat.number }}
                                 </button>
                             {% elif seat.status == 'HELD' %}
@@ -99,13 +99,13 @@
                                     data-category="{{ seat.category }}"
                                     onclick="toggleSeat(this)" 
                                     title="{{ seat.code }} ({{ seat.category }} - ₹{{ seat.price }})" 
-                                    class="seat-btn w-7 h-7 sm:w-8 sm:h-8 rounded text-[10px] font-bold border transition {% if seat.status == 'MY_HOLD' %}bg-emerald-500 border-emerald-400 text-white shadow-lg shadow-emerald-500/30 selected-seat{% else %}bg-slate-800/90 hover:bg-slate-700 border-slate-700 hover:border-slate-500 text-slate-200{% endif %}">
+                                    class="seat-btn w-7 h-7 sm:w-8 sm:h-8 rounded text-[10px] font-bold border transition {% if seat.status == 'MY_HOLD' %}bg-emerald-500 border-emerald-400 text-white shadow-lg shadow-emerald-500/30 selected-seat{% else %}bg-slate-100 dark:bg-slate-800/90 hover:bg-slate-200 dark:hover:bg-slate-700 border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500 text-slate-800 dark:text-slate-200{% endif %}">
                                     {{ seat.number }}
                                 </button>
                             {% endif %}
                         {% endfor %}
                     </div>
-                    <span class="w-6 text-center text-xs font-bold text-slate-400 font-casta">{{ row.row_label }}</span>
+                    <span class="w-6 text-center text-xs font-bold text-slate-500 dark:text-slate-400 font-casta">{{ row.row_label }}</span>
                 </div>
                 {% endfor %}
             </div>
@@ -113,7 +113,7 @@
             <!-- Cinema Screen Curve Indicator -->
             <div class="mt-8 text-center">
                 <div class="screen-indicator h-10 w-3/4 mx-auto mb-2 flex items-center justify-center">
-                    <span class="text-[11px] font-extrabold tracking-widest text-brand-400 uppercase font-mono">
+                    <span class="text-[11px] font-extrabold tracking-widest text-brand-600 dark:text-brand-400 uppercase font-mono">
                         All Eyes This Way • Cinema Screen
                     </span>
                 </div>
@@ -123,16 +123,16 @@
     </div>
 
     <!-- Floating Price & Reservation Summary Dock -->
-    <div class="sticky bottom-4 z-30 bg-slate-900/95 backdrop-blur-md border border-slate-700/80 rounded-2xl p-4 sm:p-5 shadow-2xl">
+    <div class="sticky bottom-4 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200 dark:border-slate-700/80 rounded-2xl p-4 sm:p-5 shadow-2xl transition-colors">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             
             <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 rounded-xl bg-brand-950 border border-brand-800 flex items-center justify-center text-brand-400 text-xl font-bold">
+                <div class="w-12 h-12 rounded-xl bg-brand-50 dark:bg-brand-950 border border-brand-200 dark:border-brand-800 flex items-center justify-center text-brand-600 dark:text-brand-400 text-xl font-bold">
                     <i class="fa-solid fa-couch"></i>
                 </div>
                 <div>
-                    <div class="text-xs text-slate-400">Selected Seats:</div>
-                    <div id="selected-seats-display" class="text-base font-bold text-white tracking-wide font-casta">
+                    <div class="text-xs text-slate-500 dark:text-slate-400">Selected Seats:</div>
+                    <div id="selected-seats-display" class="text-base font-bold text-slate-900 dark:text-white tracking-wide font-casta">
                         None selected
                     </div>
                 </div>
@@ -141,9 +141,9 @@
             <!-- Price Breakdown Summary -->
             <div class="flex items-center space-x-6">
                 <div class="text-right">
-                    <div class="text-xs text-slate-400">Subtotal: <span id="subtotal-display" class="font-medium text-slate-200">₹0</span></div>
-                    <div class="text-xs text-slate-400">Fee: <span id="fee-display" class="font-medium text-slate-200">₹0</span></div>
-                    <div class="text-base sm:text-lg font-black text-emerald-400 font-mono">
+                    <div class="text-xs text-slate-500 dark:text-slate-400">Subtotal: <span id="subtotal-display" class="font-medium text-slate-900 dark:text-slate-200">₹0</span></div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400">Fee: <span id="fee-display" class="font-medium text-slate-900 dark:text-slate-200">₹0</span></div>
+                    <div class="text-base sm:text-lg font-black text-emerald-600 dark:text-emerald-400 font-mono">
                         Total: <span id="grand-total-display">₹0</span>
                     </div>
                 </div>
@@ -177,14 +177,14 @@ function toggleSeat(btn) {
     if (selectedSeats.has(seatId)) {
         selectedSeats.delete(seatId);
         btn.classList.remove('bg-emerald-500', 'border-emerald-400', 'text-white', 'shadow-lg', 'shadow-emerald-500/30');
-        btn.classList.add('bg-slate-800/90', 'border-slate-700', 'text-slate-200');
+        btn.classList.add('bg-slate-100', 'dark:bg-slate-800/90', 'border-slate-300', 'dark:border-slate-700', 'text-slate-800', 'dark:text-slate-200');
     } else {
         if (selectedSeats.size >= 8) {
             alert("Maximum 8 seats allowed per booking.");
             return;
         }
         selectedSeats.set(seatId, { id: seatId, code: seatCode, price, category });
-        btn.classList.remove('bg-slate-800/90', 'border-slate-700', 'text-slate-200');
+        btn.classList.remove('bg-slate-100', 'dark:bg-slate-800/90', 'border-slate-300', 'dark:border-slate-700', 'text-slate-800', 'dark:text-slate-200');
         btn.classList.add('bg-emerald-500', 'border-emerald-400', 'text-white', 'shadow-lg', 'shadow-emerald-500/30');
     }
     updateSummary();

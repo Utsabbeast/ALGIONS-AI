@@ -1,6 +1,6 @@
 /* ==========================================================================
-   CinemaBox Custom UI Elements & Styles
-   Powered by Casta Font & Custom Interactive Animations
+   comet Cinema Ticket Booking System
+   Custom UI Elements, Casta Font & Light/Dark Theme Engine
    ========================================================================== */
 
 /* 1. Global Casta Font Integration */
@@ -27,11 +27,21 @@
 body {
   font-family: var(--font-casta);
   letter-spacing: 0.02em;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
   font-family: 'Casta', serif, sans-serif;
   letter-spacing: 0.04em;
+}
+
+/* Light / Dark Mode Global Styles */
+html:not(.dark) {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
 }
 
 /* ==========================================================================
@@ -40,7 +50,7 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
 .global-loader-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(11, 15, 25, 0.85);
+  background: rgba(11, 15, 25, 0.88);
   backdrop-filter: blur(8px);
   display: flex;
   flex-direction: column;
@@ -50,6 +60,10 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
+}
+
+html:not(.dark) .global-loader-overlay {
+  background: rgba(248, 250, 252, 0.9);
 }
 
 .global-loader-overlay.active {
@@ -103,7 +117,7 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
 .circle:nth-child(3) {
   left: auto;
   right: 15%;
-  background-color: #fff;
+  background-color: #e11d48;
   animation-delay: .3s;
 }
 
@@ -111,7 +125,7 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
   width: 20px;
   height: 4px;
   border-radius: 50%;
-  background-color: rgba(0,0,0,0.9);
+  background-color: rgba(0,0,0,0.7);
   position: absolute;
   top: 62px;
   transform-origin: 50%;
@@ -122,19 +136,9 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
 }
 
 @keyframes shadow046 {
-  0% {
-    transform: scaleX(1.5);
-  }
-
-  40% {
-    transform: scaleX(1);
-    opacity: .7;
-  }
-
-  100% {
-    transform: scaleX(.2);
-    opacity: .4;
-  }
+  0% { transform: scaleX(1.5); }
+  40% { transform: scaleX(1); opacity: .7; }
+  100% { transform: scaleX(.2); opacity: .4; }
 }
 
 .shadow:nth-child(4) {
@@ -159,7 +163,7 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: #0f0f0f;
+  background-color: #0f172a;
   border: 1px solid #334155;
   border-radius: 12px;
   color: white;
@@ -167,10 +171,15 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
   font-size: 14px;
   gap: 10px;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   position: relative;
   overflow: hidden;
   transition-duration: .3s;
+}
+
+html:not(.dark) .Btn {
+  background-color: #1e293b;
+  border-color: #cbd5e1;
 }
 
 .Btn .svgIcon {
@@ -208,7 +217,7 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
 
 /* b) Fancy Buy Tickets Button (From Uiverse.io by cssbuttons-io) */
 .fancy {
-  background-color: rgba(15, 23, 42, 0.7);
+  background-color: rgba(15, 23, 42, 0.8);
   border: 2px solid #e11d48;
   border-radius: 8px;
   box-sizing: border-box;
@@ -228,6 +237,12 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
   transition: all 0.3s ease-in-out;
   user-select: none;
   font-size: 12px;
+}
+
+html:not(.dark) .fancy {
+  background-color: #ffffff;
+  border-color: #e11d48;
+  box-shadow: 0 2px 8px rgba(225, 29, 72, 0.15);
 }
 
 .fancy::before {
@@ -253,6 +268,10 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
   text-transform: uppercase;
   text-decoration: none;
   color: #ffffff;
+}
+
+html:not(.dark) .fancy .text {
+  color: #0f172a;
 }
 
 .fancy .top-key {
@@ -286,8 +305,8 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
 }
 
 .fancy:hover {
-  color: white;
-  background: #e11d48;
+  color: white !important;
+  background: #e11d48 !important;
   border-color: #f43f5e;
   box-shadow: 0 0 20px rgba(225, 29, 72, 0.4);
 }
@@ -298,7 +317,7 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
 }
 
 .fancy:hover .text {
-  color: white;
+  color: white !important;
   padding-left: 1.5em;
 }
 
@@ -349,6 +368,11 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
   justify-content: center;
 }
 
+html:not(.dark) .btn-31 {
+  background-color: #ffffff;
+  color: #0f172a;
+}
+
 .btn-31:disabled {
   cursor: not-allowed;
   opacity: 0.5;
@@ -392,9 +416,11 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
   font-weight: 800;
   letter-spacing: 0.05em;
   position: relative;
+  color: inherit;
 }
 
 .btn-31:hover:not(:disabled) .text {
+  color: #ffffff;
   -webkit-animation: move-up-alternate 0.3s ease forwards;
   animation: move-up-alternate 0.3s ease forwards;
 }
@@ -441,14 +467,14 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
   overflow: hidden;
   border-radius: 16px;
 
-  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4)) drop-shadow(0 10px 15px rgba(244, 63, 94, 0.2));
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.35)) drop-shadow(0 10px 15px rgba(244, 63, 94, 0.2));
   animation: hoverTicket 3s ease infinite;
   will-change: transform, filter;
 }
 
 @keyframes hoverTicket {
   50% {
-    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.5)) drop-shadow(0 20px 25px rgba(244, 63, 94, 0.3));
+    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.45)) drop-shadow(0 20px 25px rgba(244, 63, 94, 0.3));
     transform: translateY(-8px) scale(1.02);
   }
 }
@@ -626,6 +652,11 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
   border: 1px solid #1e293b;
 }
 
+html:not(.dark) .press {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
 .press * {
   border: 0;
   box-sizing: border-box;
@@ -651,6 +682,10 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
   border-radius: 0.5em 0.5em 0.5em 0.5em / 1em 1em 1em 1em;
   width: 8em;
   height: 2em;
+}
+
+html:not(.dark) .press .roll {
+  background-color: #475569;
 }
 
 .press .sheet:before {
@@ -755,7 +790,7 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
   overflow: hidden;
   padding: 12px 18px;
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   background-color: var(--background-color);
   transition: all 250ms ease;
   z-index: 10;
@@ -860,7 +895,7 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
   gap: 1rem;
   animation: animation-card 10s infinite;
   overflow: hidden;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
 }
 
 .card-ticket:hover {
@@ -900,6 +935,10 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
   background-color: #090d16;
 }
 
+html:not(.dark) .separator .span-lines::after {
+  background-color: #f8fafc;
+}
+
 .separator .span-lines::before {
   content: "";
   position: absolute;
@@ -910,6 +949,10 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
   height: 16px;
   border-radius: 1rem;
   background-color: #090d16;
+}
+
+html:not(.dark) .separator .span-lines::before {
+  background-color: #f8fafc;
 }
 
 .content-ticket {
@@ -1068,10 +1111,15 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
   border: 2px solid #e11d48;
   border-bottom-left-radius: 1.5em;
   border-top-right-radius: 1.5em;
-  box-shadow: -8px 0px 0px #e11d48, -10px 10px 25px rgba(0, 0, 0, 0.5);
+  box-shadow: -8px 0px 0px #e11d48, -10px 10px 25px rgba(0, 0, 0, 0.4);
   overflow: hidden;
   position: relative;
   transition: all 0.3s ease;
+}
+
+html:not(.dark) .uiverse-login-form {
+  background-color: #ffffff;
+  box-shadow: -8px 0px 0px #e11d48, -10px 10px 25px rgba(0, 0, 0, 0.15);
 }
 
 .uiverse-login-form #login-area,
@@ -1122,6 +1170,11 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
   outline: none;
 }
 
+html:not(.dark) .uiverse-login-form #email-area input {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
 .uiverse-login-form #password-area {
   padding: 0 10%;
   margin-top: 1.25em;
@@ -1142,6 +1195,11 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
   color: #fff;
   transition: all 0.3s ease;
   outline: none;
+}
+
+html:not(.dark) .uiverse-login-form #password-area input {
+  background-color: #f1f5f9;
+  color: #0f172a;
 }
 
 .uiverse-login-form #password-area a {
@@ -1211,4 +1269,8 @@ h1, h2, h3, h4, h5, h6, .font-casta, .brand-title {
   z-index: 2;
   border-top-right-radius: 1.25em;
   box-shadow: 35px -35px 0px -1px #0f172a;
+}
+
+html:not(.dark) .uiverse-login-form #whitefilter {
+  box-shadow: 35px -35px 0px -1px #ffffff;
 }

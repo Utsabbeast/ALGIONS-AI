@@ -1,10 +1,28 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<html lang="en" class="dark h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}CinemaBox - Movie Ticket Booking{% endblock %}</title>
+    <title>{% block title %}comet — Movie Ticket Booking{% endblock %}</title>
+    
+    <!-- Favicon using Icon.png -->
+    <link rel="icon" type="image/png" href="{% static 'img/icon.png' %}">
+    
+    <!-- Inline Theme Initializer (prevents flash of white/dark) -->
+    <script>
+        (function() {
+            try {
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'light') {
+                    document.documentElement.classList.remove('dark');
+                } else {
+                    document.documentElement.classList.add('dark');
+                }
+            } catch (e) {}
+        })();
+    </script>
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -49,7 +67,7 @@
     </style>
     {% block extra_head %}{% endblock %}
 </head>
-<body class="flex flex-col min-h-screen bg-slate-950 selection:bg-brand-500 selection:text-white">
+<body class="flex flex-col min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 selection:bg-brand-500 selection:text-white">
 
     <!-- Global Interactive Page Loader Overlay (Uiverse.io by mobinkakei) -->
     <div id="global-page-loader" class="global-loader-overlay">
@@ -62,24 +80,24 @@
             <div class="shadow"></div>
             <div class="shadow"></div>
         </div>
-        <p class="text-xs uppercase tracking-widest text-brand-300 font-bold mt-5 font-mono">Securing Cinema Seats...</p>
+        <p class="text-xs uppercase tracking-widest text-brand-500 dark:text-brand-300 font-bold mt-5 font-mono">Connecting to comet Engine...</p>
     </div>
 
     <!-- Top Assessment Reviewer Quick Switcher Bar -->
-    <div class="bg-slate-900 border-b border-slate-800 text-xs py-1.5 px-4">
+    <div class="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 text-xs py-1.5 px-4 transition-colors">
         <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-            <div class="flex items-center space-x-2 text-slate-400">
+            <div class="flex items-center space-x-2 text-slate-500 dark:text-slate-400">
                 <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 <span>ALGIONS Assessment Evaluation Mode</span>
-                <span class="text-slate-600">|</span>
-                <span>Active Engine: <strong class="text-brand-400">Django + NoSQL (Hybrid)</strong></span>
+                <span class="text-slate-400 dark:text-slate-600">|</span>
+                <span>Active Engine: <strong class="text-brand-600 dark:text-brand-400">Django + NoSQL (Hybrid)</strong></span>
             </div>
             <div class="flex items-center space-x-2">
-                <span class="text-slate-400">1-Click Demo Login:</span>
-                <a href="{% url 'cinema:demo-login' role='customer' %}" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition">👤 Customer</a>
-                <a href="{% url 'cinema:demo-login' role='staff' %}" class="px-2 py-0.5 rounded bg-amber-950/60 text-amber-300 border border-amber-800/60 hover:bg-amber-900/60 transition">🎫 Gate Staff</a>
-                <a href="{% url 'cinema:demo-login' role='admin' %}" class="px-2 py-0.5 rounded bg-brand-950/60 text-brand-300 border border-brand-800/60 hover:bg-brand-900/60 transition">⚡ Cinema Admin</a>
-                <a href="{% url 'api:swagger-ui' %}" target="_blank" class="px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800 hover:bg-blue-900 transition flex items-center space-x-1">
+                <span class="text-slate-500 dark:text-slate-400">1-Click Demo Login:</span>
+                <a href="{% url 'cinema:demo-login' role='customer' %}" class="px-2 py-0.5 rounded bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition">👤 Customer</a>
+                <a href="{% url 'cinema:demo-login' role='staff' %}" class="px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-800/60 hover:bg-amber-100 dark:hover:bg-amber-900/60 transition">🎫 Gate Staff</a>
+                <a href="{% url 'cinema:demo-login' role='admin' %}" class="px-2 py-0.5 rounded bg-rose-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border border-rose-300 dark:border-brand-800/60 hover:bg-rose-100 dark:hover:bg-brand-900/60 transition">⚡ Cinema Admin</a>
+                <a href="{% url 'api:swagger-ui' %}" target="_blank" class="px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900 transition flex items-center space-x-1">
                     <i class="fa-solid fa-code text-[10px]"></i>
                     <span>Swagger API</span>
                 </a>
@@ -88,23 +106,21 @@
     </div>
 
     <!-- Main Navigation Header -->
-    <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+    <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 
-                <!-- Brand Logo & City Selector -->
+                <!-- Brand Logo (icon.png) & City Selector -->
                 <div class="flex items-center space-x-6">
-                    <a href="{% url 'cinema:home' %}" class="flex items-center space-x-2 group">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-rose-400 flex items-center justify-center text-white shadow-lg shadow-brand-500/25 group-hover:scale-105 transition transform">
-                            <i class="fa-solid fa-film text-lg"></i>
-                        </div>
-                        <span class="text-2xl font-black tracking-tight text-white group-hover:text-brand-400 transition font-casta">Cinema<span class="text-brand-500">Box</span></span>
+                    <a href="{% url 'cinema:home' %}" class="flex items-center space-x-3 group">
+                        <img src="{% static 'img/icon.png' %}" alt="comet" class="w-9 h-9 rounded-xl shadow-md group-hover:scale-105 transition transform object-cover">
+                        <span class="text-3xl font-black tracking-tight text-slate-900 dark:text-white group-hover:text-brand-500 transition font-casta lowercase">comet</span>
                     </a>
 
                     <!-- City Selector Dropdown -->
                     <form method="GET" action="{% url 'cinema:home' %}" class="hidden sm:flex items-center">
                         <div class="relative">
-                            <select name="city" onchange="this.form.submit()" class="bg-slate-800 text-slate-300 text-sm rounded-lg px-3 py-1.5 pr-8 border border-slate-700 hover:border-slate-600 focus:outline-none focus:ring-1 focus:ring-brand-500 appearance-none cursor-pointer">
+                            <select name="city" onchange="this.form.submit()" class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm rounded-lg px-3 py-1.5 pr-8 border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-1 focus:ring-brand-500 appearance-none cursor-pointer">
                                 <option value="Mumbai" {% if selected_city == 'Mumbai' %}selected{% endif %}>📍 Mumbai</option>
                                 <option value="Delhi-NCR" {% if selected_city == 'Delhi-NCR' %}selected{% endif %}>📍 Delhi-NCR</option>
                                 <option value="Bengaluru" {% if selected_city == 'Bengaluru' %}selected{% endif %}>📍 Bengaluru</option>
@@ -119,46 +135,51 @@
                 <form method="GET" action="{% url 'cinema:home' %}" class="hidden md:flex flex-1 max-w-md mx-6">
                     <div class="relative w-full">
                         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-sm"></i>
-                        <input type="text" name="search" value="{{ search_query|default:'' }}" placeholder="Search for Movies, Languages, or Genres..." class="w-full bg-slate-800/80 border border-slate-700 text-slate-200 text-sm rounded-full pl-10 pr-4 py-2 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition placeholder:text-slate-500">
+                        <input type="text" name="search" value="{{ search_query|default:'' }}" placeholder="Search for Movies, Languages, or Genres..." class="w-full bg-slate-100 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-200 text-sm rounded-full pl-10 pr-4 py-2 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition placeholder:text-slate-400 dark:placeholder:text-slate-500">
                     </div>
                 </form>
 
-                <!-- Navigation Links & User Profile -->
+                <!-- Navigation Links, Theme Toggle & User Profile -->
                 <div class="flex items-center space-x-3">
-                    <a href="{% url 'cinema:home' %}" class="hidden lg:inline-flex text-sm text-slate-300 hover:text-white px-2 py-1 transition font-medium">Movies</a>
+                    <a href="{% url 'cinema:home' %}" class="hidden lg:inline-flex text-sm text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white px-2 py-1 transition font-medium">Movies</a>
                     
+                    <!-- Light / Dark Theme Toggle Button -->
+                    <button id="theme-toggle-btn" onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 border border-slate-300 dark:border-slate-700 transition flex items-center justify-center w-9 h-9" title="Toggle Light/Dark Theme">
+                        <i id="theme-icon" class="fa-solid fa-moon text-sm"></i>
+                    </button>
+
                     {% if user.is_authenticated %}
-                        <a href="{% url 'bookings:my-bookings' %}" class="text-sm text-slate-300 hover:text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 transition font-medium flex items-center space-x-1.5">
-                            <i class="fa-solid fa-ticket text-brand-400"></i>
+                        <a href="{% url 'bookings:my-bookings' %}" class="text-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition font-medium flex items-center space-x-1.5">
+                            <i class="fa-solid fa-ticket text-brand-500"></i>
                             <span>My Bookings</span>
                         </a>
 
                         {% if user.is_gate_staff or user.is_cinema_admin %}
-                            <a href="{% url 'bookings:gate-scanner' %}" class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20 px-3 py-1.5 rounded-lg transition font-medium flex items-center space-x-1.5">
+                            <a href="{% url 'bookings:gate-scanner' %}" class="text-xs bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30 hover:bg-amber-500/20 px-3 py-1.5 rounded-lg transition font-medium flex items-center space-x-1.5">
                                 <i class="fa-solid fa-qrcode"></i>
                                 <span>Gate Scanner</span>
                             </a>
                         {% endif %}
 
                         {% if user.is_cinema_admin %}
-                            <a href="{% url 'bookings:admin-dashboard' %}" class="text-xs bg-brand-500/10 text-brand-400 border border-brand-500/30 hover:bg-brand-500/20 px-3 py-1.5 rounded-lg transition font-medium flex items-center space-x-1.5">
+                            <a href="{% url 'bookings:admin-dashboard' %}" class="text-xs bg-brand-500/10 text-brand-700 dark:text-brand-400 border border-brand-500/30 hover:bg-brand-500/20 px-3 py-1.5 rounded-lg transition font-medium flex items-center space-x-1.5">
                                 <i class="fa-solid fa-chart-pie"></i>
                                 <span>Occupancy Dashboard</span>
                             </a>
                         {% endif %}
 
                         <!-- Profile Dropdown -->
-                        <div class="flex items-center space-x-2 pl-2 border-l border-slate-800">
+                        <div class="flex items-center space-x-2 pl-2 border-l border-slate-300 dark:border-slate-800">
                             <div class="text-right hidden sm:block">
-                                <div class="text-xs font-semibold text-white leading-tight font-casta">{{ user.get_full_name|default:user.username }}</div>
-                                <div class="text-[10px] text-slate-400 capitalize">{{ user.get_role_display }}</div>
+                                <div class="text-xs font-semibold text-slate-900 dark:text-white leading-tight font-casta">{{ user.get_full_name|default:user.username }}</div>
+                                <div class="text-[10px] text-slate-500 dark:text-slate-400 capitalize">{{ user.get_role_display }}</div>
                             </div>
-                            <a href="{% url 'cinema:logout' %}" class="p-2 text-slate-400 hover:text-rose-400 transition" title="Logout">
+                            <a href="{% url 'cinema:logout' %}" class="p-2 text-slate-400 hover:text-rose-500 transition" title="Logout">
                                 <i class="fa-solid fa-arrow-right-from-bracket"></i>
                             </a>
                         </div>
                     {% else %}
-                        <a href="{% url 'cinema:login' %}" class="text-sm text-slate-300 hover:text-white px-3 py-1.5 font-medium transition">Sign In</a>
+                        <a href="{% url 'cinema:login' %}" class="text-sm text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white px-3 py-1.5 font-medium transition">Sign In</a>
                         <a href="{% url 'cinema:register' %}" class="text-sm bg-brand-600 hover:bg-brand-500 text-white font-medium px-4 py-2 rounded-lg shadow-md shadow-brand-600/30 transition">Get Started</a>
                     {% endif %}
                 </div>
@@ -213,30 +234,30 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-slate-900 border-t border-slate-800 text-slate-400 text-xs py-8 mt-12">
+    <footer class="bg-slate-100 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 text-xs py-8 mt-12 transition-colors">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-6">
                 <div>
-                    <div class="flex items-center space-x-2 text-white font-bold text-lg mb-2 font-casta">
-                        <i class="fa-solid fa-film text-brand-500"></i>
-                        <span>CinemaBox</span>
+                    <div class="flex items-center space-x-2.5 text-slate-900 dark:text-white font-bold text-2xl mb-2 font-casta lowercase">
+                        <img src="{% static 'img/icon.png' %}" alt="comet" class="w-6 h-6 rounded-lg object-cover">
+                        <span>comet</span>
                     </div>
-                    <p class="text-slate-400 text-xs leading-relaxed">
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
                         A full-stack Cinema Hall Ticket Booking Platform built with Django, NoSQL (MongoDB), temporary seat holds, and QR token verification.
                     </p>
                 </div>
                 <div>
-                    <h4 class="text-white font-semibold mb-2 font-casta text-sm">Technical Architecture</h4>
+                    <h4 class="text-slate-900 dark:text-white font-semibold mb-2 font-casta text-base">Technical Architecture</h4>
                     <ul class="space-y-1">
                         <li>• Framework: Django 5.1 (Python 3.13)</li>
-                        <li>• Font Typography: Casta Series</li>
+                        <li>• Typography: Casta Series</li>
                         <li>• NoSQL: MongoDB / Embedded Document Store</li>
                         <li>• API: Django REST Framework & OpenAPI 3.0</li>
                         <li>• Hosting Target: Render Cloud Platform</li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-white font-semibold mb-2 font-casta text-sm">Verified Acceptance Tests</h4>
+                    <h4 class="text-slate-900 dark:text-white font-semibold mb-2 font-casta text-base">Verified Acceptance Tests</h4>
                     <ul class="space-y-1">
                         <li>• Concurrency Safe Temporary Holds</li>
                         <li>• Double-Booking Prevention (ACID)</li>
@@ -246,22 +267,22 @@
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-white font-semibold mb-2 font-casta text-sm">Submission & Attribution</h4>
+                    <h4 class="text-slate-900 dark:text-white font-semibold mb-2 font-casta text-base">Submission & Attribution</h4>
                     <p class="mb-2">ALGIONS AI LABS Full-Stack Web Development assessment project.</p>
                     <div class="flex space-x-3 mt-3">
-                        <a href="{% url 'api:swagger-ui' %}" class="hover:text-brand-400"><i class="fa-solid fa-file-code"></i> API Docs</a>
-                        <a href="{% url 'bookings:admin-dashboard' %}" class="hover:text-brand-400"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+                        <a href="{% url 'api:swagger-ui' %}" class="hover:text-brand-500"><i class="fa-solid fa-file-code"></i> API Docs</a>
+                        <a href="{% url 'bookings:admin-dashboard' %}" class="hover:text-brand-500"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
                     </div>
                 </div>
             </div>
-            <div class="border-t border-slate-800/80 pt-4 flex flex-col sm:flex-row items-center justify-between text-slate-500">
-                <p>&copy; 2026 CinemaBox Booking System. Built for ALGIONS Assessment.</p>
-                <p class="mt-2 sm:mt-0">Render Ready • NoSQL Integrated • Custom Casta Typography</p>
+            <div class="border-t border-slate-200 dark:border-slate-800/80 pt-4 flex flex-col sm:flex-row items-center justify-between text-slate-500 dark:text-slate-500">
+                <p>&copy; 2026 comet. Built for ALGIONS Assessment.</p>
+                <p class="mt-2 sm:mt-0">Render Ready • NoSQL Integrated • Light & Dark Themes</p>
             </div>
         </div>
     </footer>
 
-    <!-- Global Loader Helper Script -->
+    <!-- Global Loader & Theme Toggle Scripts -->
     <script>
         function showGlobalLoader(msg) {
             const loader = document.getElementById('global-page-loader');
@@ -274,6 +295,38 @@
         function hideGlobalLoader() {
             document.getElementById('global-page-loader').classList.remove('active');
         }
+
+        // Theme Toggle Functionality
+        function applyTheme(theme) {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            if (theme === 'light') {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                if (icon) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                }
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                if (icon) {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                }
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            applyTheme(isDark ? 'light' : 'dark');
+        }
+
+        // Synchronize icon with current theme on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            applyTheme(currentTheme);
+        });
     </script>
     {% block extra_scripts %}{% endblock %}
 </body>
