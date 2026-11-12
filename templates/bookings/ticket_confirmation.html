@@ -14,8 +14,8 @@
         <p class="text-neutral-500 text-xs sm:text-sm font-mono mt-1">E-ticket pass and cryptographic QR token generated on comet.</p>
     </div>
 
-    <!-- Visual Presentation Showcase: 3D Boarding Pass & Holographic Ticket (Sharp) -->
-    <div class="mb-10 flex flex-wrap items-center justify-center gap-8">
+    <!-- Visual Presentation Showcase: 3D Boarding Pass (Sharp) -->
+    <div class="mb-10 flex flex-wrap items-center justify-center">
         
         <!-- Element 4d: 3D Boarding Pass (From Uiverse.io by Cobp) — Sharp -->
         <div class="container-cards-ticket">
@@ -97,39 +97,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Element 4a: Holographic Collectible Ticket Card (From Uiverse.io by dexter-st) — Sharp -->
-        <div class="card holographic">
-            <div class="notes">♪♪♪♪♪</div>
-            <div class="notes">♪♪♪♪</div>
-            <div class="notes">♪♪♪♪♪</div>
-
-            <div class="header">
-                CINEMA
-                <div class="symbol">✁</div>
-            </div>
-            <div class="body">
-                <em>{{ booking.showtime.movie.title }}</em><br />
-                {{ booking.showtime.start_time|date:"M jS Y" }} • {{ booking.showtime.start_time|date:"h:i A" }}<br />
-                {{ booking.showtime.screen.theatre.name }}
-            </div>
-            <div class="footer font-mono">
-                <div class="number">Seats: <span class="bold">{{ booking.seat_codes_display }}</span></div>
-                <div class="barcode"></div>
-            </div>
-
-            <div class="bg holographic"></div>
-            <svg class="filter">
-                <filter id="bump">
-                    <feTurbulence result="noise" numOctaves="3" baseFrequency="0.7" type="fractalNoise"></feTurbulence>
-                    <feSpecularLighting in="noise" result="specular" lighting-color="#fffffc" specularExponent="25" specularConstant="0.8" surfaceScale="0.15">
-                        <fePointLight z="210" y="100" x="100"></fePointLight>
-                    </feSpecularLighting>
-                    <feComposite result="noise2" operator="in" in="specular" in2="SourceGraphic"></feComposite>
-                    <feBlend mode="screen" in2="noise2" in="SourceGraphic"></feBlend>
-                </filter>
-            </svg>
         </div>
 
     </div>
