@@ -1,0 +1,269 @@
+{% extends 'base.html' %}
+
+{% block title %}Select Seats - {{ showtime.movie.title }} | CinemaBox{% endblock %}
+
+{% block extra_head %}
+<style>
+    .seat-btn {
+        transition: all 0.15s ease-in-out;
+    }
+    .seat-btn:hover:not(:disabled) {
+        transform: scale(1.15);
+    }
+    .screen-indicator {
+        background: linear-gradient(to bottom, rgba(244,63,94,0.3) 0%, rgba(244,63,94,0.02) 100%);
+        border-top: 3px solid #f43f5e;
+        border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- Top Breadcrumb & Movie Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-4 mb-6">
+        <div>
+            <div class="flex items-center space-x-2 text-xs text-slate-400 mb-1">
+                <a href="{% url 'cinema:home' %}" class="hover:text-white">Movies</a>
+                <span>/</span>
+                <a href="{% url 'cinema:movie-detail' slug=showtime.movie.slug %}" class="hover:text-white">{{ showtime.movie.title }}</a>
+                <span>/</span>
+                <span class="text-brand-400 font-semibold">Seat Selection</span>
+            </div>
+            <h1 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight flex items-center space-x-3">
+                <span>{{ showtime.movie.title }}</span>
+                <span class="text-xs px-2 py-0.5 rounded bg-brand-950 text-brand-300 border border-brand-800">{{ showtime.experience }}</span>
+            </h1>
+            <p class="text-xs text-slate-400 mt-1">
+                {{ showtime.screen.theatre.name }} | {{ showtime.screen.name }} | {{ showtime.start_time|date:"D, d M Y, h:i A" }}
+            </p>
+        </div>
+
+        <!-- Temporary Hold Expiry Banner (Hidden until seats held) -->
+        <div id="hold-timer-container" class="hidden items-center space-x-3 bg-amber-950/80 border border-amber-600/60 rounded-xl px-4 py-2 text-amber-200">
+            <i class="fa-solid fa-clock-rotate-left text-lg text-amber-400 animate-spin-slow"></i>
+            <div>
+                <div class="text-[10px] uppercase font-bold text-amber-400">Temporary Seat Hold</div>
+                <div id="hold-timer" class="text-sm font-black tracking-wider text-white">09:59</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tier Pricing Legend -->
+    <div class="flex flex-wrap items-center justify-between bg-slate-900/80 border border-slate-800 rounded-xl p-3.5 mb-8 text-xs gap-3">
+        <div class="flex flex-wrap items-center gap-4">
+            <span class="font-semibold text-slate-300">Seat Tiers:</span>
+            {% for cat in categories %}
+            <span class="inline-flex items-center space-x-1.5 bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700">
+                <span class="w-2.5 h-2.5 rounded-sm {% if cat.category == 'VIP' %}bg-purple-500{% elif cat.category == 'PLATINUM' %}bg-blue-400{% elif cat.category == 'GOLD' %}bg-amber-400{% else %}bg-slate-400{% endif %}"></span>
+                <span class="font-medium text-slate-200">{{ cat.category }}</span>
+                <span class="text-emerald-400 font-bold">₹{{ cat.price }}</span>
+            </span>
+            {% endfor %}
+        </div>
+
+        <!-- Availability Legend Status -->
+        <div class="flex items-center space-x-4 text-slate-400">
+            <span class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 rounded border border-slate-600 bg-slate-800"></span> <span>Available</span></span>
+            <span class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 rounded bg-emerald-500 border border-emerald-400"></span> <span class="text-emerald-300 font-medium">Selected</span></span>
+            <span class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 rounded bg-amber-600/70 border border-amber-500 flex items-center justify-center text-[8px] text-white"><i class="fa-solid fa-lock"></i></span> <span>Held</span></span>
+            <span class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 rounded bg-slate-800 border border-slate-700 opacity-40 line-through"></span> <span>Booked</span></span>
+        </div>
+    </div>
+
+    <!-- Seat Layout Map Container -->
+    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 sm:p-10 mb-8 overflow-x-auto shadow-2xl">
+        <div class="min-w-[640px] max-w-3xl mx-auto">
+            
+            <!-- Rows & Seats Matrix -->
+            <div class="space-y-3 mb-12">
+                {% for row in rows %}
+                <div class="flex items-center justify-center space-x-2">
+                    <span class="w-6 text-center text-xs font-bold text-slate-400">{{ row.row_label }}</span>
+                    <div class="flex items-center space-x-1.5 sm:space-x-2">
+                        {% for seat in row.seats %}
+                            {% if seat.status == 'BOOKED' %}
+                                <!-- Confirmed Booked -->
+                                <button type="button" disabled title="{{ seat.code }} - Booked" class="w-7 h-7 sm:w-8 sm:h-8 rounded bg-slate-800/60 border border-slate-800 text-slate-600 text-[10px] font-bold cursor-not-allowed line-through opacity-40">
+                                    {{ seat.number }}
+                                </button>
+                            {% elif seat.status == 'HELD' %}
+                                <!-- Held by another user -->
+                                <button type="button" disabled title="{{ seat.code }} - Temporarily Held by another user" class="w-7 h-7 sm:w-8 sm:h-8 rounded bg-amber-950/80 border border-amber-600 text-amber-300 text-[10px] font-bold cursor-not-allowed flex items-center justify-center shadow-sm">
+                                    <i class="fa-solid fa-lock text-[9px]"></i>
+                                </button>
+                            {% else %}
+                                <!-- Available or User's own hold -->
+                                <button type="button" 
+                                    data-id="{{ seat.id }}" 
+                                    data-code="{{ seat.code }}" 
+                                    data-price="{{ seat.price }}" 
+                                    data-category="{{ seat.category }}"
+                                    onclick="toggleSeat(this)" 
+                                    title="{{ seat.code }} ({{ seat.category }} - ₹{{ seat.price }})" 
+                                    class="seat-btn w-7 h-7 sm:w-8 sm:h-8 rounded text-[10px] font-bold border transition {% if seat.status == 'MY_HOLD' %}bg-emerald-500 border-emerald-400 text-white shadow-lg shadow-emerald-500/30 selected-seat{% else %}bg-slate-800/90 hover:bg-slate-700 border-slate-700 hover:border-slate-500 text-slate-200{% endif %}">
+                                    {{ seat.number }}
+                                </button>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <span class="w-6 text-center text-xs font-bold text-slate-400">{{ row.row_label }}</span>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Cinema Screen Curve Indicator -->
+            <div class="mt-8 text-center">
+                <div class="screen-indicator h-10 w-3/4 mx-auto mb-2 flex items-center justify-center">
+                    <span class="text-[11px] font-extrabold tracking-widest text-brand-400 uppercase">
+                        All Eyes This Way • Cinema Screen
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Floating Price & Reservation Summary Dock -->
+    <div class="sticky bottom-4 z-30 bg-slate-900/95 backdrop-blur-md border border-slate-700/80 rounded-2xl p-4 sm:p-5 shadow-2xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 rounded-xl bg-brand-950 border border-brand-800 flex items-center justify-center text-brand-400 text-xl font-bold">
+                    <i class="fa-solid fa-couch"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-400">Selected Seats:</div>
+                    <div id="selected-seats-display" class="text-sm font-bold text-white tracking-wide">
+                        None selected
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price Breakdown Summary -->
+            <div class="flex items-center space-x-6">
+                <div class="text-right">
+                    <div class="text-xs text-slate-400">Subtotal: <span id="subtotal-display" class="font-medium text-slate-200">₹0</span></div>
+                    <div class="text-xs text-slate-400">Fee: <span id="fee-display" class="font-medium text-slate-200">₹0</span></div>
+                    <div class="text-base sm:text-lg font-black text-emerald-400">
+                        Total: <span id="grand-total-display">₹0</span>
+                    </div>
+                </div>
+
+                <button id="hold-and-pay-btn" onclick="proceedToHoldAndPay()" disabled class="bg-brand-600 hover:bg-brand-500 disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-brand-600/30 transition flex items-center space-x-2">
+                    <i class="fa-solid fa-lock text-xs"></i>
+                    <span>Lock Seats & Pay</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let selectedSeats = new Map(); // seatId -> { id, code, price, category }
+let activeHoldToken = "{{ hold_token }}";
+const showtimeId = {{ showtime.id }};
+let timerInterval = null;
+
+function toggleSeat(btn) {
+    const seatId = parseInt(btn.getAttribute('data-id'));
+    const seatCode = btn.getAttribute('data-code');
+    const price = parseFloat(btn.getAttribute('data-price'));
+    const category = btn.getAttribute('data-category');
+
+    if (selectedSeats.has(seatId)) {
+        selectedSeats.delete(seatId);
+        btn.classList.remove('bg-emerald-500', 'border-emerald-400', 'text-white', 'shadow-lg', 'shadow-emerald-500/30');
+        btn.classList.add('bg-slate-800/90', 'border-slate-700', 'text-slate-200');
+    } else {
+        if (selectedSeats.size >= 8) {
+            alert("Maximum 8 seats allowed per booking.");
+            return;
+        }
+        selectedSeats.set(seatId, { id: seatId, code: seatCode, price, category });
+        btn.classList.remove('bg-slate-800/90', 'border-slate-700', 'text-slate-200');
+        btn.classList.add('bg-emerald-500', 'border-emerald-400', 'text-white', 'shadow-lg', 'shadow-emerald-500/30');
+    }
+    updateSummary();
+}
+
+function updateSummary() {
+    const display = document.getElementById('selected-seats-display');
+    const subtotalEl = document.getElementById('subtotal-display');
+    const feeEl = document.getElementById('fee-display');
+    const grandTotalEl = document.getElementById('grand-total-display');
+    const payBtn = document.getElementById('hold-and-pay-btn');
+
+    if (selectedSeats.size === 0) {
+        display.innerText = "None selected";
+        subtotalEl.innerText = "₹0";
+        feeEl.innerText = "₹0";
+        grandTotalEl.innerText = "₹0";
+        payBtn.disabled = true;
+        return;
+    }
+
+    const codes = Array.from(selectedSeats.values()).map(s => s.code).join(', ');
+    const count = selectedSeats.size;
+    let subtotal = 0;
+    selectedSeats.forEach(s => subtotal += s.price);
+    const fee = count * 20;
+    const grandTotal = subtotal + fee;
+
+    display.innerText = `${codes} (${count} Seat${count > 1 ? 's' : ''})`;
+    subtotalEl.innerText = `₹${subtotal.toFixed(2)}`;
+    feeEl.innerText = `₹${fee.toFixed(2)}`;
+    grandTotalEl.innerText = `₹${grandTotal.toFixed(2)}`;
+    payBtn.disabled = false;
+}
+
+async function proceedToHoldAndPay() {
+    if (selectedSeats.size === 0) return;
+
+    const seatIds = Array.from(selectedSeats.keys());
+    const payBtn = document.getElementById('hold-and-pay-btn');
+    payBtn.disabled = true;
+    payBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Locking Seats...';
+
+    try {
+        const response = await fetch('/api/bookings/hold/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                showtime_id: showtimeId,
+                seat_ids: seatIds,
+                hold_token: activeHoldToken || undefined
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            activeHoldToken = data.hold_token;
+            // Redirect to checkout
+            window.location.href = `/bookings/checkout/${activeHoldToken}/`;
+        } else if (response.status === 409) {
+            alert(data.error || "Conflict: One or more selected seats were just held or booked by another customer!");
+            window.location.reload();
+        } else {
+            alert(data.error || "Failed to hold seats. Please try again.");
+            payBtn.disabled = false;
+            payBtn.innerHTML = '<i class="fa-solid fa-lock text-xs"></i> <span>Lock Seats & Pay</span>';
+        }
+    } catch(err) {
+        alert("Network error connecting to booking engine.");
+        payBtn.disabled = false;
+        payBtn.innerHTML = '<i class="fa-solid fa-lock text-xs"></i> <span>Lock Seats & Pay</span>';
+    }
+}
+</script>
+{% endblock %}
+

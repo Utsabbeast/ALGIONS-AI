@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{% block title %}Occupancy & Sales Analytics - Admin Dashboard | CinemaBox{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-4 mb-6">
+        <div>
+            <div class="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-brand-950 text-brand-300 border border-brand-800 mb-2">
+                <i class="fa-solid fa-crown text-[10px]"></i>
+                <span>Executive Management Portal</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center space-x-2">
+                <i class="fa-solid fa-chart-line text-brand-500"></i>
+                <span>Occupancy, Revenue & Audit Reconciliation</span>
+            </h1>
+            <p class="text-slate-400 text-xs mt-1">Real-time inventory occupancy matching confirmed bookings, holds, and cancellations.</p>
+        </div>
+
+        <!-- Filter Form -->
+        <form method="GET" class="flex flex-wrap items-center gap-2">
+            <select name="theatre_id" onchange="this.form.submit()" class="bg-slate-800 text-slate-300 text-xs rounded-xl px-3 py-2 border border-slate-700 focus:outline-none focus:border-brand-500">
+                <option value="">All Theatres</option>
+                {% for t in theatres %}
+                <option value="{{ t.id }}" {% if selected_theatre_id == t.id %}selected{% endif %}>{{ t.name }} ({{ t.city }})</option>
+                {% endfor %}
+            </select>
+
+            <select name="movie_id" onchange="this.form.submit()" class="bg-slate-800 text-slate-300 text-xs rounded-xl px-3 py-2 border border-slate-700 focus:outline-none focus:border-brand-500">
+                <option value="">All Movies</option>
+                {% for m in movies %}
+                <option value="{{ m.id }}" {% if selected_movie_id == m.id %}selected{% endif %}>{{ m.title }}</option>
+                {% endfor %}
+            </select>
+
+            {% if selected_theatre_id or selected_movie_id %}
+            <a href="{% url 'bookings:admin-dashboard' %}" class="text-xs text-rose-400 hover:underline px-2">Reset</a>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Diagnostic NoSQL Engine Status Widget -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 mb-8 shadow-xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-800 gap-2 mb-3">
+            <div class="flex items-center space-x-2.5">
+                <span class="w-3 h-3 rounded-full {% if nosql_status.is_mongodb_connected %}bg-emerald-500{% else %}bg-blue-500{% endif %} animate-ping"></span>
+                <span class="text-xs font-bold text-white">NoSQL Persistence Layer:</span>
+                <span class="text-xs font-semibold px-2 py-0.5 rounded {% if nosql_status.is_mongodb_connected %}bg-emerald-950 text-emerald-300 border border-emerald-800{% else %}bg-blue-950 text-blue-300 border border-blue-800{% endif %}">
+                    {{ nosql_status.engine }}
+                </span>
+            </div>
+            <div class="text-[11px] text-slate-400 font-mono">
+                Database: <span class="text-slate-200">{{ nosql_status.database_name }}</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+            <div class="bg-slate-800/60 p-2.5 rounded-xl border border-slate-700/60">
+                <span class="text-slate-400 block text-[10px] uppercase font-bold">ticket_scans</span>
+                <span class="text-base font-extrabold text-white">{{ nosql_status.collections.ticket_scans }} docs</span>
+            </div>
+            <div class="bg-slate-800/60 p-2.5 rounded-xl border border-slate-700/60">
+                <span class="text-slate-400 block text-[10px] uppercase font-bold">audit_events</span>
+                <span class="text-base font-extrabold text-white">{{ nosql_status.collections.audit_events }} docs</span>
+            </div>
+            <div class="bg-slate-800/60 p-2.5 rounded-xl border border-slate-700/60">
+                <span class="text-slate-400 block text-[10px] uppercase font-bold">movie_reviews</span>
+                <span class="text-base font-extrabold text-white">{{ nosql_status.collections.movie_reviews }} docs</span>
+            </div>
+            <div class="bg-slate-800/60 p-2.5 rounded-xl border border-slate-700/60">
+                <span class="text-slate-400 block text-[10px] uppercase font-bold">seat_matrix_cache</span>
+                <span class="text-base font-extrabold text-white">{{ nosql_status.collections.seat_matrix_cache }} docs</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary KPI Cards -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-4 mb-8">
+        
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg">
+            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Total Capacity</div>
+            <div class="text-2xl font-black text-white">{{ summary.total_capacity }} <span class="text-xs font-normal text-slate-400">seats</span></div>
+            <div class="text-[11px] text-slate-400 mt-1">Across {{ summary.total_shows }} active shows</div>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg">
+            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Confirmed Occupancy</div>
+            <div class="text-2xl font-black text-emerald-400">{{ summary.overall_occupancy_percentage }}%</div>
+            <div class="text-[11px] text-slate-400 mt-1">{{ summary.total_confirmed_seats }} booked | {{ summary.total_active_holds }} active holds</div>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg">
+            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Gross Revenue</div>
+            <div class="text-2xl font-black text-white">₹{{ summary.total_gross_revenue|floatformat:2 }}</div>
+            <div class="text-[11px] text-rose-400 mt-1">₹{{ summary.total_refunds|floatformat:2 }} refunds issued</div>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg">
+            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Net Sales Revenue</div>
+            <div class="text-2xl font-black text-brand-400">₹{{ summary.net_revenue|floatformat:2 }}</div>
+            <div class="text-[11px] text-slate-400 mt-1">{{ summary.total_cancelled_bookings }} cancelled reservations</div>
+        </div>
+
+    </div>
+
+    <!-- Detailed Showtime Reconciliation Table -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl mb-8">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-white text-base flex items-center space-x-2">
+                <i class="fa-solid fa-table-list text-brand-400"></i>
+                <span>Showtime Inventory & Revenue Reconciliation</span>
+            </h3>
+            <span class="text-xs text-slate-400 bg-slate-800 px-3 py-1 rounded-lg border border-slate-700">
+                Formula: Available = Capacity - (Confirmed + Holds)
+            </span>
+        </div>
+
+        {% if shows %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead class="text-slate-400 border-b border-slate-800 text-[10px] uppercase">
+                    <tr>
+                        <th class="pb-3">Movie & Theatre</th>
+                        <th class="pb-3">Showtime</th>
+                        <th class="pb-3 text-center">Capacity</th>
+                        <th class="pb-3 text-center">Confirmed</th>
+                        <th class="pb-3 text-center">Holds</th>
+                        <th class="pb-3 text-center">Available</th>
+                        <th class="pb-3 text-center">Occupancy</th>
+                        <th class="pb-3 text-right">Gross Rev</th>
+                        <th class="pb-3 text-right">Refunds</th>
+                        <th class="pb-3 text-right">Net Rev</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/60">
+                    {% for s in shows %}
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="py-3">
+                            <strong class="text-white text-sm block">{{ s.movie_title }}</strong>
+                            <span class="text-slate-400 text-xs">{{ s.theatre_name }} ({{ s.screen_name }})</span>
+                        </td>
+                        <td class="py-3 text-slate-300 whitespace-nowrap">
+                            {{ s.start_time }}
+                        </td>
+                        <td class="py-3 text-center font-bold text-slate-300">
+                            {{ s.total_capacity }}
+                        </td>
+                        <td class="py-3 text-center font-bold text-emerald-400">
+                            {{ s.confirmed_seats }}
+                        </td>
+                        <td class="py-3 text-center font-bold text-amber-400">
+                            {{ s.active_holds }}
+                        </td>
+                        <td class="py-3 text-center font-bold text-slate-300">
+                            {{ s.available_seats }}
+                        </td>
+                        <td class="py-3 text-center">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold {% if s.occupancy_percentage > 50 %}bg-emerald-950 text-emerald-300 border border-emerald-800{% else %}bg-slate-800 text-slate-300{% endif %}">
+                                {{ s.occupancy_percentage }}%
+                            </span>
+                        </td>
+                        <td class="py-3 text-right text-slate-200">
+                            ₹{{ s.gross_revenue|floatformat:2 }}
+                        </td>
+                        <td class="py-3 text-right text-rose-400">
+                            ₹{{ s.refunds_issued|floatformat:2 }}
+                        </td>
+                        <td class="py-3 text-right font-bold text-brand-400">
+                            ₹{{ s.net_revenue|floatformat:2 }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-xs text-slate-400 text-center py-6">No showtime records found matching criteria.</p>
+        {% endif %}
+    </div>
+
+    <!-- Material Business Actions Audit Trail from NoSQL -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-white text-base flex items-center space-x-2">
+                <i class="fa-solid fa-clock-rotate-left text-brand-400"></i>
+                <span>Material Business Actions Audit Trail</span>
+            </h3>
+            <span class="text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-800/60 px-2 py-0.5 rounded-full font-mono">
+                NoSQL collection: audit_events
+            </span>
+        </div>
+
+        {% if audit_events %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead class="text-slate-400 border-b border-slate-800 text-[10px] uppercase">
+                    <tr>
+                        <th class="pb-2">Timestamp</th>
+                        <th class="pb-2">Event Type</th>
+                        <th class="pb-2">Actor</th>
+                        <th class="pb-2">Target Entity</th>
+                        <th class="pb-2">Details Payload</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/60 font-mono text-[11px]">
+                    {% for evt in audit_events %}
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="py-2.5 text-slate-400 whitespace-nowrap">
+                            {{ evt.timestamp|slice:":19" }}
+                        </td>
+                        <td class="py-2.5">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase {% if 'CONFIRMED' in evt.event_type %}bg-emerald-950 text-emerald-300 border border-emerald-800{% elif 'CANCELLED' in evt.event_type %}bg-rose-950 text-rose-300 border border-rose-800{% else %}bg-slate-800 text-slate-300{% endif %}">
+                                {{ evt.event_type }}
+                            </span>
+                        </td>
+                        <td class="py-2.5 text-slate-300">
+                            {{ evt.actor }}
+                        </td>
+                        <td class="py-2.5 text-slate-400">
+                            {{ evt.entity_type }} ({{ evt.entity_id|truncatechars:15 }})
+                        </td>
+                        <td class="py-2.5 text-slate-300 font-sans text-xs">
+                            {{ evt.details }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-xs text-slate-400 text-center py-6">No audit records logged yet in NoSQL collection.</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
+

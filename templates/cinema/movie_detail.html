@@ -1,0 +1,264 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ movie.title }} - Showtimes & Tickets | CinemaBox{% endblock %}
+
+{% block content %}
+<!-- Movie Banner & Header Hero -->
+<div class="relative bg-slate-900 border-b border-slate-800 overflow-hidden">
+    <!-- Blurred Backdrop -->
+    <div class="absolute inset-0 opacity-20 bg-cover bg-center filter blur-xl scale-110 pointer-events-none" style="background-image: url('{{ movie.poster_url }}');"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div class="flex flex-col md:flex-row gap-8 items-start">
+            
+            <!-- Poster -->
+            <div class="w-48 sm:w-60 flex-shrink-0 rounded-2xl overflow-hidden shadow-2xl border-2 border-slate-700/60 bg-slate-800">
+                <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="w-full h-auto object-cover">
+            </div>
+
+            <!-- Details -->
+            <div class="flex-1">
+                <div class="flex flex-wrap items-center gap-2 mb-3">
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center space-x-1">
+                        <i class="fa-solid fa-star text-[10px]"></i>
+                        <span>{{ movie.rating_average }}/10 ({{ movie.votes_count }} votes)</span>
+                    </span>
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700">
+                        {{ movie.certification }}
+                    </span>
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-brand-950 text-brand-300 border border-brand-800">
+                        {{ movie.language }}
+                    </span>
+                </div>
+
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">
+                    {{ movie.title }}
+                </h1>
+
+                <div class="flex flex-wrap items-center text-xs sm:text-sm text-slate-300 gap-x-4 gap-y-2 mb-4">
+                    <span><i class="fa-regular fa-clock mr-1 text-slate-400"></i> {{ movie.duration_formatted }}</span>
+                    <span>•</span>
+                    <span><i class="fa-regular fa-calendar mr-1 text-slate-400"></i> Released {{ movie.release_date|date:"d M Y" }}</span>
+                    <span>•</span>
+                    <span class="flex items-center gap-1">
+                        {% for f in movie.format_types %}
+                        <span class="px-1.5 py-0.5 rounded bg-slate-800 text-[10px] font-bold border border-slate-700">{{ f }}</span>
+                        {% endfor %}
+                    </span>
+                </div>
+
+                <div class="flex flex-wrap gap-1.5 mb-5">
+                    {% for g in movie.genres.all %}
+                    <span class="text-xs bg-slate-800/90 text-slate-200 px-3 py-1 rounded-full border border-slate-700">
+                        {{ g.name }}
+                    </span>
+                    {% endfor %}
+                </div>
+
+                <p class="text-slate-300 text-sm leading-relaxed max-w-3xl mb-6">
+                    {{ movie.description }}
+                </p>
+
+                {% if movie.trailer_url %}
+                <a href="{{ movie.trailer_url }}" target="_blank" class="inline-flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold px-4 py-2 rounded-xl border border-slate-700 transition">
+                    <i class="fa-brands fa-youtube text-red-500 text-base"></i>
+                    <span>Watch Official Trailer</span>
+                </a>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- 7-Day Date Filter Strip -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 mb-8">
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-semibold text-slate-300 flex items-center space-x-2">
+                <i class="fa-regular fa-calendar-days text-brand-400"></i>
+                <span>Select Date for {{ selected_city }}</span>
+            </h3>
+            <span class="text-xs text-slate-400">
+                City: <strong class="text-white">{{ selected_city }}</strong>
+            </span>
+        </div>
+        <div class="flex items-center space-x-3 overflow-x-auto pb-2 scrollbar-none">
+            {% for d in dates %}
+            <a href="?date={{ d.date_str }}&city={{ selected_city }}" class="flex-shrink-0 flex flex-col items-center justify-center w-16 py-2.5 rounded-xl border transition {% if selected_date_str == d.date_str %}bg-brand-600 text-white border-brand-500 shadow-lg shadow-brand-600/30{% else %}bg-slate-800/90 text-slate-300 border-slate-700 hover:bg-slate-800 hover:border-slate-600{% endif %}">
+                <span class="text-[10px] font-semibold uppercase">{{ d.day_name }}</span>
+                <span class="text-lg font-black leading-none my-0.5">{{ d.day_num }}</span>
+                <span class="text-[10px] text-slate-300">{{ d.month }}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left: Theatres and Showtimes (2 Columns on large screens) -->
+        <div class="lg:col-span-2 space-y-6">
+            <h2 class="text-xl font-bold text-white tracking-tight flex items-center space-x-2">
+                <i class="fa-solid fa-masks-theater text-brand-500"></i>
+                <span>Available Theatres & Showtimes</span>
+            </h2>
+
+            {% if theatre_shows %}
+                {% for theatre, shows in theatre_shows.items %}
+                <div class="bg-slate-900 rounded-2xl border border-slate-800 p-5 shadow-sm">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-2">
+                        <div>
+                            <h3 class="font-bold text-white text-base flex items-center space-x-2">
+                                <i class="fa-solid fa-location-dot text-brand-400 text-xs"></i>
+                                <span>{{ theatre.name }}</span>
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-0.5">{{ theatre.address }}</p>
+                        </div>
+                        <div class="flex flex-wrap gap-1">
+                            {% for fac in theatre.facilities|slice:":3" %}
+                            <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">
+                                {{ fac }}
+                            </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Showtime Chips -->
+                    <div class="mt-4 flex flex-wrap gap-3">
+                        {% for show in shows %}
+                        <a href="{% url 'bookings:seat-selection' showtime_id=show.id %}" class="group relative flex flex-col items-center bg-slate-800/80 hover:bg-brand-600 border border-slate-700 hover:border-brand-500 rounded-xl px-4 py-2.5 transition text-center min-w-[110px] shadow-sm">
+                            <span class="text-sm font-bold text-white group-hover:text-white">
+                                {{ show.start_time|date:"h:i A" }}
+                            </span>
+                            <span class="text-[10px] text-slate-400 group-hover:text-brand-100 uppercase font-semibold mt-0.5">
+                                {{ show.screen.name }}
+                            </span>
+                            <span class="text-[10px] text-emerald-400 group-hover:text-white font-medium mt-1">
+                                From ₹{{ show.price_silver }}
+                            </span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-12 bg-slate-900/60 rounded-2xl border border-slate-800">
+                    <i class="fa-solid fa-calendar-xmark text-3xl text-slate-600 mb-2"></i>
+                    <h3 class="text-base font-bold text-white">No Shows Scheduled</h3>
+                    <p class="text-slate-400 text-xs mt-1">
+                        There are no showtimes available for the selected date in {{ selected_city }}. Please try another date or switch city.
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Right: Dynamic Reviews from NoSQL Document Collection & Form -->
+        <div class="space-y-6">
+            <div class="bg-slate-900 rounded-2xl border border-slate-800 p-5">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-bold text-white text-base flex items-center space-x-2">
+                        <i class="fa-solid fa-comments text-brand-400"></i>
+                        <span>Audience Reviews</span>
+                    </h3>
+                    <span class="text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-800/60 px-2 py-0.5 rounded-full">
+                        Powered by NoSQL
+                    </span>
+                </div>
+
+                <!-- Add Review Form -->
+                {% if user.is_authenticated %}
+                <form id="review-form" class="mb-5 p-3.5 bg-slate-800/60 rounded-xl border border-slate-700/80">
+                    {% csrf_token %}
+                    <div class="mb-2">
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Your Rating (1-10)</label>
+                        <input type="number" id="review-rating" min="1" max="10" step="0.5" value="9.0" class="w-full bg-slate-900 border border-slate-700 text-white text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-brand-500">
+                    </div>
+                    <div class="mb-2">
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Review</label>
+                        <textarea id="review-comment" rows="2" placeholder="Share your experience..." class="w-full bg-slate-900 border border-slate-700 text-white text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-brand-500" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Tags (comma separated)</label>
+                        <input type="text" id="review-tags" placeholder="e.g. Must Watch, Great Visuals, Climax" class="w-full bg-slate-900 border border-slate-700 text-white text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-brand-500">
+                    </div>
+                    <button type="submit" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs py-2 rounded-lg transition shadow-md shadow-brand-600/30">
+                        Submit Review to NoSQL
+                    </button>
+                    <div id="review-status" class="text-xs mt-2 hidden"></div>
+                </form>
+                {% else %}
+                <div class="mb-5 p-3 text-center bg-slate-800/40 rounded-xl border border-slate-800 text-xs text-slate-400">
+                    <a href="{% url 'cinema:login' %}" class="text-brand-400 font-semibold hover:underline">Sign in</a> to leave a verified review.
+                </div>
+                {% endif %}
+
+                <!-- Reviews Stream from NoSQL -->
+                <div id="reviews-list" class="space-y-3">
+                    {% if reviews %}
+                        {% for r in reviews %}
+                        <div class="p-3 bg-slate-800/50 rounded-xl border border-slate-800 text-xs">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-bold text-white">{{ r.username }}</span>
+                                <span class="text-amber-400 font-semibold"><i class="fa-solid fa-star text-[10px]"></i> {{ r.rating }}/10</span>
+                            </div>
+                            <p class="text-slate-300 mb-2 leading-relaxed">{{ r.comment }}</p>
+                            {% if r.tags %}
+                            <div class="flex flex-wrap gap-1">
+                                {% for tag in r.tags %}
+                                <span class="text-[9px] bg-slate-700 text-slate-300 px-1.5 py-0.5 rounded">{{ tag }}</span>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-xs text-slate-400 text-center py-4">No reviews yet. Be the first to review!</p>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.getElementById('review-form')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const rating = parseFloat(document.getElementById('review-rating').value);
+    const comment = document.getElementById('review-comment').value.trim();
+    const tagsRaw = document.getElementById('review-tags').value;
+    const tags = tagsRaw.split(',').map(t => t.trim()).filter(t => t.length > 0);
+    const statusDiv = document.getElementById('review-status');
+
+    try {
+        const resp = await fetch('/api/movies/{{ movie.id }}/reviews/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ rating, comment, tags })
+        });
+        if (resp.ok) {
+            statusDiv.className = 'text-xs text-emerald-400 mt-2 block';
+            statusDiv.innerText = 'Review saved to NoSQL collection successfully! Refreshing...';
+            setTimeout(() => window.location.reload(), 1000);
+        } else {
+            const err = await resp.json();
+            statusDiv.className = 'text-xs text-rose-400 mt-2 block';
+            statusDiv.innerText = err.error || 'Failed to submit review.';
+        }
+    } catch(e) {
+        statusDiv.className = 'text-xs text-rose-400 mt-2 block';
+        statusDiv.innerText = 'Error connecting to API.';
+    }
+});
+</script>
+{% endblock %}
+

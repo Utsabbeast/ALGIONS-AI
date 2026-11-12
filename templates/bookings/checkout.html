@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout & Payment - {{ showtime.movie.title }} | CinemaBox{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+
+    <!-- Top Hold Countdown Alert -->
+    <div class="bg-amber-950/70 border border-amber-600/70 rounded-2xl p-4 mb-6 flex items-center justify-between shadow-lg">
+        <div class="flex items-center space-x-3 text-amber-200">
+            <i class="fa-solid fa-stopwatch text-2xl text-amber-400 animate-pulse"></i>
+            <div>
+                <h4 class="font-bold text-sm text-white">Seats Temporarily Locked</h4>
+                <p class="text-xs text-amber-300">Complete payment before your reservation hold expires.</p>
+            </div>
+        </div>
+        <div class="text-right">
+            <div class="text-[10px] uppercase font-bold text-amber-400">Time Remaining</div>
+            <div id="countdown-display" class="text-2xl font-black text-white font-mono">10:00</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Left: Payment Simulation Options (2 cols) -->
+        <div class="md:col-span-2 space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center space-x-2">
+                    <i class="fa-solid fa-credit-card text-brand-500"></i>
+                    <span>Simulated Payment Gateway</span>
+                </h3>
+                <p class="text-xs text-slate-400 mb-6">
+                    This is an isolated sandbox environment. No actual money will be charged.
+                </p>
+
+                <form method="POST" id="checkout-form" class="space-y-4">
+                    {% csrf_token %}
+                    
+                    <div class="space-y-2.5">
+                        <label class="flex items-center justify-between p-3.5 rounded-xl border border-brand-500/50 bg-slate-800/80 cursor-pointer transition">
+                            <div class="flex items-center space-x-3">
+                                <input type="radio" name="payment_method" value="SIMULATED_UPI" checked class="text-brand-600 focus:ring-brand-500">
+                                <div>
+                                    <div class="text-sm font-semibold text-white">Instant UPI (GPay / PhonePe / Paytm)</div>
+                                    <div class="text-xs text-slate-400">Simulated immediate webhook confirmation</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-mobile-screen-button text-brand-400"></i>
+                        </label>
+
+                        <label class="flex items-center justify-between p-3.5 rounded-xl border border-slate-700 bg-slate-800/40 hover:bg-slate-800 cursor-pointer transition">
+                            <div class="flex items-center space-x-3">
+                                <input type="radio" name="payment_method" value="SIMULATED_CREDIT_CARD" class="text-brand-600 focus:ring-brand-500">
+                                <div>
+                                    <div class="text-sm font-semibold text-white">Credit / Debit Card</div>
+                                    <div class="text-xs text-slate-400">Visa, Mastercard, RuPay</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-credit-card text-slate-400"></i>
+                        </label>
+
+                        <label class="flex items-center justify-between p-3.5 rounded-xl border border-slate-700 bg-slate-800/40 hover:bg-slate-800 cursor-pointer transition">
+                            <div class="flex items-center space-x-3">
+                                <input type="radio" name="payment_method" value="SIMULATED_NET_BANKING" class="text-brand-600 focus:ring-brand-500">
+                                <div>
+                                    <div class="text-sm font-semibold text-white">Net Banking</div>
+                                    <div class="text-xs text-slate-400">HDFC, ICICI, SBI, Axis</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-building-columns text-slate-400"></i>
+                        </label>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-slate-800">
+                        <button type="submit" id="pay-submit-btn" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-brand-600/30 transition flex items-center justify-center space-x-2 text-base">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <span>Pay ₹{{ grand_total|floatformat:2 }} & Confirm Booking</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right: Order Summary (1 col) -->
+        <div>
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sticky top-24 shadow-xl">
+                <h4 class="font-bold text-white text-sm mb-4 pb-2 border-b border-slate-800 flex items-center space-x-2">
+                    <i class="fa-solid fa-receipt text-brand-400"></i>
+                    <span>Booking Summary</span>
+                </h4>
+
+                <div class="flex space-x-3 mb-4">
+                    <img src="{{ showtime.movie.poster_url }}" alt="{{ showtime.movie.title }}" class="w-16 h-22 object-cover rounded-lg shadow">
+                    <div>
+                        <h5 class="font-bold text-white text-sm leading-snug">{{ showtime.movie.title }}</h5>
+                        <p class="text-xs text-slate-400 mt-0.5">{{ showtime.language }} ({{ showtime.experience }})</p>
+                        <p class="text-xs text-slate-300 mt-1 font-medium">{{ showtime.screen.theatre.name }}</p>
+                    </div>
+                </div>
+
+                <div class="text-xs text-slate-400 space-y-1.5 py-3 border-y border-slate-800">
+                    <div class="flex justify-between">
+                        <span>Auditorium:</span>
+                        <span class="text-slate-200 font-semibold">{{ showtime.screen.name }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Showtime:</span>
+                        <span class="text-slate-200 font-semibold">{{ showtime.start_time|date:"d M, h:i A" }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Seats ({{ seats|length }}):</span>
+                        <span class="text-emerald-400 font-bold">{{ seat_codes }}</span>
+                    </div>
+                </div>
+
+                <!-- Price Breakdown -->
+                <div class="text-xs space-y-2 pt-3">
+                    <div class="flex justify-between text-slate-400">
+                        <span>Ticket Subtotal:</span>
+                        <span class="text-slate-200 font-medium">₹{{ subtotal|floatformat:2 }}</span>
+                    </div>
+                    <div class="flex justify-between text-slate-400">
+                        <span>Convenience Fee:</span>
+                        <span class="text-slate-200 font-medium">₹{{ convenience_fee|floatformat:2 }}</span>
+                    </div>
+                    <div class="flex justify-between text-sm font-black text-white pt-2 border-t border-slate-800">
+                        <span>Total Payable:</span>
+                        <span class="text-emerald-400 text-base">₹{{ grand_total|floatformat:2 }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let remainingSeconds = {{ seconds_remaining|default:600 }};
+const countdownEl = document.getElementById('countdown-display');
+
+function updateTimer() {
+    if (remainingSeconds <= 0) {
+        countdownEl.innerText = "00:00";
+        alert("Your temporary seat hold has expired. Please select your seats again.");
+        window.location.href = "{% url 'bookings:seat-selection' showtime_id=showtime.id %}";
+        return;
+    }
+    const mins = Math.floor(remainingSeconds / 60);
+    const secs = remainingSeconds % 60;
+    countdownEl.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    remainingSeconds--;
+}
+
+setInterval(updateTimer, 1000);
+updateTimer();
+
+document.getElementById('checkout-form').addEventListener('submit', function() {
+    const btn = document.getElementById('pay-submit-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing Payment...';
+});
+</script>
+{% endblock %}
+

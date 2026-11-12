@@ -1,0 +1,1094 @@
+openapi: 3.0.3
+info:
+  title: CinemaBox Cinema Ticket Booking API
+  version: 1.0.0
+  description: RESTful API documentation for Cinema Hall Ticket Booking System with
+    temporary seat locks, QR code issuance, entry scanner, and occupancy analytics.
+paths:
+  /api/admin/reports/occupancy/:
+    get:
+      operationId: admin_reports_occupancy_retrieve
+      description: Admin Occupancy & Sales Report Endpoint (Admin only).
+      tags:
+      - admin
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OccupancyReportResponse'
+          description: ''
+  /api/bookings/{reference}/:
+    get:
+      operationId: bookings_retrieve
+      description: Retrieves full booking confirmation receipt, seats, and verifiable
+        QR code.
+      parameters:
+      - in: path
+        name: reference
+        schema:
+          type: string
+        required: true
+      tags:
+      - bookings
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingDetail'
+          description: ''
+  /api/bookings/{reference}/cancel/:
+    post:
+      operationId: bookings_cancel_create
+      description: Cancels a confirmed reservation, issues simulated refund, and releases
+        seats back to inventory.
+      parameters:
+      - in: path
+        name: reference
+        schema:
+          type: string
+        required: true
+      tags:
+      - bookings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CancelRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CancelRequestRequest'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingDetail'
+          description: ''
+  /api/bookings/confirm/:
+    post:
+      operationId: bookings_confirm_create
+      description: Confirms an active reservation hold into a confirmed booking.
+      tags:
+      - bookings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingConfirmRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BookingConfirmRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BookingConfirmRequestRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingDetail'
+          description: ''
+  /api/bookings/hold/:
+    post:
+      operationId: bookings_hold_create
+      description: Locks one or more seats with a temporary hold token and expiry
+        countdown timer.
+      tags:
+      - bookings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SeatHoldRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SeatHoldRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SeatHoldRequestRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeatHoldResponse'
+          description: ''
+  /api/bookings/my-bookings/:
+    get:
+      operationId: bookings_my_bookings_list
+      description: Lists all bookings belonging to the currently authenticated user.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - bookings
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBookingDetailList'
+          description: ''
+  /api/bookings/release/:
+    post:
+      operationId: bookings_release_create
+      description: Explicitly releases temporary seat holds when a user deselects
+        seats or abandons cart.
+      tags:
+      - bookings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleaseHoldRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReleaseHoldRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReleaseHoldRequestRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeatReleaseResponse'
+          description: ''
+  /api/movies/:
+    get:
+      operationId: movies_list
+      description: Search and filter movies currently showing.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - movies
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMovieListList'
+          description: ''
+  /api/movies/{movie_id}/reviews/:
+    post:
+      operationId: movies_reviews_create
+      description: Posts a customer review directly to the NoSQL movie_reviews document
+        collection.
+      parameters:
+      - in: path
+        name: movie_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - movies
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovieReviewRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MovieReviewRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MovieReviewRequestRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieReviewResponse'
+          description: ''
+  /api/movies/{id}/:
+    get:
+      operationId: movies_retrieve
+      description: Detailed information for a single movie, including dynamic customer
+        reviews from NoSQL.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - movies
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieList'
+          description: ''
+  /api/nosql/audit-trail/:
+    get:
+      operationId: nosql_audit_trail_retrieve
+      description: Retrieves the immutable audit trail from NoSQL (Admin/Staff only).
+      tags:
+      - nosql
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSQLAuditResponse'
+          description: ''
+  /api/nosql/status/:
+    get:
+      operationId: nosql_status_retrieve
+      description: Diagnostic info about the active NoSQL database and document collections.
+      tags:
+      - nosql
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSQLStatusResponse'
+          description: ''
+  /api/nosql/ticket-scans/:
+    get:
+      operationId: nosql_ticket_scans_retrieve
+      description: Retrieves gate scanner security logs from NoSQL (Admin/Staff only).
+      tags:
+      - nosql
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSQLTicketScansResponse'
+          description: ''
+  /api/showtimes/:
+    get:
+      operationId: showtimes_list
+      description: List upcoming showtimes for a movie, optionally filtered by date
+        and theatre city.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - showtimes
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedShowtimeList'
+          description: ''
+  /api/showtimes/{showtime_id}/seats/:
+    get:
+      operationId: showtimes_seats_retrieve
+      description: Retrieves the complete interactive seat layout for a showtime.
+      parameters:
+      - in: path
+        name: showtime_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - showtimes
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeatMatrixResponse'
+          description: ''
+  /api/staff/validate-ticket/:
+    post:
+      operationId: staff_validate_ticket_create
+      description: Gate Scanner Validation Endpoint (Staff & Admin only).
+      tags:
+      - staff
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TicketValidateRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TicketValidateRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TicketValidateRequestRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketValidationSuccessResponse'
+          description: ''
+  /api/theatres/:
+    get:
+      operationId: theatres_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - theatres
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTheatreList'
+          description: ''
+components:
+  schemas:
+    BookingConfirmRequestRequest:
+      type: object
+      properties:
+        hold_token:
+          type: string
+          minLength: 1
+        payment_method:
+          type: string
+          minLength: 1
+          default: SIMULATED_UPI
+      required:
+      - hold_token
+    BookingDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        booking_reference:
+          type: string
+          description: Human-readable booking reference e.g. BMS-8X9K2L
+          maxLength: 32
+        user:
+          type: integer
+        user_email:
+          type: string
+          format: email
+          readOnly: true
+        user_name:
+          type: string
+          readOnly: true
+        showtime:
+          type: integer
+        movie_title:
+          type: string
+          readOnly: true
+        movie_poster:
+          type: string
+          readOnly: true
+        theatre_name:
+          type: string
+          readOnly: true
+        screen_name:
+          type: string
+          readOnly: true
+        show_time:
+          type: string
+          format: date-time
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        total_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        convenience_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+        discount_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+        payment_method:
+          type: string
+          maxLength: 50
+        payment_reference:
+          type: string
+          maxLength: 64
+        payment_status:
+          type: string
+          maxLength: 30
+        qr_token:
+          type: string
+          description: Unique verifiable security token encoded into ticket QR
+          maxLength: 128
+        is_validated:
+          type: boolean
+          description: True if scanned and checked into cinema gate
+        validated_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancellation_reason:
+          type: string
+          nullable: true
+        refund_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        refund_status:
+          type: string
+          nullable: true
+          maxLength: 40
+        cancelled_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        seats:
+          type: array
+          items:
+            $ref: '#/components/schemas/BookingSeat'
+          readOnly: true
+      required:
+      - booking_reference
+      - created_at
+      - id
+      - movie_poster
+      - movie_title
+      - qr_token
+      - screen_name
+      - seats
+      - show_time
+      - showtime
+      - theatre_name
+      - total_amount
+      - user
+      - user_email
+      - user_name
+    BookingSeat:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        seat:
+          type: integer
+        seat_code:
+          type: string
+          readOnly: true
+        row_label:
+          type: string
+          readOnly: true
+        seat_number:
+          type: integer
+          readOnly: true
+        seat_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+        seat_category:
+          type: string
+          maxLength: 20
+      required:
+      - id
+      - row_label
+      - seat
+      - seat_category
+      - seat_code
+      - seat_number
+      - seat_price
+    CancelRequestRequest:
+      type: object
+      properties:
+        reason:
+          type: string
+          minLength: 1
+          default: Customer cancellation
+    Genre:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 60
+        slug:
+          oneOf:
+          - type: string
+            maxLength: 70
+            pattern: ^[-a-zA-Z0-9_]+$
+          - type: string
+            maxLength: 0
+      required:
+      - id
+      - name
+    MovieList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        slug:
+          oneOf:
+          - type: string
+            maxLength: 220
+            pattern: ^[-a-zA-Z0-9_]+$
+          - type: string
+            maxLength: 0
+        description:
+          type: string
+        duration_minutes:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Duration in minutes
+        duration_formatted:
+          type: string
+          readOnly: true
+        language:
+          type: string
+          maxLength: 60
+        format_types:
+          description: e.g. ['2D', '3D', 'IMAX 3D', '4DX']
+        certification:
+          type: string
+          description: U, UA, A, PG-13, R
+          maxLength: 15
+        genres:
+          type: array
+          items:
+            $ref: '#/components/schemas/Genre'
+          readOnly: true
+        release_date:
+          type: string
+          format: date
+        poster_url:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 500
+          - type: string
+            maxLength: 0
+        banner_url:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 500
+          - type: string
+            maxLength: 0
+        trailer_url:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 500
+          - type: string
+            maxLength: 0
+        rating_average:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,2}(?:\.\d{0,1})?$
+        votes_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        is_active:
+          type: boolean
+      required:
+      - description
+      - duration_formatted
+      - duration_minutes
+      - genres
+      - id
+      - release_date
+      - title
+    MovieReviewRequestRequest:
+      type: object
+      properties:
+        rating:
+          type: number
+          format: double
+          maximum: 10.0
+          minimum: 1.0
+        comment:
+          type: string
+          minLength: 1
+          maxLength: 1000
+        tags:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 30
+      required:
+      - comment
+      - rating
+    MovieReviewResponse:
+      type: object
+      properties:
+        movie_id:
+          type: integer
+        username:
+          type: string
+        rating:
+          type: number
+          format: double
+        comment:
+          type: string
+        tags:
+          type: array
+          items: {}
+      required:
+      - comment
+      - movie_id
+      - rating
+      - tags
+      - username
+    NoSQLAuditResponse:
+      type: object
+      properties:
+        count:
+          type: integer
+        events:
+          type: array
+          items: {}
+      required:
+      - count
+      - events
+    NoSQLStatusResponse:
+      type: object
+      properties:
+        engine:
+          type: string
+        is_mongodb_connected:
+          type: boolean
+        database_name:
+          type: string
+        collections:
+          type: object
+          additionalProperties: {}
+      required:
+      - collections
+      - database_name
+      - engine
+      - is_mongodb_connected
+    NoSQLTicketScansResponse:
+      type: object
+      properties:
+        count:
+          type: integer
+        scans:
+          type: array
+          items: {}
+      required:
+      - count
+      - scans
+    OccupancyReportResponse:
+      type: object
+      properties:
+        summary:
+          type: object
+          additionalProperties: {}
+        shows:
+          type: array
+          items: {}
+      required:
+      - shows
+      - summary
+    PaginatedBookingDetailList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/BookingDetail'
+    PaginatedMovieListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MovieList'
+    PaginatedShowtimeList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Showtime'
+    PaginatedTheatreList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Theatre'
+    ReleaseHoldRequestRequest:
+      type: object
+      properties:
+        hold_token:
+          type: string
+          minLength: 1
+      required:
+      - hold_token
+    SeatHoldRequestRequest:
+      type: object
+      properties:
+        showtime_id:
+          type: integer
+        seat_ids:
+          type: array
+          items:
+            type: integer
+        hold_token:
+          type: string
+          default: ''
+      required:
+      - seat_ids
+      - showtime_id
+    SeatHoldResponse:
+      type: object
+      properties:
+        hold_token:
+          type: string
+        showtime_id:
+          type: integer
+        expires_at:
+          type: string
+          format: date-time
+        seats:
+          type: array
+          items: {}
+        grand_total:
+          type: number
+          format: double
+      required:
+      - expires_at
+      - grand_total
+      - hold_token
+      - seats
+      - showtime_id
+    SeatMatrixResponse:
+      type: object
+      properties:
+        showtime:
+          type: object
+          additionalProperties: {}
+        stats:
+          type: object
+          additionalProperties: {}
+        categories:
+          type: array
+          items: {}
+        rows:
+          type: array
+          items: {}
+      required:
+      - categories
+      - rows
+      - showtime
+      - stats
+    SeatReleaseResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    Showtime:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        movie:
+          type: integer
+        movie_title:
+          type: string
+          readOnly: true
+        movie_poster:
+          type: string
+          readOnly: true
+        screen:
+          type: integer
+        theatre_name:
+          type: string
+          readOnly: true
+        theatre_city:
+          type: string
+          readOnly: true
+        screen_name:
+          type: string
+          readOnly: true
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        experience:
+          type: string
+          description: 2D, 3D, IMAX 3D, etc.
+          maxLength: 30
+        language:
+          type: string
+          maxLength: 50
+        price_silver:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+        price_gold:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+        price_platinum:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+        price_vip:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+        is_active:
+          type: boolean
+      required:
+      - end_time
+      - id
+      - movie
+      - movie_poster
+      - movie_title
+      - screen
+      - screen_name
+      - start_time
+      - theatre_city
+      - theatre_name
+    StatusEnum:
+      enum:
+      - PENDING
+      - CONFIRMED
+      - CANCELLED
+      type: string
+      description: |-
+        * `PENDING` - Pending Payment
+        * `CONFIRMED` - Confirmed
+        * `CANCELLED` - Cancelled
+    Theatre:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 150
+        city:
+          type: string
+          maxLength: 100
+        address:
+          type: string
+        facilities:
+          description: 'List of amenities: [''Dolby Atmos'', ''Recliners'', ''4K Laser
+            Projection'', ''Parking'', ''Food Court'']'
+        is_active:
+          type: boolean
+      required:
+      - address
+      - city
+      - id
+      - name
+    TicketValidateRequestRequest:
+      type: object
+      properties:
+        token_or_reference:
+          type: string
+          minLength: 1
+          description: QR token (e.g. TKT-...) or booking reference (e.g. BMS-...)
+        device_id:
+          type: string
+          minLength: 1
+          default: gate-terminal-01
+      required:
+      - token_or_reference
+    TicketValidationSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        status:
+          type: string
+        message:
+          type: string
+        booking_reference:
+          type: string
+        customer_name:
+          type: string
+        movie_title:
+          type: string
+        seats:
+          type: array
+          items: {}
+      required:
+      - booking_reference
+      - customer_name
+      - message
+      - movie_title
+      - seats
+      - status
+      - success
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid

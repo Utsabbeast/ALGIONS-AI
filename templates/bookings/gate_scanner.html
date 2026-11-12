@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% block title %}Gate Entry Scanner - CinemaBox{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-3 mb-6">
+        <div>
+            <div class="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-800 mb-2">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>Operational Staff Access</span>
+            </div>
+            <h1 class="text-2xl font-extrabold text-white tracking-tight flex items-center space-x-2">
+                <i class="fa-solid fa-qrcode text-brand-500"></i>
+                <span>Gate Scanner & Entry Validation</span>
+            </h1>
+            <p class="text-slate-400 text-xs mt-0.5">Scan ticket QR codes or enter booking references to validate audience admission.</p>
+        </div>
+
+        <div class="text-right">
+            <span class="text-xs text-slate-400">Validator Terminal:</span>
+            <div class="text-xs font-bold text-white">{{ user.username }} ({{ user.get_role_display }})</div>
+        </div>
+    </div>
+
+    <!-- Scan Input Form -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl mb-8">
+        <form method="POST" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">
+                    Scan or Enter Ticket Token / Booking Reference
+                </label>
+                <div class="flex gap-2">
+                    <div class="relative flex-1">
+                        <i class="fa-solid fa-barcode absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                        <input type="text" name="token" required placeholder="e.g. TKT-3a8f... or BMS-20261112-X4K9..." autofocus class="w-full bg-slate-800 border border-slate-700 text-white text-sm rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:border-brand-500 font-mono">
+                    </div>
+                    <button type="submit" class="bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-brand-600/30 transition flex items-center space-x-2">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Verify Entry</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Validation Result Card -->
+    {% if validation_result %}
+    <div class="mb-8 rounded-2xl p-6 border shadow-2xl transition {% if validation_result.status == 'VALID_ENTRY' %}bg-emerald-950/80 border-emerald-600 text-emerald-100{% elif validation_result.status == 'ALREADY_USED' %}bg-amber-950/80 border-amber-500 text-amber-100{% else %}bg-rose-950/80 border-rose-600 text-rose-100{% endif %}">
+        <div class="flex items-start space-x-4">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0 {% if validation_result.status == 'VALID_ENTRY' %}bg-emerald-800 text-white{% elif validation_result.status == 'ALREADY_USED' %}bg-amber-700 text-white{% else %}bg-rose-800 text-white{% endif %}">
+                {% if validation_result.status == 'VALID_ENTRY' %}
+                <i class="fa-solid fa-check"></i>
+                {% elif validation_result.status == 'ALREADY_USED' %}
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                {% else %}
+                <i class="fa-solid fa-xmark"></i>
+                {% endif %}
+            </div>
+            
+            <div class="flex-1">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-black tracking-wide uppercase">
+                        {% if validation_result.status == 'VALID_ENTRY' %}
+                        Entry Approved
+                        {% elif validation_result.status == 'ALREADY_USED' %}
+                        Duplicate Scan Alert (Already Used)
+                        {% else %}
+                        Entry Denied
+                        {% endif %}
+                    </h3>
+                    <span class="text-xs font-mono px-2 py-0.5 rounded bg-black/40">
+                        Status: {{ validation_result.status }}
+                    </span>
+                </div>
+
+                <p class="text-sm mt-1 mb-3">
+                    {{ validation_result.message|default:validation_result.error }}
+                </p>
+
+                {% if validation_result.status == 'VALID_ENTRY' %}
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-emerald-900/40 p-3 rounded-xl text-xs border border-emerald-800/60">
+                    <div>
+                        <span class="text-emerald-300 block text-[10px] uppercase font-bold">Customer</span>
+                        <strong class="text-white">{{ validation_result.customer_name }}</strong>
+                    </div>
+                    <div>
+                        <span class="text-emerald-300 block text-[10px] uppercase font-bold">Seats</span>
+                        <strong class="text-emerald-300 font-bold text-sm">{{ validation_result.seats|join:", " }}</strong>
+                    </div>
+                    <div>
+                        <span class="text-emerald-300 block text-[10px] uppercase font-bold">Screen</span>
+                        <strong class="text-white">{{ validation_result.screen_name }}</strong>
+                    </div>
+                    <div>
+                        <span class="text-emerald-300 block text-[10px] uppercase font-bold">Showtime</span>
+                        <strong class="text-white">{{ validation_result.show_time }}</strong>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- NoSQL Audit Stream: Recent Gate Scans -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-white text-base flex items-center space-x-2">
+                <i class="fa-solid fa-list-check text-brand-400"></i>
+                <span>Live Gate Validation Audit Trail</span>
+            </h3>
+            <span class="text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-800/60 px-2 py-0.5 rounded-full font-mono">
+                NoSQL collection: ticket_scans
+            </span>
+        </div>
+
+        {% if scan_logs %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead class="text-slate-400 border-b border-slate-800 text-[10px] uppercase">
+                    <tr>
+                        <th class="pb-2">Timestamp</th>
+                        <th class="pb-2">Status</th>
+                        <th class="pb-2">Booking Ref / Token</th>
+                        <th class="pb-2">Staff</th>
+                        <th class="pb-2">Audit Detail</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/60">
+                    {% for scan in scan_logs %}
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="py-2.5 text-slate-400 font-mono text-[11px] whitespace-nowrap">
+                            {{ scan.timestamp|slice:":19" }}
+                        </td>
+                        <td class="py-2.5">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase {% if scan.status == 'VALID_ENTRY' %}bg-emerald-950 text-emerald-300 border border-emerald-800{% elif scan.status == 'ALREADY_USED' %}bg-amber-950 text-amber-300 border border-amber-800{% else %}bg-rose-950 text-rose-300 border border-rose-800{% endif %}">
+                                {{ scan.status }}
+                            </span>
+                        </td>
+                        <td class="py-2.5 font-mono text-slate-300 text-[11px]">
+                            {{ scan.booking_reference|truncatechars:20 }}
+                        </td>
+                        <td class="py-2.5 text-slate-400">
+                            {{ scan.staff_username }}
+                        </td>
+                        <td class="py-2.5 text-slate-300 text-xs">
+                            {{ scan.message|truncatechars:50 }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-xs text-slate-400 text-center py-6">No scan records logged yet in NoSQL collection.</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
+
