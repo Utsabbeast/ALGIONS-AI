@@ -83,15 +83,34 @@ def hold_seats(
     """
     Atomically places a temporary hold on the requested seats for a showtime.
     Guarantees no two users can hold or book the same seat simultaneously.
+    Sanitizes seat IDs against duplicates, negative numbers, and excessive batch holds.
     """
     if not seat_ids:
         raise ValidationError("At least one seat must be selected.")
+
+    # Deduplicate and validate seat IDs
+    try:
+        cleaned_seat_ids = list(dict.fromkeys(int(s) for s in seat_ids if int(s) > 0))
+    except (ValueError, TypeError):
+        raise ValidationError("Invalid seat identifier provided.")
+
+    if not cleaned_seat_ids:
+        raise ValidationError("At least one valid seat identifier must be selected.")
+
+    if len(cleaned_seat_ids) > 10:
+        raise ValidationError("Maximum 10 seats can be reserved in a single transaction.")
+
+    seat_ids = cleaned_seat_ids
 
     # Always flush expired holds first
     release_expired_holds(showtime_id)
 
     with transaction.atomic():
-        showtime = Showtime.objects.select_related('screen', 'movie').get(id=showtime_id)
+        try:
+            showtime = Showtime.objects.select_related('screen', 'movie').get(id=showtime_id)
+        except Showtime.DoesNotExist:
+            raise ValidationError(f"Showtime {showtime_id} not found.")
+
         if showtime.is_past:
             raise ValidationError("Cannot reserve seats for a past showtime.")
 
@@ -255,6 +274,16 @@ def confirm_booking(
                 "Your reservation hold has expired or is invalid. Please select your seats again."
             )
 
+        # Race condition check: Ensure hold did not expire while acquiring lock
+        now = timezone.now()
+        if any(h.expires_at < now for h in active_holds):
+            for h in active_holds:
+                h.status = SeatHold.Status.EXPIRED
+                h.save(update_fields=['status'])
+            raise HoldExpiredError(
+                "Your reservation hold has expired. Please select your seats again."
+            )
+
         showtime = active_holds[0].showtime
         seats = [h.seat for h in active_holds]
 
@@ -270,6 +299,12 @@ def confirm_booking(
                 f"Seat(s) {', '.join(conflicts)} have already been confirmed by another booking."
             )
 
+        # Sanitize payment method
+        allowed_payment_methods = {'SIMULATED_UPI', 'SIMULATED_CARD', 'SIMULATED_NETBANKING', 'UPI', 'CARD', 'NET_BANKING'}
+        clean_payment_method = payment_method.strip().upper() if payment_method else 'SIMULATED_UPI'
+        if clean_payment_method not in allowed_payment_methods:
+            clean_payment_method = 'SIMULATED_UPI'
+
         # Calculate pricing
         subtotal = Decimal('0.00')
         for s in seats:
@@ -279,7 +314,7 @@ def confirm_booking(
         total_amount = subtotal + convenience_fee
 
         # Generate unique booking reference and secure QR verification token
-        date_str = timezone.now().strftime('%Y%m%d')
+        date_str = now.strftime('%Y%m%d')
         random_suffix = uuid.uuid4().hex[:6].upper()
         booking_reference = f"BMS-{date_str}-{random_suffix}"
         
@@ -295,7 +330,7 @@ def confirm_booking(
             total_amount=total_amount,
             convenience_fee=convenience_fee,
             discount_amount=Decimal('0.00'),
-            payment_method=payment_method,
+            payment_method=clean_payment_method,
             payment_reference=simulated_pay_ref,
             payment_status='COMPLETED',
             qr_token=qr_token,
@@ -348,16 +383,19 @@ def cancel_booking(
     Cancels a confirmed booking, calculates simulated refund, releases seats,
     and logs the audit trail.
     """
+    clean_reference = str(booking_reference or '').strip()[:100]
+    clean_reason = str(reason or 'Customer requested cancellation').strip()[:255]
+
     with transaction.atomic():
         try:
             booking = (
                 Booking.objects.select_for_update()
                 .select_related('showtime', 'showtime__movie', 'user')
                 .prefetch_related('seats', 'seats__seat')
-                .get(booking_reference=booking_reference)
+                .get(booking_reference=clean_reference)
             )
         except Booking.DoesNotExist:
-            raise ValidationError(f"Booking {booking_reference} not found.")
+            raise ValidationError(f"Booking {clean_reference} not found.")
 
         # RBAC Check: Only owner or staff/admin can cancel
         if not (requested_by.is_cinema_admin or requested_by.is_gate_staff or booking.user_id == requested_by.id):
@@ -387,7 +425,7 @@ def cancel_booking(
             refund_note = "50% cancellation fee applied within 2 hours of showtime"
 
         booking.status = Booking.Status.CANCELLED
-        booking.cancellation_reason = reason
+        booking.cancellation_reason = clean_reason
         booking.refund_amount = refund_amount
         booking.refund_status = f"SIMULATED_REFUND_PROCESSED ({refund_note})"
         booking.cancelled_at = now
@@ -407,7 +445,7 @@ def cancel_booking(
                 'seats_released': seat_codes,
                 'refund_amount': float(refund_amount),
                 'refund_status': booking.refund_status,
-                'reason': reason
+                'reason': clean_reason
             }
         )
 
@@ -427,20 +465,24 @@ def validate_ticket_entry(
     - Second scan: REJECTED with ALREADY_USED status, logging incident to NoSQL.
     - Cancelled ticket: REJECTED.
     """
+    if not token_or_reference or not str(token_or_reference).strip():
+        raise TicketValidationError("A valid ticket reference or QR token must be provided.")
+
+    clean_token = str(token_or_reference).strip()[:100]
+
     with transaction.atomic():
-        token_or_reference = token_or_reference.strip()
         booking = (
             Booking.objects.select_for_update()
             .select_related('showtime', 'showtime__movie', 'showtime__screen', 'showtime__screen__theatre', 'user')
             .prefetch_related('seats', 'seats__seat')
-            .filter(Q(qr_token=token_or_reference) | Q(booking_reference=token_or_reference))
+            .filter(Q(qr_token=clean_token) | Q(booking_reference=clean_token))
             .first()
         )
 
         if not booking:
             log_ticket_scan(
-                booking_reference=token_or_reference,
-                qr_token=token_or_reference,
+                booking_reference=clean_token,
+                qr_token=clean_token,
                 status='INVALID_TOKEN',
                 staff_username=staff_user.username if staff_user else 'unknown',
                 message='Ticket reference / QR token not found in database',
@@ -621,21 +663,34 @@ def get_show_seat_matrix(showtime_id: int, current_hold_token: Optional[str] = N
     }
 
 
-def get_occupancy_report_data(theatre_id: Optional[int] = None, movie_id: Optional[int] = None) -> Dict[str, Any]:
+def get_occupancy_report_data(theatre_id: Optional[Any] = None, movie_id: Optional[Any] = None) -> Dict[str, Any]:
     """
     Computes occupancy and sales reconciliation metrics for administrative reporting.
     Guarantees that:
     - Confirmed bookings + active holds + available = total capacity.
     - Cancellations decrement confirmed bookings and track simulated refund amounts.
     - Gross revenue, refunds, and net revenue reconcile perfectly.
+    - Gracefully handles malformed or non-integer query filters.
     """
     release_expired_holds()
 
     showtimes_qs = Showtime.objects.select_related('movie', 'screen', 'screen__theatre').all()
-    if theatre_id:
-        showtimes_qs = showtimes_qs.filter(screen__theatre_id=theatre_id)
-    if movie_id:
-        showtimes_qs = showtimes_qs.filter(movie_id=movie_id)
+    
+    clean_theatre_id = None
+    if theatre_id is not None and theatre_id != '':
+        try:
+            clean_theatre_id = int(theatre_id)
+            showtimes_qs = showtimes_qs.filter(screen__theatre_id=clean_theatre_id)
+        except (ValueError, TypeError):
+            pass
+
+    clean_movie_id = None
+    if movie_id is not None and movie_id != '':
+        try:
+            clean_movie_id = int(movie_id)
+            showtimes_qs = showtimes_qs.filter(movie_id=clean_movie_id)
+        except (ValueError, TypeError):
+            pass
 
     show_reports = []
     total_capacity_sum = 0

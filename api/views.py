@@ -90,7 +90,10 @@ class ShowtimeListAPIView(generics.ListAPIView):
 
         movie_id = self.request.query_params.get('movie_id')
         if movie_id:
-            qs = qs.filter(movie_id=movie_id)
+            try:
+                qs = qs.filter(movie_id=int(movie_id))
+            except (ValueError, TypeError):
+                pass
 
         city = self.request.query_params.get('city')
         if city:
@@ -362,9 +365,24 @@ class OccupancyReportAPIView(views.APIView):
     def get(self, request):
         theatre_id = request.query_params.get('theatre_id')
         movie_id = request.query_params.get('movie_id')
+
+        parsed_theatre_id = None
+        if theatre_id:
+            try:
+                parsed_theatre_id = int(theatre_id)
+            except (ValueError, TypeError):
+                parsed_theatre_id = None
+
+        parsed_movie_id = None
+        if movie_id:
+            try:
+                parsed_movie_id = int(movie_id)
+            except (ValueError, TypeError):
+                parsed_movie_id = None
+
         data = services.get_occupancy_report_data(
-            theatre_id=int(theatre_id) if theatre_id else None,
-            movie_id=int(movie_id) if movie_id else None
+            theatre_id=parsed_theatre_id,
+            movie_id=parsed_movie_id
         )
         return Response(data, status=status.HTTP_200_OK)
 
@@ -407,7 +425,11 @@ class NoSQLAuditTrailAPIView(views.APIView):
         )}
     )
     def get(self, request):
-        limit = int(request.query_params.get('limit', 50))
+        raw_limit = request.query_params.get('limit', 50)
+        try:
+            limit = min(max(1, int(raw_limit)), 100)
+        except (ValueError, TypeError):
+            limit = 50
         trail = nosql_service.get_audit_trail(limit=limit)
         return Response({'count': len(trail), 'events': trail}, status=status.HTTP_200_OK)
 
@@ -428,7 +450,11 @@ class NoSQLTicketScansAPIView(views.APIView):
         )}
     )
     def get(self, request):
-        limit = int(request.query_params.get('limit', 50))
+        raw_limit = request.query_params.get('limit', 50)
+        try:
+            limit = min(max(1, int(raw_limit)), 100)
+        except (ValueError, TypeError):
+            limit = 50
         scans = nosql_service.get_ticket_scan_logs(limit=limit)
         return Response({'count': len(scans), 'scans': scans}, status=status.HTTP_200_OK)
 

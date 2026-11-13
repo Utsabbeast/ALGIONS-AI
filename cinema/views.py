@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
 from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
+from django.utils.html import strip_tags
 from datetime import datetime, timedelta
 
 from cinema.models import Movie, Showtime, Theatre, Genre, User
@@ -123,14 +125,20 @@ def login_view(request):
         return redirect('cinema:home')
 
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '')
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
             messages.success(request, f"Welcome back, {user.get_full_name() or user.username}!")
-            next_url = request.GET.get('next') or request.POST.get('next') or 'cinema:home'
-            return redirect(next_url)
+            next_url = request.GET.get('next') or request.POST.get('next') or ''
+            if next_url and url_has_allowed_host_and_scheme(
+                url=next_url,
+                allowed_hosts={request.get_host()},
+                require_https=request.is_secure()
+            ):
+                return redirect(next_url)
+            return redirect('cinema:home')
         else:
             messages.error(request, "Invalid username or password.")
 
@@ -142,15 +150,19 @@ def register_view(request):
         return redirect('cinema:home')
 
     if request.method == 'POST':
-        username = request.POST.get('username', '').strip()
-        email = request.POST.get('email', '').strip()
+        username = strip_tags(request.POST.get('username', '')).strip()
+        email = strip_tags(request.POST.get('email', '')).strip().lower()
         password = request.POST.get('password', '')
-        first_name = request.POST.get('first_name', '').strip()
-        last_name = request.POST.get('last_name', '').strip()
-        phone = request.POST.get('phone', '').strip()
+        first_name = strip_tags(request.POST.get('first_name', '')).strip()[:50]
+        last_name = strip_tags(request.POST.get('last_name', '')).strip()[:50]
+        phone = strip_tags(request.POST.get('phone', '')).strip()[:20]
 
-        if User.objects.filter(username=username).exists():
+        if not username:
+            messages.error(request, "Username is required.")
+        elif User.objects.filter(username=username).exists():
             messages.error(request, "Username is already taken.")
+        elif not email:
+            messages.error(request, "Email address is required.")
         elif User.objects.filter(email=email).exists():
             messages.error(request, "Email address is already registered.")
         elif len(password) < 6:
@@ -166,7 +178,7 @@ def register_view(request):
                 role=User.Role.CUSTOMER
             )
             login(request, user)
-            messages.success(request, "Registration successful! Welcome to CinemaBox.")
+            messages.success(request, "Registration successful! Welcome to COMET.")
             return redirect('cinema:home')
 
     return render(request, 'cinema/register.html')

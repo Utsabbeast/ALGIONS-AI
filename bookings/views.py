@@ -230,9 +230,23 @@ def admin_dashboard_view(request):
     theatre_id = request.GET.get('theatre_id')
     movie_id = request.GET.get('movie_id')
 
+    parsed_theatre_id = None
+    if theatre_id:
+        try:
+            parsed_theatre_id = int(theatre_id)
+        except (ValueError, TypeError):
+            parsed_theatre_id = None
+
+    parsed_movie_id = None
+    if movie_id:
+        try:
+            parsed_movie_id = int(movie_id)
+        except (ValueError, TypeError):
+            parsed_movie_id = None
+
     report_data = services.get_occupancy_report_data(
-        theatre_id=int(theatre_id) if theatre_id else None,
-        movie_id=int(movie_id) if movie_id else None
+        theatre_id=parsed_theatre_id,
+        movie_id=parsed_movie_id
     )
 
     nosql_status = nosql_service.get_nosql_status()
@@ -247,7 +261,7 @@ def admin_dashboard_view(request):
         'audit_events': audit_events,
         'theatres': theatres,
         'movies': movies,
-        'selected_theatre_id': int(theatre_id) if theatre_id else None,
-        'selected_movie_id': int(movie_id) if movie_id else None,
+        'selected_theatre_id': parsed_theatre_id,
+        'selected_movie_id': parsed_movie_id,
     }
     return render(request, 'bookings/admin_dashboard.html', context)

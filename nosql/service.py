@@ -249,15 +249,41 @@ def log_ticket_scan(booking_reference: str, qr_token: str, status: str, staff_us
 # Movie Reviews NoSQL Helpers
 def add_movie_review(movie_id: int, username: str, rating: float, comment: str, tags: Optional[List[str]] = None, verified_booking: bool = False):
     """
-    Stores unstructured customer review documents.
+    Stores unstructured customer review documents with strict input sanitization.
+    Strips script tags and inner contents, removes HTML markup, and bounds ratings.
     """
+    import re
+    from django.utils.html import strip_tags
+
+    def _sanitize(val: str) -> str:
+        if not val:
+            return ""
+        # Strip script and style blocks completely
+        val = re.sub(r'(?is)<(script|style).*?>.*?(</\1>)', '', str(val))
+        return strip_tags(val).strip()
+
+    clean_username = _sanitize(username)[:50] or 'Anonymous Guest'
+    clean_comment = _sanitize(comment)[:1000]
+    
+    try:
+        clean_rating = max(1.0, min(5.0, round(float(rating), 1)))
+    except (ValueError, TypeError):
+        clean_rating = 5.0
+
+    clean_tags = []
+    if tags:
+        for t in tags:
+            tag_str = _sanitize(t)[:30]
+            if tag_str and tag_str not in clean_tags:
+                clean_tags.append(tag_str)
+
     doc = {
-        'movie_id': movie_id,
-        'username': username,
-        'rating': float(rating),
-        'comment': comment,
-        'tags': tags or [],
-        'verified_booking': verified_booking,
+        'movie_id': int(movie_id),
+        'username': clean_username,
+        'rating': clean_rating,
+        'comment': clean_comment,
+        'tags': clean_tags[:8],
+        'verified_booking': bool(verified_booking),
         'created_at': datetime.utcnow().isoformat(),
         'likes_count': 0
     }

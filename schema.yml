@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: CinemaBox Cinema Ticket Booking API
+  title: COMET Cinema Ticket Booking API
   version: 1.0.0
   description: RESTful API documentation for Cinema Hall Ticket Booking System with
     temporary seat locks, QR code issuance, entry scanner, and occupancy analytics.
