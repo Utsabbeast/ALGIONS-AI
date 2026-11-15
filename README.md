@@ -254,8 +254,11 @@ Interactive Swagger 3.0 UI is embedded at:
 
 ---
 
-## ⚖️ Known Limitations & Assumptions
-1. **Payment Simulation**: Real payment processing (Razorpay/Stripe) is simulated in accordance with assessment rules forbidding live financial credentials.
-2. **Hold Expiry Worker**: Temporary holds are lazily flushed during seat matrix queries and booking calls; in an enterprise production cluster, Celery beat or Redis keyspace notifications can be added for sub-second TTL eviction.
-3. **NoSQL Dual-Mode**: PyMongo connects to MongoDB Atlas when `MONGODB_URI` is supplied, falling back to a thread-safe local JSON document store for zero-friction evaluation.
+## ⚖️ Known Limitations & Architectural Trade-offs
+1. **Simulated Payment Sandbox**: Real financial gateways (e.g., Razorpay/Stripe) are mocked via a simulated gateway sandbox to comply with assessment security instructions prohibiting live credentials.
+2. **Lazy Hold Reaping Engine**: Temporary 10-minute seat holds are automatically reaped during seat matrix reads and booking confirmation writes. For massive hyperscale environments (>50k req/s), a background periodic task runner (Celery Beat) or Redis keyspace expiry events would provide sub-second proactive lock eviction.
+3. **Dual-Mode NoSQL Fallback**: PyMongo natively connects to MongoDB Atlas when `MONGODB_URI` is provided, automatically falling back to an embedded thread-safe JSON document store for zero-dependency assessment review.
+4. **Browser Navigation Interception**: HTML5 `pushState` and `onpopstate` locks prevent accidental loss of seat holds during checkout, paired with an on-screen Back button. Clients with JavaScript disabled rely on server-side session guards.
+5. **Database Portability**: Defaults to SQLite for instant local and test run reproducibility, automatically connecting to managed PostgreSQL when deployed on Render via `DATABASE_URL`.
+6. **Real-time Seat Updates**: Live seat status updates upon hold acquisition, checkout, and countdown polling. An enterprise WebSocket tier (Django Channels + Redis) can be plugged in for multi-client push broadcasting.
 

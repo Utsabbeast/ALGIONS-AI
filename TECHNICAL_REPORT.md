@@ -112,7 +112,7 @@ All 22 automated unit, integration, and security edge-case tests executed with 1
 ## 5. 3–5 Minute Walkthrough Video Script
 
 - **[0:00 - 0:45] Overview & Tech Stack:**
-  Show home page (`/`), demonstrate city switcher (Mumbai, Delhi-NCR, Bengaluru) and movie filters (genres, languages, search across 20 titles). Show light/dark mode toggle.
+  Show home page (`/`), demonstrate city switcher (across 8 metropolitan hubs: Mumbai, Delhi-NCR, Bengaluru, Hyderabad, Chennai, Kolkata, Pune, Ahmedabad) and movie filters (genres, languages, search across 20 titles). Show light/dark mode toggle.
 - **[0:45 - 1:45] Customer Journey (Discovery & Seat Reservation):**
   Click on "Dune: Part Two" or "Deadpool & Wolverine", select a theatre and showtime. Open interactive seat picker. Select 2 seats across tiers (Gold / Platinum). Demonstrate the 10-minute hold lock timer and live price calculation. Click "Lock Seats & Pay", simulate UPI checkout, and view the generated ticket with base64 QR code pass.
 - **[1:45 - 2:30] Gate Scanner & Entry Validation (Staff Flow):**
@@ -122,5 +122,21 @@ All 22 automated unit, integration, and security edge-case tests executed with 1
 - **[3:15 - 4:00] Admin Dashboard & NoSQL Diagnostics:**
   Sign in as Cinema Admin using 1-click login. Review the live Occupancy and Sales Dashboard. Demonstrate the mathematical reconciliation table and the NoSQL engine diagnostic card displaying live document counts.
 - **[4:00 - 4:30] API Documentation & OpenAPI Swagger:**
-  Open `/api/docs/` to show the interactive Swagger UI with live schema testing for movies, showtimes, seat holds, booking confirmation, ticket verification, and NoSQL collections.
+  Open the Admin Dashboard or top header, launch `/api/docs/` to show the interactive Swagger UI with live schema testing for movies, showtimes, seat holds, booking confirmation, ticket verification, and NoSQL collections.
+
+---
+
+## 6. Honest Limitations & Architectural Trade-offs
+
+In accordance with rigorous production engineering standards, the following architectural trade-offs and deliberate limitations are documented:
+
+| Area | Current Implementation | Production Enterprise Scaling Roadmap |
+| :--- | :--- | :--- |
+| **Payment Processing** | **Simulated Sandbox Gateway:** Supports simulated Credit/Debit, UPI, and NetBanking without live billing, adhering strictly to assessment guidelines forbidding live financial credentials. | Integrate Razorpay / Stripe Webhooks with HMAC cryptographic signature verification and asynchronous idempotency keys. |
+| **Seat Hold TTL Eviction** | **Lazy In-Transaction Reaper:** Expired 10-minute seat holds are proactively reaped on read queries (`get_showtime_seat_matrix`) and checkout write operations. | For hyperscale traffic (>50k req/s), deploy **Redis Keyspace Notifications (`Ex`)** or a Celery Beat periodic task runner for exact sub-second proactive lock eviction. |
+| **Polyglot Persistence** | **Dual-Mode Resilient Manager:** Connects natively to MongoDB Atlas via PyMongo when `MONGODB_URI` is provided; seamlessly falls back to a thread-safe local JSON document store for zero-dependency assessment review. | Provision dedicated MongoDB replica set with automatic sharding on `showtime_id` for high-velocity gate audit and review feeds. |
+| **Browser Navigation Interception** | **Client-side History Trap & On-Screen Navigation:** Uses `history.pushState` and `window.onpopstate` with an on-screen Back button to prevent session abandonment during checkout. | Clients with JavaScript disabled fall back to server-side session checks and flash alerts. |
+| **Database Deployment** | **Relational ORM (SQLite / PostgreSQL):** Automatically defaults to zero-config SQLite locally and auto-binds to managed PostgreSQL on Render via `DATABASE_URL`. | In production, provision PostgreSQL read replicas for query-heavy showtime lookups, retaining pessimistic `select_for_update` on the primary write node. |
+| **Real-Time Seat Seat Broadcasting** | **Optimistic Polling & Hold Locking:** Client refreshes seat availability on hold attempts and countdown polling. | Implement **Django Channels + WebSockets** backed by Redis Pub/Sub to push instant seat color changes across concurrent connected browsers. |
+
 
