@@ -347,14 +347,22 @@
     </div>
 
     <!-- Locked Browser Navigation Toast Notice (Sharp, Architectural) -->
-    <div id="browser-nav-notice" class="fixed bottom-6 right-6 z-50 hidden bg-neutral-950 text-white border-2 border-red-600 px-5 py-3.5 shadow-2xl font-mono text-xs flex items-center space-x-3.5 transition-all transform duration-300">
-        <div class="w-8 h-8 bg-red-600/20 text-red-500 border border-red-500/40 flex items-center justify-center flex-shrink-0">
+    <div id="browser-nav-notice" class="fixed bottom-6 right-6 z-50 hidden bg-neutral-950 text-white border-2 border-red-600 p-4 shadow-2xl font-mono text-xs flex items-center space-x-4 transition-all transform duration-300 max-w-md">
+        <div class="w-9 h-9 bg-red-600/20 text-red-500 border border-red-500/40 flex items-center justify-center flex-shrink-0 text-sm">
             <i class="fa-solid fa-arrow-left"></i>
         </div>
-        <div>
-            <div class="font-bold uppercase tracking-wider text-red-500 text-[11px]">Browser Navigation Disabled</div>
-            <div class="text-neutral-300 text-[11px] mt-0.5">Please use the on-screen <strong class="text-white bg-neutral-800 px-1 py-0.5 border border-neutral-700">Back</strong> button on the website.</div>
+        <div class="flex-1">
+            <div class="font-bold uppercase tracking-wider text-red-500 text-[11px] flex items-center space-x-1.5">
+                <i class="fa-solid fa-ban text-[10px]"></i>
+                <span>Browser Navigation Disabled</span>
+            </div>
+            <div class="text-neutral-300 text-[11px] mt-0.5 leading-snug">
+                Browser Back &amp; Forth buttons are disabled to protect your transaction. Please use the on-screen <strong>Back</strong> button.
+            </div>
         </div>
+        <button type="button" onclick="goBackOnSite()" class="flex-shrink-0 px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white text-[10px] font-bold uppercase tracking-wider border border-red-500 transition shadow">
+            Go Back &larr;
+        </button>
     </div>
 
     <!-- Global Loader, Theme Toggle, Browser Lock & On-Site Back Scripts -->
@@ -370,17 +378,46 @@
             clearTimeout(window._navNoticeTimer);
             window._navNoticeTimer = setTimeout(function() {
                 notice.classList.add('hidden');
-            }, 3500);
+            }, 4000);
         }
 
-        // Lock native browser Back/Forward navigation
+        // Comprehensive Browser Navigation Disabler (Back & Forward Buttons, Mouse Buttons, Keyboard)
         (function setupBrowserNavigationLock() {
             try {
+                // Seed initial history entries to absorb back/forth clicks
                 history.pushState(null, document.title, window.location.href);
+
+                // Intercept native browser Back / Forward history pop
                 window.addEventListener('popstate', function(event) {
                     if (!allowSiteNavigation) {
                         history.pushState(null, document.title, window.location.href);
                         showBrowserNavNotice();
+                    }
+                });
+
+                // Intercept mouse side Back/Forward navigation buttons (button 3 and 4)
+                window.addEventListener('mouseup', function(e) {
+                    if (e.button === 3 || e.button === 4) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showBrowserNavNotice();
+                        return false;
+                    }
+                });
+
+                // Intercept keyboard navigation shortcuts: Alt+Left, Alt+Right, standalone Backspace
+                window.addEventListener('keydown', function(e) {
+                    const isAltLeft = e.altKey && (e.key === 'ArrowLeft' || e.keyCode === 37);
+                    const isAltRight = e.altKey && (e.key === 'ArrowRight' || e.keyCode === 39);
+                    const isBackspace = (e.key === 'Backspace' || e.keyCode === 8) &&
+                        !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName) &&
+                        !document.activeElement?.isContentEditable;
+
+                    if (isAltLeft || isAltRight || isBackspace) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showBrowserNavNotice();
+                        return false;
                     }
                 });
             } catch (e) {
