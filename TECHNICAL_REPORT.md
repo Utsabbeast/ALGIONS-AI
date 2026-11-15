@@ -92,28 +92,35 @@ To solve this, COMET is architected as a **modular monolith** employing **Polygl
 
 ---
 
-## 4. Verification Evidence (Acceptance Criteria)
+## 4. Verification Evidence (Acceptance Criteria & Edge Cases)
 
-All 12 automated unit and integration tests executed with 100% success:
+All 22 automated unit, integration, and security edge-case tests executed with 100% success (`OK`):
 
 1. **Available seat can be held and booked:** Verified by `test_01_available_seat_can_be_held_and_booked`. Seat hold created, status converted to `CONFIRMED`, unique booking reference and QR token generated.
 2. **Concurrency conflict prevention:** Verified by `test_02_double_booking_concurrency_prevention`. Second user receives `SeatUnavailableError` (HTTP 409).
 3. **Expired hold release:** Verified by `test_03_expired_holds_release_seat_and_confirmed_remain_booked`. Expired holds return to `AVAILABLE`; confirmed bookings remain `BOOKED`.
 4. **Single-use ticket QR validation:** Verified by `test_04_single_use_ticket_qr_validation`. 1st scan approves entry; 2nd scan throws `TicketAlreadyUsedError` and logs to NoSQL.
 5. **Occupancy & revenue reconciliation:** Verified by `test_05_occupancy_report_matches_bookings_and_cancellations`. Invariant equation: `Capacity = Confirmed + Holds + Available` holds exactly before and after cancellations.
+6. **Seat ID Deduplication & Bounds:** Verified by `test_hold_seats_duplicate_seat_ids_deduplicated` and `test_hold_seats_exceeds_max_limit_raises_error`.
+7. **Hold Expiry Race Condition:** Verified by `test_confirm_booking_race_condition_expired_hold`.
+8. **Open Redirect Defense:** Verified by `test_login_view_open_redirect_defense`.
+9. **Malformed Query Param Safety:** Verified by `test_admin_dashboard_malformed_query_params` and `test_occupancy_api_malformed_query_params`.
+10. **Stored XSS Sanitization:** Verified by `test_nosql_review_html_sanitization`.
 
 ---
 
 ## 5. 3–5 Minute Walkthrough Video Script
 
 - **[0:00 - 0:45] Overview & Tech Stack:**
-  Show home page (`/`), review top evaluation bar, demonstrate city switcher (Mumbai, Delhi-NCR, Bengaluru) and movie filters (genres, languages, search).
+  Show home page (`/`), demonstrate city switcher (Mumbai, Delhi-NCR, Bengaluru) and movie filters (genres, languages, search across 20 titles). Show light/dark mode toggle.
 - **[0:45 - 1:45] Customer Journey (Discovery & Seat Reservation):**
-  Click on "Dune: Part Two", select a theatre and showtime. Open interactive seat picker. Select 2 seats across tiers (Gold / Platinum). Demonstrate the 10-minute hold lock timer and live price calculation. Click "Lock Seats & Pay", simulate UPI checkout, and view the generated ticket with base64 QR code pass.
+  Click on "Dune: Part Two" or "Deadpool & Wolverine", select a theatre and showtime. Open interactive seat picker. Select 2 seats across tiers (Gold / Platinum). Demonstrate the 10-minute hold lock timer and live price calculation. Click "Lock Seats & Pay", simulate UPI checkout, and view the generated ticket with base64 QR code pass.
 - **[1:45 - 2:30] Gate Scanner & Entry Validation (Staff Flow):**
-  Switch to Gate Staff role using 1-click login. Open Gate Scanner (`/bookings/staff/gate-scanner/`). Scan the generated ticket QR token. Show **Entry Approved** screen. Immediately scan the same ticket a second time to demonstrate the **Already Used** security alert and live NoSQL audit log.
+  Click "Sign In" in the navigation bar or visit `/accounts/login/` to show the 1-Click Demo Box. Click **Staff**. Open Gate Scanner (`/bookings/staff/gate-scanner/`). Click "Simulate Scan" or enter the ticket QR token. Show **Entry Approved** screen. Immediately scan the same ticket a second time to demonstrate the **Already Used** security alert and live NoSQL audit log.
 - **[2:30 - 3:15] Cancellation & Inventory Release:**
   Return to customer view, open "My Bookings". Click "Cancel Ticket". Observe the simulated refund policy calculation (e.g. ₹480 refund processed) and verify that the cancelled seats are instantly released back to available inventory.
 - **[3:15 - 4:00] Admin Dashboard & NoSQL Diagnostics:**
-  Sign in as Cinema Admin. Review the live Occupancy and Sales Dashboard. Demonstrate the mathematical reconciliation table and the NoSQL engine diagnostic card displaying live document counts.
+  Sign in as Cinema Admin using 1-click login. Review the live Occupancy and Sales Dashboard. Demonstrate the mathematical reconciliation table and the NoSQL engine diagnostic card displaying live document counts.
+- **[4:00 - 4:30] API Documentation & OpenAPI Swagger:**
+  Open `/api/docs/` to show the interactive Swagger UI with live schema testing for movies, showtimes, seat holds, booking confirmation, ticket verification, and NoSQL collections.
 

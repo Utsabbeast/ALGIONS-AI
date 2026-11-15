@@ -4,7 +4,7 @@
 [![Django](https://img.shields.io/badge/Django-5.1-092E20.svg)](https://www.djangoproject.com/)
 [![NoSQL](https://img.shields.io/badge/NoSQL-MongoDB%20%2B%20Document%20Store-47A248.svg)](https://www.mongodb.com/)
 [![Render](https://img.shields.io/badge/Deploy-Render%20Ready-46E3B7.svg)](https://render.com/)
-[![Tests](https://img.shields.io/badge/Tests-12%2F12%20Passing-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/Tests-22%2F22%20Passing-brightgreen.svg)]()
 
 > **Full-Stack Web Development Advanced Assessment Project**  
 > Candidate Project: **COMET** — Cinema Hall Ticket Booking System ("BookMyShow" style application)  
@@ -134,16 +134,21 @@ Run the test suite covering all 5 explicit assessment criteria:
 python manage.py test tests
 ```
 
-### Acceptance Criteria Verification Table
+### Acceptance Criteria & Edge-Case Verification Table (22/22 Passing)
 
-| # | Assessment Acceptance Criterion | Test Method | Status | Verification Evidence |
-|---|----------------------------------|-------------|:------:|-----------------------|
+| # | Criterion / Module | Test Suite / Method | Status | Verification Evidence |
+|---|--------------------|---------------------|:------:|-----------------------|
 | 1 | **Available seat can be held and booked** | `test_01_available_seat_can_be_held_and_booked` | **PASS** | Creates `SeatHold`, locks seat with token, converts to confirmed `Booking`, verifies unique `BMS-...` reference and QR token. |
 | 2 | **Same seat cannot be confirmed to 2 users** | `test_02_double_booking_concurrency_prevention` | **PASS** | Tests concurrent hold on identical seat; User B receives `SeatUnavailableError` (HTTP 409 Conflict). |
 | 3 | **Expired holds release seat; confirmed stays booked** | `test_03_expired_holds_release_seat_and_confirmed_remain_booked` | **PASS** | Backdated holds transition to `EXPIRED`, seat status resets to `AVAILABLE`, while confirmed seat remains `BOOKED`. |
 | 4 | **Ticket QR validated once in simulated entry flow** | `test_04_single_use_ticket_qr_validation` | **PASS** | 1st scan approves entry (`VALID_ENTRY`); 2nd scan throws `TicketAlreadyUsedError` (`ALREADY_USED`) and logs to NoSQL. |
 | 5 | **Occupancy report matches bookings & cancellations** | `test_05_occupancy_report_matches_bookings_and_cancellations` | **PASS** | Mathematical proof: `Capacity = Confirmed + Active Holds + Available`. Confirmed bookings increase occupancy; cancellations decrement confirmed count and calculate refund. |
 | 6 | **Negative & RBAC Security Cases** | `test_06_cannot_cancel_past_show`, `test_07_unauthorized_user_cannot_cancel_others_booking` | **PASS** | Confirms past show cancellation rejection and customer privilege isolation. |
+| 7 | **Seat ID Deduplication & Limits** | `test_hold_seats_duplicate_seat_ids_deduplicated`, `test_hold_seats_exceeds_max_limit_raises_error` | **PASS** | Deduplicates redundant seat IDs in payloads; enforces 10-seat transaction limits. |
+| 8 | **Hold Expiry Race Condition** | `test_confirm_booking_race_condition_expired_hold` | **PASS** | Re-checks expiry timestamp inside locked atomic block; marks hold `EXPIRED` and throws `HoldExpiredError`. |
+| 9 | **Open Redirect Defense** | `test_login_view_open_redirect_defense` | **PASS** | Rejects off-site `?next=https://attacker.com` parameters; safely defaults to home. |
+| 10 | **Malformed Query Param Safety** | `test_admin_dashboard_malformed_query_params`, `test_occupancy_api_malformed_query_params` | **PASS** | Non-numeric `theatre_id`, `movie_id`, and `limit` query parameters are safely cast without 500 crashes. |
+| 11 | **NoSQL Review Sanitization** | `test_nosql_review_html_sanitization` | **PASS** | Strips dangerous `<script>`/`<style>` blocks and HTML tags; clamps ratings between 1.0 and 5.0. |
 
 ---
 
