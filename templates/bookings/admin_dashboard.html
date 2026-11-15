@@ -46,7 +46,41 @@
             {% if selected_theatre_id or selected_movie_id %}
             <a href="{% url 'bookings:admin-dashboard' %}" class="text-xs font-mono uppercase tracking-wider text-rose-500 dark:text-rose-400 hover:underline px-2">Reset</a>
             {% endif %}
+
+            <a href="{% url 'api:swagger-ui' %}" target="_blank" class="inline-flex items-center space-x-1.5 px-3 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-mono font-bold uppercase tracking-wider border border-blue-500 shadow-sm transition" title="Open Swagger OpenAPI Documentation">
+                <i class="fa-solid fa-code text-xs"></i>
+                <span class="hidden sm:inline">Swagger</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+            </a>
         </form>
+    </div>
+
+    <!-- Developer & REST API Console (Swagger OpenAPI 3.0) -->
+    <div class="bg-white dark:bg-[#0e0e12] border-2 border-blue-600/70 dark:border-blue-500/70 p-5 mb-8 shadow-sm transition-colors">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div>
+                <div class="inline-flex items-center space-x-1.5 px-2.5 py-0.5 text-[9px] font-mono font-bold bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800 mb-1.5 uppercase tracking-widest">
+                    <i class="fa-solid fa-terminal"></i>
+                    <span>ADMIN REST API & DEVELOPER ENGINE</span>
+                </div>
+                <h3 class="text-xl font-light text-neutral-900 dark:text-white font-casta">
+                    Interactive OpenAPI 3.0 & Swagger UI
+                </h3>
+                <p class="text-xs text-neutral-500 font-mono mt-0.5">
+                    Live endpoint testing for Concurrency Locks, QR Pass Issuance, Single-Use Gate Scans, and NoSQL Diagnostics.
+                </p>
+            </div>
+            <div class="flex items-center space-x-2.5 w-full md:w-auto">
+                <a href="{% url 'api:schema' %}" target="_blank" class="flex-1 md:flex-none text-center px-3.5 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-[#16161e] dark:hover:bg-[#20202b] border border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 text-xs font-mono font-bold uppercase tracking-wider transition">
+                    <i class="fa-solid fa-file-lines mr-1 text-neutral-500"></i>YAML Schema
+                </a>
+                <a href="{% url 'api:swagger-ui' %}" target="_blank" class="flex-1 md:flex-none text-center px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-mono font-bold uppercase tracking-wider border border-blue-500 shadow-sm transition flex items-center justify-center space-x-1.5">
+                    <i class="fa-solid fa-code text-xs"></i>
+                    <span>Launch Swagger Docs</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                </a>
+            </div>
+        </div>
     </div>
 
     <!-- Diagnostic NoSQL Engine Status Widget (Sharp) -->

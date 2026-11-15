@@ -28,31 +28,28 @@
             </p>
         </div>
 
-        <div class="grid grid-cols-2 gap-2.5 mb-3">
+        <div class="grid grid-cols-3 gap-2 mb-3">
             <!-- Customer Role -->
-            <a href="{% url 'cinema:demo-login' role='customer' %}" class="flex items-center justify-center space-x-2 py-3 px-3 bg-neutral-100 hover:bg-neutral-200 dark:bg-[#16161e] dark:hover:bg-[#20202b] border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-xs font-mono font-bold tracking-wider uppercase transition shadow-sm group">
-                <i class="fa-solid fa-user text-emerald-500 text-xs group-hover:scale-110 transition-transform"></i>
+            <a href="{% url 'cinema:demo-login' role='customer' %}" class="flex flex-col sm:flex-row items-center justify-center space-x-0 sm:space-x-1.5 py-3 px-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-[#16161e] dark:hover:bg-[#20202b] border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-xs font-mono font-bold tracking-wider uppercase transition shadow-sm group text-center">
+                <i class="fa-solid fa-user text-emerald-500 text-xs group-hover:scale-110 transition-transform mb-1 sm:mb-0"></i>
                 <span>Customer</span>
             </a>
 
             <!-- Staff Role (Gate Scanner) -->
-            <a href="{% url 'cinema:demo-login' role='staff' %}" class="flex items-center justify-center space-x-2 py-3 px-3 bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 dark:hover:bg-amber-900/60 border border-amber-300 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-xs font-mono font-bold tracking-wider uppercase transition shadow-sm group">
-                <i class="fa-solid fa-qrcode text-amber-500 text-xs group-hover:scale-110 transition-transform"></i>
+            <a href="{% url 'cinema:demo-login' role='staff' %}" class="flex flex-col sm:flex-row items-center justify-center space-x-0 sm:space-x-1.5 py-3 px-2 bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 dark:hover:bg-amber-900/60 border border-amber-300 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-xs font-mono font-bold tracking-wider uppercase transition shadow-sm group text-center">
+                <i class="fa-solid fa-qrcode text-amber-500 text-xs group-hover:scale-110 transition-transform mb-1 sm:mb-0"></i>
                 <span>Staff</span>
             </a>
 
-            <!-- Admin Role (Occupancy Dashboard) -->
-            <a href="{% url 'cinema:demo-login' role='admin' %}" class="flex items-center justify-center space-x-2 py-3 px-3 bg-rose-50 hover:bg-rose-100 dark:bg-brand-950/40 dark:hover:bg-brand-900/60 border border-rose-300 dark:border-brand-800 text-brand-700 dark:text-brand-300 text-xs font-mono font-bold tracking-wider uppercase transition shadow-sm group">
-                <i class="fa-solid fa-chart-pie text-brand-500 text-xs group-hover:scale-110 transition-transform"></i>
+            <!-- Admin Role (Occupancy Dashboard & Swagger Docs) -->
+            <a href="{% url 'cinema:demo-login' role='admin' %}" class="flex flex-col sm:flex-row items-center justify-center space-x-0 sm:space-x-1.5 py-3 px-2 bg-rose-50 hover:bg-rose-100 dark:bg-brand-950/40 dark:hover:bg-brand-900/60 border border-rose-300 dark:border-brand-800 text-brand-700 dark:text-brand-300 text-xs font-mono font-bold tracking-wider uppercase transition shadow-sm group text-center" title="Admin Portal & Swagger OpenAPI Docs">
+                <i class="fa-solid fa-chart-pie text-brand-500 text-xs group-hover:scale-110 transition-transform mb-1 sm:mb-0"></i>
                 <span>Admin</span>
             </a>
-
-            <!-- Swagger API Docs -->
-            <a href="{% url 'api:swagger-ui' %}" target="_blank" class="flex items-center justify-center space-x-2 py-3 px-3 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/60 border border-blue-300 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-xs font-mono font-bold tracking-wider uppercase transition shadow-sm group">
-                <i class="fa-solid fa-code text-blue-500 text-xs group-hover:scale-110 transition-transform"></i>
-                <span>Swagger</span>
-            </a>
         </div>
+        <p class="text-[10px] text-center text-neutral-400 font-mono">
+            * Swagger API documentation is accessible inside <strong>Admin</strong> login.
+        </p>
         <p class="text-[10px] text-center text-neutral-400 font-mono">Instant session bypass • No password typing required</p>
     </div>
 

@@ -150,6 +150,101 @@ class Command(BaseCommand):
                     {'name': 'Audi 1 - Insignia', 'type': 'STANDARD', 'rows': 7, 'cols': 10},
                 ]
             },
+            {
+                'name': 'Prasads Multiplex: Large Screen',
+                'city': 'Hyderabad',
+                'address': 'NTR Gardens, Necklace Road, Khairatabad, Hyderabad 500063',
+                'facilities': ['IMAX Giant Screen', 'Dolby Atmos', 'VR Zone', 'Gourmet Food Court'],
+                'screens': [
+                    {'name': 'Screen 1 - Large Screen', 'type': 'IMAX 3D', 'rows': 8, 'cols': 12},
+                    {'name': 'Audi 2 - Atmos Gold', 'type': 'DOLBY ATMOS', 'rows': 7, 'cols': 10},
+                ]
+            },
+            {
+                'name': 'AMB Cinemas: Superplex Gachibowli',
+                'city': 'Hyderabad',
+                'address': 'Sarath City Capital Mall, Gachibowli - Miyapur Rd, Hyderabad 500084',
+                'facilities': ['Laser 4K', 'M-Lounge Recliners', 'VIP Dining', 'Valet Parking'],
+                'screens': [
+                    {'name': 'Screen 1 - Laser 4K', 'type': 'STANDARD', 'rows': 7, 'cols': 10},
+                ]
+            },
+            {
+                'name': 'PVR INOX: Sathyam Cinemas',
+                'city': 'Chennai',
+                'address': '8, Thiruvika Road, Royapettah, Chennai, Tamil Nadu 600014',
+                'facilities': ['RDX 4K', 'Dolby Atmos', 'Sathyam Popcorn Bar', 'Elite Recliners'],
+                'screens': [
+                    {'name': 'Main Audi - Sathyam 4K', 'type': 'DOLBY ATMOS', 'rows': 8, 'cols': 12},
+                    {'name': 'Audi 2 - Santham', 'type': 'STANDARD', 'rows': 7, 'cols': 10},
+                ]
+            },
+            {
+                'name': 'SPI Cinemas: Palazzo (Nexus Vijaya)',
+                'city': 'Chennai',
+                'address': '183, Arcot Road, Vadapalani, Chennai, Tamil Nadu 600026',
+                'facilities': ['IMAX Experience', 'Italian Cafe', 'Royal Lounges'],
+                'screens': [
+                    {'name': 'Palazzo - IMAX', 'type': 'IMAX 3D', 'rows': 8, 'cols': 12},
+                ]
+            },
+            {
+                'name': 'PVR INOX: South City Mall',
+                'city': 'Kolkata',
+                'address': '375, Prince Anwar Shah Rd, South City Complex, Kolkata, West Bengal 700068',
+                'facilities': ['IMAX Laser', 'Dolby Atmos', 'Sub-Zero Cafe', 'Valet Parking'],
+                'screens': [
+                    {'name': 'Screen 1 - IMAX Laser', 'type': 'IMAX', 'rows': 8, 'cols': 12},
+                    {'name': 'Screen 2 - Insignia', 'type': 'STANDARD', 'rows': 7, 'cols': 10},
+                ]
+            },
+            {
+                'name': 'Cinepolis: Acropolis Mall',
+                'city': 'Kolkata',
+                'address': '1858, Rajdanga Main Road, Kasba, Kolkata, West Bengal 700107',
+                'facilities': ['VIP Recliners', 'Dolby 7.1', 'Coffee House'],
+                'screens': [
+                    {'name': 'Audi 1 - Club Class', 'type': 'STANDARD', 'rows': 7, 'cols': 10},
+                ]
+            },
+            {
+                'name': 'PVR: Phoenix Marketcity Viman Nagar',
+                'city': 'Pune',
+                'address': 'S.No. 207, Viman Nagar Road, Pune, Maharashtra 411014',
+                'facilities': ['IMAX 3D', 'Dolby Atmos 4K', 'Gold Class Recliners'],
+                'screens': [
+                    {'name': 'Screen 1 - IMAX 3D', 'type': 'IMAX 3D', 'rows': 8, 'cols': 12},
+                    {'name': 'Screen 2 - Atmos Prime', 'type': 'DOLBY ATMOS', 'rows': 7, 'cols': 10},
+                ]
+            },
+            {
+                'name': 'Cinepolis: Westend Mall Aundh',
+                'city': 'Pune',
+                'address': 'Near Parihar Chowk, Aundh, Pune, Maharashtra 411007',
+                'facilities': ['Laser 4K Projection', 'Coffee Bar', 'Luxury Lounges'],
+                'screens': [
+                    {'name': 'Audi 1 - VIP Laser', 'type': 'VIP', 'rows': 6, 'cols': 8},
+                ]
+            },
+            {
+                'name': 'PVR: Acropolis Mall Thaltej',
+                'city': 'Ahmedabad',
+                'address': 'Drive In Road, Thaltej, Ahmedabad, Gujarat 380054',
+                'facilities': ['4DX Motion Seats', 'Dolby Atmos', 'Cafe Gourmet'],
+                'screens': [
+                    {'name': 'Screen 1 - 4DX', 'type': '4DX', 'rows': 6, 'cols': 8},
+                    {'name': 'Screen 2 - Atmos Laser', 'type': 'DOLBY ATMOS', 'rows': 7, 'cols': 10},
+                ]
+            },
+            {
+                'name': 'Cinepolis: Ahmedabad One Mall',
+                'city': 'Ahmedabad',
+                'address': 'Vastrapur Lake, Vastrapur, Ahmedabad, Gujarat 380015',
+                'facilities': ['Macro XE Giant Screen', 'Dolby Atmos', 'VIP Recliners'],
+                'screens': [
+                    {'name': 'Screen 1 - Macro XE', 'type': 'MACRO XE', 'rows': 8, 'cols': 12},
+                ]
+            },
         ]
 
         all_screens = []

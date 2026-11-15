@@ -114,6 +114,10 @@
                                 <option value="Delhi-NCR" {% if selected_city == 'Delhi-NCR' %}selected{% endif %}>DELHI-NCR</option>
                                 <option value="Bengaluru" {% if selected_city == 'Bengaluru' %}selected{% endif %}>BENGALURU</option>
                                 <option value="Hyderabad" {% if selected_city == 'Hyderabad' %}selected{% endif %}>HYDERABAD</option>
+                                <option value="Chennai" {% if selected_city == 'Chennai' %}selected{% endif %}>CHENNAI</option>
+                                <option value="Kolkata" {% if selected_city == 'Kolkata' %}selected{% endif %}>KOLKATA</option>
+                                <option value="Pune" {% if selected_city == 'Pune' %}selected{% endif %}>PUNE</option>
+                                <option value="Ahmedabad" {% if selected_city == 'Ahmedabad' %}selected{% endif %}>AHMEDABAD</option>
                             </select>
                             <i class="fa-solid fa-chevron-down absolute right-2.5 top-2.5 text-[9px] text-neutral-400 pointer-events-none"></i>
                         </div>
@@ -154,6 +158,10 @@
                             <a href="{% url 'bookings:admin-dashboard' %}" class="text-xs uppercase tracking-wider bg-brand-50 dark:bg-brand-950/40 text-brand-700 dark:text-brand-400 border border-brand-300 dark:border-brand-800/70 hover:bg-brand-100 dark:hover:bg-brand-900/40 px-3 py-1.5 transition font-mono flex items-center space-x-1.5">
                                 <i class="fa-solid fa-chart-line"></i>
                                 <span class="hidden sm:inline">Dashboard</span>
+                            </a>
+                            <a href="{% url 'api:swagger-ui' %}" target="_blank" class="text-xs uppercase tracking-wider bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 border border-blue-300 dark:border-blue-800/70 hover:bg-blue-100 dark:hover:bg-blue-900/40 px-3 py-1.5 transition font-mono flex items-center space-x-1.5" title="Interactive OpenAPI 3.0 Documentation">
+                                <i class="fa-solid fa-code text-xs"></i>
+                                <span class="hidden sm:inline">Swagger</span>
                             </a>
                         {% endif %}
 
@@ -295,24 +303,23 @@
                 <span class="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400 block mb-2 text-center">
                     1-Click Instant Demo Access:
                 </span>
-                <div class="grid grid-cols-2 gap-2">
-                    <a href="{% url 'cinema:demo-login' role='customer' %}" class="flex items-center justify-center space-x-2 py-2.5 px-2 bg-white dark:bg-[#1b1b24] hover:bg-neutral-100 dark:hover:bg-[#252532] border border-neutral-300 dark:border-neutral-700 text-xs font-mono font-bold uppercase text-neutral-800 dark:text-neutral-200 transition shadow-sm">
-                        <i class="fa-solid fa-user text-emerald-500 text-xs"></i>
+                <div class="grid grid-cols-3 gap-2">
+                    <a href="{% url 'cinema:demo-login' role='customer' %}" class="flex flex-col sm:flex-row items-center justify-center space-x-0 sm:space-x-1.5 py-2.5 px-2 bg-white dark:bg-[#1b1b24] hover:bg-neutral-100 dark:hover:bg-[#252532] border border-neutral-300 dark:border-neutral-700 text-xs font-mono font-bold uppercase text-neutral-800 dark:text-neutral-200 transition shadow-sm text-center">
+                        <i class="fa-solid fa-user text-emerald-500 text-xs mb-1 sm:mb-0"></i>
                         <span>Customer</span>
                     </a>
-                    <a href="{% url 'cinema:demo-login' role='staff' %}" class="flex items-center justify-center space-x-2 py-2.5 px-2 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-300 dark:border-amber-800 text-xs font-mono font-bold uppercase text-amber-700 dark:text-amber-300 transition shadow-sm">
-                        <i class="fa-solid fa-qrcode text-amber-500 text-xs"></i>
+                    <a href="{% url 'cinema:demo-login' role='staff' %}" class="flex flex-col sm:flex-row items-center justify-center space-x-0 sm:space-x-1.5 py-2.5 px-2 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-300 dark:border-amber-800 text-xs font-mono font-bold uppercase text-amber-700 dark:text-amber-300 transition shadow-sm text-center">
+                        <i class="fa-solid fa-qrcode text-amber-500 text-xs mb-1 sm:mb-0"></i>
                         <span>Staff</span>
                     </a>
-                    <a href="{% url 'cinema:demo-login' role='admin' %}" class="flex items-center justify-center space-x-2 py-2.5 px-2 bg-rose-50 dark:bg-brand-950/40 hover:bg-rose-100 dark:hover:bg-brand-900/60 border border-rose-300 dark:border-brand-800 text-xs font-mono font-bold uppercase text-brand-700 dark:text-brand-300 transition shadow-sm">
-                        <i class="fa-solid fa-chart-pie text-brand-500 text-xs"></i>
+                    <a href="{% url 'cinema:demo-login' role='admin' %}" class="flex flex-col sm:flex-row items-center justify-center space-x-0 sm:space-x-1.5 py-2.5 px-2 bg-rose-50 dark:bg-brand-950/40 hover:bg-rose-100 dark:hover:bg-brand-900/60 border border-rose-300 dark:border-brand-800 text-xs font-mono font-bold uppercase text-brand-700 dark:text-brand-300 transition shadow-sm text-center" title="Admin Portal & Swagger OpenAPI Docs">
+                        <i class="fa-solid fa-chart-pie text-brand-500 text-xs mb-1 sm:mb-0"></i>
                         <span>Admin</span>
                     </a>
-                    <a href="{% url 'api:swagger-ui' %}" target="_blank" class="flex items-center justify-center space-x-2 py-2.5 px-2 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/60 border border-blue-300 dark:border-blue-800 text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-300 transition shadow-sm">
-                        <i class="fa-solid fa-code text-blue-500 text-xs"></i>
-                        <span>Swagger</span>
-                    </a>
                 </div>
+                <p class="text-[10px] text-center text-neutral-400 font-mono mt-2.5">
+                    * Swagger API Docs & Analytics are located inside <strong>Admin</strong> login.
+                </p>
             </div>
 
             <!-- Standard Credentials Form -->

@@ -101,7 +101,7 @@ For quick evaluation, convenient **1-click demo login buttons** are available at
 
 | Role | Username | Password | Access Capabilities |
 |------|----------|----------|---------------------|
-| **Cinema Admin** | `admin` | `admin123` | Occupancy reports, revenue analytics, audit trail, Django admin (`/admin/`) |
+| **Cinema Admin** | `admin` | `admin123` | Occupancy reports, revenue analytics, audit trail, Django admin (`/admin/`), Swagger OpenAPI Docs (`/api/docs/`) |
 | **Gate Staff** | `staff1` | `staff123` | Operational gate scanner (`/bookings/staff/gate-scanner/`), QR validation |
 | **Customer** | `customer1` | `customer123` | Browse, interactive seat picker, hold seats, checkout, booking history, cancel |
 | **Customer 2** | `priya_sharma` | `customer123` | Secondary customer for testing concurrency and conflict prevention |
