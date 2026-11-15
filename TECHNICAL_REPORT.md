@@ -4,6 +4,9 @@
 **Role:** Full-Stack Web Development  
 **Organization:** ALGIONS AI LABS PRIVATE LIMITED  
 **Submission Package:** Architecture, Design Decisions & Evaluation Evidence  
+**Live Production URL:** [https://comet-r0r4.onrender.com/](https://comet-r0r4.onrender.com/)  
+**Interactive API Docs (Swagger):** [https://comet-r0r4.onrender.com/api/docs/](https://comet-r0r4.onrender.com/api/docs/)  
+**Executive Occupancy Portal:** [https://comet-r0r4.onrender.com/bookings/admin/dashboard/](https://comet-r0r4.onrender.com/bookings/admin/dashboard/)  
 
 ---
 

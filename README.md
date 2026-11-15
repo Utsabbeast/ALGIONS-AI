@@ -1,14 +1,25 @@
 # COMET — Cinema Hall Ticket Booking System
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Render-46E3B7?style=for-the-badge&logo=render)](https://comet-r0r4.onrender.com/)
+[![OpenAPI 3.0](https://img.shields.io/badge/Swagger%203.0-Interactive%20API-blue?style=for-the-badge&logo=swagger)](https://comet-r0r4.onrender.com/api/docs/)
 [![Python](https://img.shields.io/badge/Python-3.13-blue.svg)](https://www.python.org/)
 [![Django](https://img.shields.io/badge/Django-5.1-092E20.svg)](https://www.djangoproject.com/)
 [![NoSQL](https://img.shields.io/badge/NoSQL-MongoDB%20%2B%20Document%20Store-47A248.svg)](https://www.mongodb.com/)
-[![Render](https://img.shields.io/badge/Deploy-Render%20Ready-46E3B7.svg)](https://render.com/)
 [![Tests](https://img.shields.io/badge/Tests-22%2F22%20Passing-brightgreen.svg)]()
 
 > **Full-Stack Web Development Advanced Assessment Project**  
 > Candidate Project: **COMET** — Cinema Hall Ticket Booking System ("BookMyShow" style application)  
-> Assigned by: **ALGIONS AI LABS PRIVATE LIMITED**
+> Assigned by: **ALGIONS AI LABS PRIVATE LIMITED**  
+> 
+> 🌐 **Live Production Web Service:** **[https://comet-r0r4.onrender.com/](https://comet-r0r4.onrender.com/)**  
+> ⚡ **Interactive Swagger API Docs:** **[https://comet-r0r4.onrender.com/api/docs/](https://comet-r0r4.onrender.com/api/docs/)**  
+> 📊 **Executive Occupancy Portal:** **[https://comet-r0r4.onrender.com/bookings/admin/dashboard/](https://comet-r0r4.onrender.com/bookings/admin/dashboard/)**  
+> 
+> **1-Click Live Evaluation Login:**  
+> • [Customer Demo Login](https://comet-r0r4.onrender.com/accounts/demo-login/customer/)  
+> • [Staff Demo Login](https://comet-r0r4.onrender.com/accounts/demo-login/staff/)  
+> • [Admin Demo Login](https://comet-r0r4.onrender.com/accounts/demo-login/admin/)  
+> • [Swagger API Docs](https://comet-r0r4.onrender.com/api/docs/)  
 
 ---
 
@@ -97,33 +108,35 @@ Visit the application in your browser at: **`http://127.0.0.1:8000/`**
 
 ## 🔑 Pre-Configured Demo Credentials
 
-For quick evaluation, convenient **1-click demo login buttons** are available at the top of every page. You can also sign in manually:
+For quick evaluation, convenient **1-click demo login buttons** are available at the top of every page, both locally and on the **Live Render URL** ([https://comet-r0r4.onrender.com/](https://comet-r0r4.onrender.com/)):
 
-| Role | Username | Password | Access Capabilities |
-|------|----------|----------|---------------------|
-| **Cinema Admin** | `admin` | `admin123` | Occupancy reports, revenue analytics, audit trail, Django admin (`/admin/`), Swagger OpenAPI Docs (`/api/docs/`) |
-| **Gate Staff** | `staff1` | `staff123` | Operational gate scanner (`/bookings/staff/gate-scanner/`), QR validation |
-| **Customer** | `customer1` | `customer123` | Browse, interactive seat picker, hold seats, checkout, booking history, cancel |
-| **Customer 2** | `priya_sharma` | `customer123` | Secondary customer for testing concurrency and conflict prevention |
+| Role | Username | Password | Live 1-Click Link | Access Capabilities |
+|------|----------|----------|:-----------------:|---------------------|
+| **Cinema Admin** | `admin` | `admin123` | [1-Click Admin](https://comet-r0r4.onrender.com/accounts/demo-login/admin/) | Occupancy reports, revenue analytics, audit trail, Django admin, Swagger OpenAPI Docs |
+| **Gate Staff** | `staff1` | `staff123` | [1-Click Staff](https://comet-r0r4.onrender.com/accounts/demo-login/staff/) | Operational gate scanner, single-use QR validation, replay rejection |
+| **Customer** | `customer1` | `customer123` | [1-Click Customer](https://comet-r0r4.onrender.com/accounts/demo-login/customer/) | Film discovery across 8 cities, interactive seat picker, hold timer, checkout, booking history |
+| **Customer 2** | `priya_sharma` | `customer123` | — | Secondary customer account for evaluating race condition conflict prevention |
 
 ---
 
-## 🌐 Deploying to Render.com (Zero-Cost Hosting)
+## 🌐 Live Cloud Web Service on Render
 
-COMET is 100% pre-configured for **Render Web Service** deployment with Gunicorn and Whitenoise:
+COMET is actively hosted and live on **Render Cloud Web Service**:
 
-1. **Push your code to GitHub / GitLab**.
-2. **Create New Web Service on Render**:
-   - Repository: Select your repository.
-   - Environment: `Python 3`
-   - Build Command: `./build.sh`
-   - Start Command: `gunicorn cinemabox.wsgi:application`
-3. **Environment Variables on Render**:
-   - `PYTHON_VERSION`: `3.13.2`
-   - `DJANGO_SECRET_KEY`: `<generate or set random string>`
-   - `DJANGO_DEBUG`: `False`
-   - `ALLOWED_HOSTS`: `.onrender.com`
-   - *(Optional)* `MONGODB_URI`: `mongodb+srv://<user>:<password>@cluster0.mongodb.net/?retryWrites=true&w=majority` (Connects directly to your free MongoDB Atlas database; if omitted, automatically uses the embedded resilient document store).
+* **Production Live URL:** **[https://comet-r0r4.onrender.com/](https://comet-r0r4.onrender.com/)**
+* **Interactive Swagger UI:** **[https://comet-r0r4.onrender.com/api/docs/](https://comet-r0r4.onrender.com/api/docs/)**
+* **Admin Occupancy Portal:** **[https://comet-r0r4.onrender.com/bookings/admin/dashboard/](https://comet-r0r4.onrender.com/bookings/admin/dashboard/)**
+
+### Render Web Service Configuration
+* **Runtime:** `Python 3.13`
+* **Root Directory:** *(Blank / Root)*
+* **Build Command:** `./build.sh` *(auto-executes dependencies, migrations, static collection, and multi-city seed data)*
+* **Start Command:** `gunicorn cinemabox.wsgi:application --bind 0.0.0.0:$PORT --workers 2`
+* **Key Environment Variables:**
+  * `PYTHON_VERSION`: `3.13.2`
+  * `DJANGO_DEBUG`: `False`
+  * `ALLOWED_HOSTS`: `.onrender.com,localhost,127.0.0.1`
+  * `CSRF_TRUSTED_ORIGINS`: `https://*.onrender.com,http://localhost:8000,http://127.0.0.1:8000`
 
 ---
 
