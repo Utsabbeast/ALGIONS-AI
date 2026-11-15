@@ -84,28 +84,6 @@
         <p class="text-[11px] uppercase tracking-[0.25em] text-neutral-400 font-bold mt-6 font-mono">Connecting to <span class="text-red-600 font-black">C</span>OMET Engine...</p>
     </div>
 
-    <!-- Top Assessment Reviewer Quick Switcher Bar (Sharp Hairline) -->
-    <div class="bg-neutral-100 dark:bg-[#0e0e12] border-b border-neutral-200 dark:border-neutral-800 text-xs py-1.5 px-4 transition-colors">
-        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-            <div class="flex items-center space-x-2.5 text-neutral-500 dark:text-neutral-400 text-[11px] font-mono">
-                <span class="inline-block w-1.5 h-1.5 bg-emerald-500"></span>
-                <span>ALGIONS AI LABS EVALUATION PORTAL</span>
-                <span class="text-neutral-300 dark:text-neutral-700">/</span>
-                <span>ENGINE: <strong class="text-brand-600 dark:text-brand-400 font-semibold">DJANGO 5.1 + NOSQL</strong></span>
-            </div>
-            <div class="flex items-center space-x-2 text-[11px]">
-                <span class="text-neutral-500 dark:text-neutral-400 font-mono hidden sm:inline">1-CLICK DEMO:</span>
-                <a href="{% url 'cinema:demo-login' role='customer' %}" class="px-2 py-0.5 rounded-none bg-white dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700 hover:border-brand-500 transition font-mono">Customer</a>
-                <a href="{% url 'cinema:demo-login' role='staff' %}" class="px-2 py-0.5 rounded-none bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-800/80 hover:bg-amber-100 dark:hover:bg-amber-900 transition font-mono">Staff</a>
-                <a href="{% url 'cinema:demo-login' role='admin' %}" class="px-2 py-0.5 rounded-none bg-rose-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border border-rose-300 dark:border-brand-800/80 hover:bg-rose-100 dark:hover:bg-brand-900 transition font-mono">Admin</a>
-                <a href="{% url 'api:swagger-ui' %}" target="_blank" class="px-2 py-0.5 rounded-none bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900 transition font-mono flex items-center space-x-1">
-                    <i class="fa-solid fa-code text-[9px]"></i>
-                    <span>Swagger</span>
-                </a>
-            </div>
-        </div>
-    </div>
-
     <!-- Main Navigation Header (Sharp, Architectural, High-End Glassmorphism) -->
     <header class="sticky top-0 z-40 bg-white/95 dark:bg-[#08080a]/95 backdrop-blur-xl border-b border-neutral-200 dark:border-neutral-800 transition-colors">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -184,7 +162,7 @@
                             </a>
                         </div>
                     {% else %}
-                        <a href="{% url 'cinema:login' %}" class="text-xs uppercase tracking-widest text-neutral-600 dark:text-neutral-300 hover:text-brand-500 dark:hover:text-white px-3 py-1.5 font-mono transition">Sign In</a>
+                        <button type="button" onclick="openLoginModal()" class="text-xs uppercase tracking-widest text-neutral-600 dark:text-neutral-300 hover:text-brand-500 dark:hover:text-white px-3 py-1.5 font-mono transition">Sign In</button>
                         <a href="{% url 'cinema:register' %}" class="text-xs uppercase tracking-widest bg-brand-600 hover:bg-brand-500 text-white font-bold px-4 py-2 border border-brand-500 transition font-mono shadow-sm">Join</a>
                     {% endif %}
                 </div>
@@ -252,34 +230,33 @@
                     </p>
                 </div>
                 <div>
-                    <h4 class="text-neutral-900 dark:text-white uppercase tracking-widest font-mono text-[11px] mb-3">Core Stack</h4>
+                    <h4 class="text-neutral-900 dark:text-white uppercase tracking-widest font-mono text-[11px] mb-3">Cinematic Formats</h4>
                     <ul class="space-y-1.5 font-mono text-[11px] text-neutral-500 dark:text-neutral-400">
-                        <li>• Django 5.1 (Python 3.13)</li>
-                        <li>• Polyglot NoSQL (MongoDB / Store)</li>
-                        <li>• Typography: Casta Serif</li>
-                        <li>• REST API & OpenAPI 3.0</li>
-                        <li>• Render Cloud Web Service</li>
+                        <li>• IMAX 3D with Laser</li>
+                        <li>• Dolby Atmos Spatial Sound</li>
+                        <li>• 4DX Environmental Motion</li>
+                        <li>• Director's Cut VIP Recliners</li>
+                        <li>• Macro XE Giant Screen</li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-neutral-900 dark:text-white uppercase tracking-widest font-mono text-[11px] mb-3">Verified Acceptance Criteria</h4>
+                    <h4 class="text-neutral-900 dark:text-white uppercase tracking-widest font-mono text-[11px] mb-3">Metropolitan Theatres</h4>
                     <ul class="space-y-1.5 font-mono text-[11px] text-neutral-500 dark:text-neutral-400">
-                        <li>• 1. Concurrency Safe Seat Locks</li>
-                        <li>• 2. Double-Booking Prevention</li>
-                        <li>• 3. 10-Minute Expired Hold Reaper</li>
-                        <li>• 4. Single-Use Gate Validation</li>
-                        <li>• 5. Real-Time Occupancy Reconciliation</li>
+                        <li>• Mumbai: Phoenix Palladium & Inorbit</li>
+                        <li>• Navi Mumbai: Nexus Seawoods</li>
+                        <li>• Delhi-NCR: Saket & Ambience Mall</li>
+                        <li>• Bengaluru: Koramangala & Garuda</li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-neutral-900 dark:text-white uppercase tracking-widest font-mono text-[11px] mb-3">ALGIONS Submission</h4>
-                    <p class="mb-3 text-neutral-500 dark:text-neutral-400 leading-relaxed">
-                        Full-Stack Web Development Advanced Assessment project for ALGIONS AI LABS.
+                    <h4 class="text-neutral-900 dark:text-white uppercase tracking-widest font-mono text-[11px] mb-3">System & Services</h4>
+                    <p class="mb-3 text-neutral-500 dark:text-neutral-400 leading-relaxed font-sans">
+                        Architectural high-performance cinema ticketing with real-time seat locks and verifiable digital passes.
                     </p>
                     <div class="flex items-center space-x-3 font-mono text-[11px]">
-                        <a href="{% url 'api:swagger-ui' %}" class="text-brand-600 dark:text-brand-400 hover:underline">API Docs</a>
+                        <a href="{% url 'api:swagger-ui' %}" target="_blank" class="text-brand-600 dark:text-brand-400 hover:underline">API Documentation</a>
                         <span>/</span>
-                        <a href="{% url 'bookings:admin-dashboard' %}" class="text-brand-600 dark:text-brand-400 hover:underline">Occupancy Portal</a>
+                        <a href="{% url 'cinema:login' %}" class="text-brand-600 dark:text-brand-400 hover:underline">Portal Access</a>
                     </div>
                 </div>
             </div>
@@ -290,8 +267,94 @@
         </div>
     </footer>
 
+    <!-- Quick Login Modal Box (Sharp, Architectural) -->
+    <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white dark:bg-[#0e0e12] border-2 border-neutral-300 dark:border-neutral-700 w-full max-w-md mx-4 p-6 shadow-2xl relative transform scale-95 transition-transform duration-300">
+            <!-- Close Button -->
+            <button type="button" onclick="closeLoginModal()" class="absolute top-4 right-4 text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <div class="flex items-center justify-center space-x-2 text-2xl font-light font-casta uppercase text-neutral-900 dark:text-white">
+                    <img src="{% static 'img/icon.jpg' %}" alt="COMET" class="w-6 h-6 object-cover border border-neutral-300 dark:border-neutral-700">
+                    <span><span class="text-red-600 font-bold">C</span>OMET Access</span>
+                </div>
+                <p class="text-xs text-neutral-500 font-mono mt-1">Sign in to book tickets or manage reservations</p>
+            </div>
+
+            <!-- 1-Click Demo Quick Access (Appears First) -->
+            <div class="mb-5 p-4 bg-neutral-50 dark:bg-[#141419] border border-neutral-200 dark:border-neutral-800">
+                <span class="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400 block mb-2 text-center">
+                    1-Click Instant Demo Access:
+                </span>
+                <div class="grid grid-cols-2 gap-2">
+                    <a href="{% url 'cinema:demo-login' role='customer' %}" class="flex items-center justify-center space-x-2 py-2.5 px-2 bg-white dark:bg-[#1b1b24] hover:bg-neutral-100 dark:hover:bg-[#252532] border border-neutral-300 dark:border-neutral-700 text-xs font-mono font-bold uppercase text-neutral-800 dark:text-neutral-200 transition shadow-sm">
+                        <i class="fa-solid fa-user text-emerald-500 text-xs"></i>
+                        <span>Customer</span>
+                    </a>
+                    <a href="{% url 'cinema:demo-login' role='staff' %}" class="flex items-center justify-center space-x-2 py-2.5 px-2 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-300 dark:border-amber-800 text-xs font-mono font-bold uppercase text-amber-700 dark:text-amber-300 transition shadow-sm">
+                        <i class="fa-solid fa-qrcode text-amber-500 text-xs"></i>
+                        <span>Staff</span>
+                    </a>
+                    <a href="{% url 'cinema:demo-login' role='admin' %}" class="flex items-center justify-center space-x-2 py-2.5 px-2 bg-rose-50 dark:bg-brand-950/40 hover:bg-rose-100 dark:hover:bg-brand-900/60 border border-rose-300 dark:border-brand-800 text-xs font-mono font-bold uppercase text-brand-700 dark:text-brand-300 transition shadow-sm">
+                        <i class="fa-solid fa-chart-pie text-brand-500 text-xs"></i>
+                        <span>Admin</span>
+                    </a>
+                    <a href="{% url 'api:swagger-ui' %}" target="_blank" class="flex items-center justify-center space-x-2 py-2.5 px-2 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/60 border border-blue-300 dark:border-blue-800 text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-300 transition shadow-sm">
+                        <i class="fa-solid fa-code text-blue-500 text-xs"></i>
+                        <span>Swagger</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Standard Credentials Form -->
+            <form method="POST" action="{% url 'cinema:login' %}" onsubmit="showGlobalLoader('Authenticating with COMET...')">
+                {% csrf_token %}
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-[10px] font-mono uppercase tracking-wider text-neutral-500 mb-1">Username</label>
+                        <input type="text" name="username" required class="w-full px-3 py-2 bg-neutral-100 dark:bg-[#121217] border border-neutral-300 dark:border-neutral-700 text-xs font-mono text-neutral-900 dark:text-white focus:outline-none focus:border-brand-500">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-mono uppercase tracking-wider text-neutral-500 mb-1">Password</label>
+                        <input type="password" name="password" required class="w-full px-3 py-2 bg-neutral-100 dark:bg-[#121217] border border-neutral-300 dark:border-neutral-700 text-xs font-mono text-neutral-900 dark:text-white focus:outline-none focus:border-brand-500">
+                    </div>
+                    <button type="submit" class="w-full py-2.5 bg-brand-600 hover:bg-brand-500 text-white font-mono font-bold text-xs uppercase tracking-widest transition border border-brand-500 mt-2">
+                        Sign In
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-4 pt-3 border-t border-neutral-200 dark:border-neutral-800 text-center text-xs font-mono text-neutral-500">
+                New to COMET? <a href="{% url 'cinema:register' %}" class="text-brand-600 dark:text-brand-400 font-bold hover:underline">Create Account</a>
+            </div>
+        </div>
+    </div>
+
     <!-- Global Loader & Theme Toggle Scripts -->
     <script>
+        function openLoginModal() {
+            const modal = document.getElementById('login-modal');
+            if (modal) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.firstElementChild.classList.remove('scale-95');
+            }
+        }
+        function closeLoginModal() {
+            const modal = document.getElementById('login-modal');
+            if (modal) {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                modal.firstElementChild.classList.add('scale-95');
+            }
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeLoginModal();
+        });
+        document.getElementById('login-modal')?.addEventListener('click', function(e) {
+            if (e.target === this) closeLoginModal();
+        });
         function showGlobalLoader(msg) {
             const loader = document.getElementById('global-page-loader');
             if (msg) {

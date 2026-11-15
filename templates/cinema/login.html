@@ -3,17 +3,67 @@
 {% block title %}Sign In — COMET{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto px-4 py-16 flex flex-col items-center">
+<div class="max-w-md mx-auto px-4 py-12 flex flex-col items-center">
 
-    <!-- Interactive Animated Login Form (From Uiverse.io by Novaxlo) — Sharp -->
-    <form method="POST" class="uiverse-login-form mb-8 shadow-xl" onsubmit="showGlobalLoader('Authenticating with COMET...')">
+    <!-- 1-Click Instant Demo Box (Appears First) -->
+    <div class="w-full max-w-sm mb-8 bg-white dark:bg-[#0e0e12] border-2 border-brand-600 dark:border-brand-500 p-6 shadow-2xl transition-colors">
+        <div class="text-center mb-4">
+            <div class="inline-flex items-center space-x-2 px-3 py-1 bg-brand-50 dark:bg-brand-950/80 border border-brand-300 dark:border-brand-800 text-brand-700 dark:text-brand-300 text-[10px] font-mono tracking-widest uppercase font-bold">
+                <span class="w-1.5 h-1.5 bg-brand-500 animate-pulse"></span>
+                <span>1-CLICK INSTANT DEMO ACCESS</span>
+            </div>
+            <h2 class="text-2xl font-light text-neutral-900 dark:text-white font-casta mt-2">
+                <span class="text-red-600 font-bold">C</span>OMET Portal Access
+            </h2>
+            <p class="text-xs text-neutral-500 dark:text-neutral-400 font-mono mt-1">
+                Select any evaluation role to log in with 1 click:
+            </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5 mb-3">
+            <!-- Customer Role -->
+            <a href="{% url 'cinema:demo-login' role='customer' %}" class="flex items-center justify-center space-x-2 py-3 px-3 bg-neutral-100 hover:bg-neutral-200 dark:bg-[#16161e] dark:hover:bg-[#20202b] border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-xs font-mono font-bold tracking-wider uppercase transition shadow-sm group">
+                <i class="fa-solid fa-user text-emerald-500 text-xs group-hover:scale-110 transition-transform"></i>
+                <span>Customer</span>
+            </a>
+
+            <!-- Staff Role (Gate Scanner) -->
+            <a href="{% url 'cinema:demo-login' role='staff' %}" class="flex items-center justify-center space-x-2 py-3 px-3 bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 dark:hover:bg-amber-900/60 border border-amber-300 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-xs font-mono font-bold tracking-wider uppercase transition shadow-sm group">
+                <i class="fa-solid fa-qrcode text-amber-500 text-xs group-hover:scale-110 transition-transform"></i>
+                <span>Staff</span>
+            </a>
+
+            <!-- Admin Role (Occupancy Dashboard) -->
+            <a href="{% url 'cinema:demo-login' role='admin' %}" class="flex items-center justify-center space-x-2 py-3 px-3 bg-rose-50 hover:bg-rose-100 dark:bg-brand-950/40 dark:hover:bg-brand-900/60 border border-rose-300 dark:border-brand-800 text-brand-700 dark:text-brand-300 text-xs font-mono font-bold tracking-wider uppercase transition shadow-sm group">
+                <i class="fa-solid fa-chart-pie text-brand-500 text-xs group-hover:scale-110 transition-transform"></i>
+                <span>Admin</span>
+            </a>
+
+            <!-- Swagger API Docs -->
+            <a href="{% url 'api:swagger-ui' %}" target="_blank" class="flex items-center justify-center space-x-2 py-3 px-3 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/60 border border-blue-300 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-xs font-mono font-bold tracking-wider uppercase transition shadow-sm group">
+                <i class="fa-solid fa-code text-blue-500 text-xs group-hover:scale-110 transition-transform"></i>
+                <span>Swagger</span>
+            </a>
+        </div>
+        <p class="text-[10px] text-center text-neutral-400 font-mono">Instant session bypass • No password typing required</p>
+    </div>
+
+    <!-- Clean Divider -->
+    <div class="w-full max-w-sm flex items-center justify-between gap-3 mb-6">
+        <div class="flex-1 h-px bg-neutral-200 dark:bg-neutral-800"></div>
+        <span class="text-[10px] font-mono uppercase tracking-widest text-neutral-400">or sign in with credentials</span>
+        <div class="flex-1 h-px bg-neutral-200 dark:bg-neutral-800"></div>
+    </div>
+
+    <!-- Interactive Animated Credentials Login Form (Uiverse.io Novaxlo) — Sharp -->
+    <form method="POST" class="uiverse-login-form shadow-xl" onsubmit="showGlobalLoader('Authenticating with COMET...')">
         {% csrf_token %}
         <div id="login-area">
-            <p class="title font-casta"><span class="text-red-500 font-normal">C</span>OMET ACCESS</p>
+            <p class="title font-casta"><span class="text-white font-bold">C</span>OMET CREDENTIALS</p>
         </div>
         
         <div id="email-area">
-            <input placeholder="USERNAME" name="username" id="username" class="input font-mono" type="text" required autofocus />
+            <input placeholder="USERNAME" name="username" id="username" class="input font-mono" type="text" required />
         </div>
         
         <div id="password-area">
@@ -31,22 +81,6 @@
 
         <div id="background-color"></div>
     </form>
-
-    <!-- Fast Demo Reviewer Logins (Sharp) -->
-    <div class="bg-white dark:bg-[#0e0e12] border border-neutral-200 dark:border-neutral-800 p-5 w-full max-w-sm shadow-sm text-center transition-colors">
-        <p class="text-[10px] font-mono font-bold uppercase tracking-widest text-neutral-500 mb-3">Reviewer Instant Credentials:</p>
-        <div class="grid grid-cols-3 gap-2">
-            <a href="{% url 'cinema:demo-login' role='customer' %}" class="py-2 px-1 bg-neutral-50 dark:bg-[#141419] hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-mono uppercase text-neutral-700 dark:text-neutral-300 transition border border-neutral-200 dark:border-neutral-700">
-                Customer
-            </a>
-            <a href="{% url 'cinema:demo-login' role='staff' %}" class="py-2 px-1 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-300 dark:border-amber-800 text-xs font-mono uppercase text-amber-700 dark:text-amber-300 transition">
-                Staff
-            </a>
-            <a href="{% url 'cinema:demo-login' role='admin' %}" class="py-2 px-1 bg-rose-50 dark:bg-brand-950/40 hover:bg-rose-100 dark:hover:bg-brand-900/60 border border-rose-300 dark:border-brand-800 text-xs font-mono uppercase text-brand-700 dark:text-brand-300 transition">
-                Admin
-            </a>
-        </div>
-    </div>
 
 </div>
 {% endblock %}
