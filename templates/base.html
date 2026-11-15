@@ -90,7 +90,13 @@
             <div class="flex items-center justify-between h-16">
                 
                 <!-- Brand Logo (icon.jpg) & City Selector -->
-                <div class="flex items-center space-x-6">
+                <div class="flex items-center space-x-3 sm:space-x-6">
+                    <!-- In-Website Back Button (Sharp, Architectural) -->
+                    <button type="button" id="site-back-btn" onclick="goBackOnSite()" class="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-neutral-100 hover:bg-neutral-200 dark:bg-[#141419] dark:hover:bg-[#1e1e26] border border-neutral-300 dark:border-neutral-700 text-xs font-mono uppercase tracking-wider text-neutral-800 dark:text-neutral-200 transition shadow-sm" title="Go back to previous page">
+                        <i class="fa-solid fa-arrow-left text-[11px] text-red-600 dark:text-red-500"></i>
+                        <span class="font-bold">Back</span>
+                    </button>
+
                     <a href="{% url 'cinema:home' %}" class="flex items-center space-x-3 group">
                         <div class="w-8 h-8 rounded-none border border-neutral-300 dark:border-neutral-700 p-0.5 group-hover:border-red-600 transition duration-300">
                             <img src="{% static 'img/icon.jpg' %}" alt="COMET" class="w-full h-full object-cover">
@@ -333,8 +339,111 @@
         </div>
     </div>
 
-    <!-- Global Loader & Theme Toggle Scripts -->
+    <!-- Locked Browser Navigation Toast Notice (Sharp, Architectural) -->
+    <div id="browser-nav-notice" class="fixed bottom-6 right-6 z-50 hidden bg-neutral-950 text-white border-2 border-red-600 px-5 py-3.5 shadow-2xl font-mono text-xs flex items-center space-x-3.5 transition-all transform duration-300">
+        <div class="w-8 h-8 bg-red-600/20 text-red-500 border border-red-500/40 flex items-center justify-center flex-shrink-0">
+            <i class="fa-solid fa-arrow-left"></i>
+        </div>
+        <div>
+            <div class="font-bold uppercase tracking-wider text-red-500 text-[11px]">Browser Navigation Disabled</div>
+            <div class="text-neutral-300 text-[11px] mt-0.5">Please use the on-screen <strong class="text-white bg-neutral-800 px-1 py-0.5 border border-neutral-700">Back</strong> button on the website.</div>
+        </div>
+    </div>
+
+    <!-- Global Loader, Theme Toggle, Browser Lock & On-Site Back Scripts -->
     <script>
+        // In-Website Back Navigation & Native Browser Lock
+        let allowSiteNavigation = false;
+
+        function showBrowserNavNotice() {
+            const notice = document.getElementById('browser-nav-notice');
+            if (!notice) return;
+            notice.classList.remove('hidden');
+            notice.style.opacity = '1';
+            clearTimeout(window._navNoticeTimer);
+            window._navNoticeTimer = setTimeout(function() {
+                notice.classList.add('hidden');
+            }, 3500);
+        }
+
+        // Lock native browser Back/Forward navigation
+        (function setupBrowserNavigationLock() {
+            try {
+                history.pushState(null, document.title, window.location.href);
+                window.addEventListener('popstate', function(event) {
+                    if (!allowSiteNavigation) {
+                        history.pushState(null, document.title, window.location.href);
+                        showBrowserNavNotice();
+                    }
+                });
+            } catch (e) {
+                console.warn('Navigation locking exception:', e);
+            }
+        })();
+
+        // Intelligent In-Website Back Navigation
+        function goBackOnSite() {
+            allowSiteNavigation = true;
+            const ref = document.referrer;
+            const host = window.location.host;
+            const path = window.location.pathname;
+
+            // If valid same-site referrer exists and is not the exact same page
+            if (ref && ref.includes(host) && !ref.endsWith(path)) {
+                window.location.href = ref;
+                return;
+            }
+
+            // Contextual Route Hierarchy Fallbacks
+            if (path.includes('/seats/')) {
+                // Seat selection -> Movie Detail or Home
+                const movieLink = document.querySelector('a[href*="/movies/"]');
+                if (movieLink && movieLink.href) {
+                    window.location.href = movieLink.href;
+                } else {
+                    window.location.href = "{% url 'cinema:home' %}";
+                }
+            } else if (path.includes('/checkout/')) {
+                // Checkout -> Showtimes / Home
+                if (ref && ref.includes(host)) {
+                    window.location.href = ref;
+                } else {
+                    window.location.href = "{% url 'cinema:home' %}";
+                }
+            } else if (path.includes('/confirmation/')) {
+                // Booking confirmation -> My Tickets
+                window.location.href = "{% url 'bookings:my-bookings' %}";
+            } else if (path.includes('/movies/')) {
+                // Movie detail -> Home
+                window.location.href = "{% url 'cinema:home' %}";
+            } else if (path.includes('/my-bookings/')) {
+                // My Bookings -> Home
+                window.location.href = "{% url 'cinema:home' %}";
+            } else if (path.includes('/gate-scanner/') || path.includes('/admin/')) {
+                // Staff / Admin -> Home
+                window.location.href = "{% url 'cinema:home' %}";
+            } else if (path === '/' || path === '') {
+                // At homepage root
+                return;
+            } else {
+                window.location.href = "{% url 'cinema:home' %}";
+            }
+        }
+
+        // Configure Back Button visual status for root homepage
+        document.addEventListener('DOMContentLoaded', function() {
+            const backBtn = document.getElementById('site-back-btn');
+            const path = window.location.pathname;
+            const ref = document.referrer;
+            const host = window.location.host;
+
+            if (backBtn && (path === '/' || path === '')) {
+                if (!ref || !ref.includes(host) || ref.endsWith('/')) {
+                    backBtn.classList.add('opacity-40', 'cursor-not-allowed');
+                    backBtn.setAttribute('title', 'Already at start of COMET');
+                }
+            }
+        });
         function openLoginModal() {
             const modal = document.getElementById('login-modal');
             if (modal) {

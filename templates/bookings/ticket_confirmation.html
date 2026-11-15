@@ -5,6 +5,17 @@
 {% block content %}
 <div class="max-w-4xl mx-auto px-4 py-8">
 
+    <!-- In-Website Back Navigation -->
+    <div class="mb-6 flex items-center justify-between">
+        <button type="button" onclick="goBackOnSite()" class="inline-flex items-center space-x-2 px-3 py-1.5 bg-neutral-100 hover:bg-neutral-200 dark:bg-[#141419] dark:hover:bg-[#1e1e26] border border-neutral-300 dark:border-neutral-700 text-xs font-mono uppercase tracking-wider text-neutral-800 dark:text-neutral-200 transition shadow-sm">
+            <i class="fa-solid fa-arrow-left text-[11px] text-red-600"></i>
+            <span class="font-bold">Back to My Bookings</span>
+        </button>
+        <a href="{% url 'cinema:home' %}" class="text-xs font-mono uppercase tracking-wider text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition">
+            Explore Films &rarr;
+        </a>
+    </div>
+
     <!-- Success Header (Sharp) -->
     <div class="text-center mb-8 pb-4 border-b border-neutral-200 dark:border-neutral-800">
         <div class="w-14 h-14 bg-emerald-500/10 text-emerald-500 border border-emerald-500/40 flex items-center justify-center text-2xl mx-auto mb-3">
