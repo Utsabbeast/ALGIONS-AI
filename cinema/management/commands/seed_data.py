@@ -13,13 +13,13 @@ class Command(BaseCommand):
     help = 'Seeds realistic cinema booking data (theatres, screens, movies, showtimes, seats, users, and NoSQL reviews)'
 
     def handle(self, *args, **options):
-        self.stdout.write(self.style.NOTICE("Starting database seeding for CinemaBox..."))
+        self.stdout.write(self.style.NOTICE("Starting database seeding for COMET..."))
 
         # 1. Create Core Users
         admin_user, _ = User.objects.get_or_create(
             username='admin',
             defaults={
-                'email': 'admin@cinemabox.com',
+                'email': 'admin@comet.test',
                 'first_name': 'Cinema',
                 'last_name': 'Administrator',
                 'role': User.Role.ADMIN,
@@ -33,7 +33,7 @@ class Command(BaseCommand):
         staff_user, _ = User.objects.get_or_create(
             username='staff1',
             defaults={
-                'email': 'staff1@cinemabox.com',
+                'email': 'staff1@comet.test',
                 'first_name': 'Vikram',
                 'last_name': 'Verma (Gate Staff)',
                 'role': User.Role.STAFF,
@@ -46,7 +46,7 @@ class Command(BaseCommand):
         customer_user, _ = User.objects.get_or_create(
             username='customer1',
             defaults={
-                'email': 'customer1@cinemabox.com',
+                'email': 'customer1@comet.test',
                 'first_name': 'Aarav',
                 'last_name': 'Mehta',
                 'role': User.Role.CUSTOMER,
@@ -58,7 +58,7 @@ class Command(BaseCommand):
         customer_user2, _ = User.objects.get_or_create(
             username='priya_sharma',
             defaults={
-                'email': 'priya@cinemabox.com',
+                'email': 'priya@comet.test',
                 'first_name': 'Priya',
                 'last_name': 'Sharma',
                 'role': User.Role.CUSTOMER,
@@ -70,7 +70,10 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("✓ Seeded demo users (admin, staff1, customer1, priya_sharma)"))
 
         # 2. Genres
-        genre_names = ['Action', 'Sci-Fi', 'Thriller', 'Drama', 'Adventure', 'Animation', 'Comedy']
+        genre_names = [
+            'Action', 'Sci-Fi', 'Thriller', 'Drama', 'Adventure',
+            'Animation', 'Comedy', 'Horror', 'Crime', 'Fantasy', 'Biography'
+        ]
         genres = {}
         for g_name in genre_names:
             g, _ = Genre.objects.get_or_create(name=g_name)
@@ -78,7 +81,7 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.SUCCESS(f"✓ Seeded {len(genres)} genres"))
 
-        # 3. Theatres & Screens
+        # 3. Theatres & Screens across Metropolitan Hubs
         theatres_data = [
             {
                 'name': 'PVR ICON: Phoenix Palladium',
@@ -101,12 +104,31 @@ class Command(BaseCommand):
                 ]
             },
             {
+                'name': 'Cinepolis: Nexus Seawoods',
+                'city': 'Mumbai',
+                'address': 'Sector 40, Seawoods Railway Station, Navi Mumbai 400706',
+                'facilities': ['VIP Lounge', 'Dolby Atmos', 'Laser Projection'],
+                'screens': [
+                    {'name': 'Audi 1 - Laser 4K', 'type': 'STANDARD', 'rows': 7, 'cols': 10},
+                ]
+            },
+            {
                 'name': 'Cinepolis: DLF Avenue Saket',
                 'city': 'Delhi-NCR',
                 'address': 'A4, Press Enclave Marg, Saket District Centre, New Delhi 110017',
                 'facilities': ['Macro XE', 'Dolby Atmos', 'VIP Recliners', 'Coffee Bar'],
                 'screens': [
                     {'name': 'Screen 1 - Macro XE', 'type': 'MACRO XE', 'rows': 8, 'cols': 12},
+                    {'name': 'Screen 2 - Club Class', 'type': 'STANDARD', 'rows': 7, 'cols': 10},
+                ]
+            },
+            {
+                'name': 'PVR Director’s Cut: Ambience Mall',
+                'city': 'Delhi-NCR',
+                'address': 'Nelson Mandela Marg, Vasant Kunj II, New Delhi 110070',
+                'facilities': ['Luxury Dining', 'Director Cut Recliners', 'Concierge Service'],
+                'screens': [
+                    {'name': 'Screen 1 - Director Cut', 'type': 'VIP', 'rows': 6, 'cols': 8},
                 ]
             },
             {
@@ -116,6 +138,16 @@ class Command(BaseCommand):
                 'facilities': ['IMAX', 'Gold Class Recliners', 'Parking'],
                 'screens': [
                     {'name': 'Screen 1 - IMAX', 'type': 'IMAX', 'rows': 8, 'cols': 12},
+                    {'name': 'Screen 2 - Atmos Lounge', 'type': 'DOLBY ATMOS', 'rows': 7, 'cols': 10},
+                ]
+            },
+            {
+                'name': 'INOX: Garuda Mall',
+                'city': 'Bengaluru',
+                'address': 'Magrath Road, Ashok Nagar, Bengaluru, Karnataka 560025',
+                'facilities': ['Dolby Atmos', 'Recliner Luxury', 'Live Kitchen'],
+                'screens': [
+                    {'name': 'Audi 1 - Insignia', 'type': 'STANDARD', 'rows': 7, 'cols': 10},
                 ]
             },
         ]
@@ -170,9 +202,9 @@ class Command(BaseCommand):
                             )
                     Seat.objects.bulk_create(seats_batch)
 
-        self.stdout.write(self.style.SUCCESS(f"✓ Seeded theatres, screens, and seat layouts"))
+        self.stdout.write(self.style.SUCCESS(f"✓ Seeded {len(theatres_data)} theatres and {len(all_screens)} screens"))
 
-        # 4. Movies
+        # 4. Comprehensive Movie Catalog (20 Blockbusters across Hollywood, Bollywood & Indian Cinema)
         movies_data = [
             {
                 'title': 'Dune: Part Two',
@@ -203,22 +235,78 @@ class Command(BaseCommand):
                 'votes': 22400
             },
             {
-                'title': 'Interstellar: IMAX Special',
-                'description': 'When Earth becomes uninhabitable in the future, a farmer and ex-NASA pilot, Joseph Cooper, is tasked to pilot a spacecraft, along with a team of researchers, to find a new planet for humans.',
-                'duration': 169,
+                'title': 'Deadpool & Wolverine',
+                'description': 'A listless Wade Wilson toils away in civilian life with his days as the morally flexible mercenary behind him. When his home world faces an existential threat, Wade must reluctantly suit-up with an even more reluctant Wolverine.',
+                'duration': 128,
                 'language': 'English',
-                'formats': ['2D', 'IMAX'],
+                'formats': ['2D', '3D', 'IMAX 3D', '4DX'],
+                'cert': 'A',
+                'genres': ['Action', 'Comedy', 'Sci-Fi'],
+                'release_date': date(2026, 7, 26),
+                'poster_url': 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=800&q=80',
+                'trailer_url': 'https://www.youtube.com/watch?v=73_1biulkYk',
+                'rating': Decimal('8.7'),
+                'votes': 34200
+            },
+            {
+                'title': 'The Batman: Part II',
+                'description': 'The Dark Knight ventures deeper into Gotham City criminal underworld as corruption and subterranean syndicates emerge from the flooded district to challenge Bruce Wayne order.',
+                'duration': 165,
+                'language': 'English',
+                'formats': ['2D', 'IMAX', 'Dolby Atmos'],
                 'cert': 'UA',
-                'genres': ['Sci-Fi', 'Adventure', 'Drama'],
-                'release_date': date(2026, 1, 15),
-                'poster_url': 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=800&q=80',
-                'trailer_url': 'https://www.youtube.com/watch?v=zSWdZVtXT7E',
-                'rating': Decimal('9.3'),
-                'votes': 48000
+                'genres': ['Action', 'Crime', 'Drama', 'Thriller'],
+                'release_date': date(2026, 10, 2),
+                'poster_url': 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80',
+                'trailer_url': 'https://www.youtube.com/watch?v=mqqft2x_Aa4',
+                'rating': Decimal('9.0'),
+                'votes': 28500
+            },
+            {
+                'title': 'Gladiator II',
+                'description': 'Years after witnessing the death of Maximus, Lucius must enter the Colosseum after his home is conquered by tyrannical emperors who rule Rome with an iron fist.',
+                'duration': 148,
+                'language': 'English',
+                'formats': ['2D', 'IMAX 3D', 'Dolby Atmos'],
+                'cert': 'A',
+                'genres': ['Action', 'Adventure', 'Drama'],
+                'release_date': date(2026, 11, 15),
+                'poster_url': 'https://images.unsplash.com/photo-1533929736458-ca588d08c8be?auto=format&fit=crop&w=800&q=80',
+                'trailer_url': 'https://www.youtube.com/watch?v=4rgYUipGJNo',
+                'rating': Decimal('8.5'),
+                'votes': 16900
+            },
+            {
+                'title': 'Stree 2: Sarkate Ka Aatank',
+                'description': 'The town of Chanderi is being haunted again by a headless entity named Sarkata who is abducting progressive women. Vicky and his friends re-team with the mysterious woman to protect their town.',
+                'duration': 149,
+                'language': 'Hindi',
+                'formats': ['2D', 'Dolby Atmos'],
+                'cert': 'UA',
+                'genres': ['Comedy', 'Horror'],
+                'release_date': date(2026, 8, 15),
+                'poster_url': 'https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&w=800&q=80',
+                'trailer_url': 'https://www.youtube.com/watch?v=KVnheQj6qtg',
+                'rating': Decimal('8.6'),
+                'votes': 31000
+            },
+            {
+                'title': 'Pushpa 2: The Rule',
+                'description': 'Pushpa Raj ascends the syndicate throne of red sandalwood smuggling, sparking all-out war with Bhanwar Singh Shekhawat and rival cartels in an explosive high-stakes confrontation.',
+                'duration': 175,
+                'language': 'Telugu',
+                'formats': ['2D', '3D', 'IMAX'],
+                'cert': 'UA',
+                'genres': ['Action', 'Crime', 'Drama'],
+                'release_date': date(2026, 12, 6),
+                'poster_url': 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80',
+                'trailer_url': 'https://www.youtube.com/watch?v=1kVK0MZlbI4',
+                'rating': Decimal('8.9'),
+                'votes': 42000
             },
             {
                 'title': 'Kalki 2898 AD',
-                'description': 'A modern avatar of Vishnu, a Hindu god, who is believed to have descended to the earth to protect the world from evil forces in a dystopian futuristic world.',
+                'description': 'A modern avatar of Vishnu descends to earth to protect humanity from evil forces in a dystopian post-apocalyptic future ruled by the Supreme Yaskin in the Complex.',
                 'duration': 181,
                 'language': 'Hindi',
                 'formats': ['2D', '3D', 'IMAX 3D'],
@@ -231,8 +319,22 @@ class Command(BaseCommand):
                 'votes': 19500
             },
             {
+                'title': 'Avatar: The Way of Water (Special Re-Release)',
+                'description': 'Jake Sully and Neytiri navigate the oceanic regions of Pandora as the RDA returns to exploit the planet, teaming with the aquatic Metkayina clan.',
+                'duration': 192,
+                'language': 'English',
+                'formats': ['3D', 'IMAX 3D', '4DX'],
+                'cert': 'UA',
+                'genres': ['Sci-Fi', 'Adventure', 'Action'],
+                'release_date': date(2026, 4, 12),
+                'poster_url': 'https://images.unsplash.com/photo-1518709779341-56cf4535e983?auto=format&fit=crop&w=800&q=80',
+                'trailer_url': 'https://www.youtube.com/watch?v=d9MyW72ELq0',
+                'rating': Decimal('8.8'),
+                'votes': 39000
+            },
+            {
                 'title': 'Spider-Man: Beyond the Spider-Verse',
-                'description': 'Miles Morales catapults across the Multiverse, encountering a team of Spider-People charged with protecting its very existence.',
+                'description': 'Miles Morales catapults across the Multiverse, encountering a coalition of Spider-Heroes defending the canon of existence from reality-shattering anomalies.',
                 'duration': 140,
                 'language': 'English',
                 'formats': ['2D', '3D'],
@@ -245,8 +347,106 @@ class Command(BaseCommand):
                 'votes': 11800
             },
             {
+                'title': 'Interstellar: IMAX Special',
+                'description': 'When Earth becomes uninhabitable, ex-NASA pilot Joseph Cooper pilots an endurance spacecraft through a Saturn wormhole to find a habitable colony for humanity.',
+                'duration': 169,
+                'language': 'English',
+                'formats': ['2D', 'IMAX'],
+                'cert': 'UA',
+                'genres': ['Sci-Fi', 'Adventure', 'Drama'],
+                'release_date': date(2026, 1, 15),
+                'poster_url': 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=800&q=80',
+                'trailer_url': 'https://www.youtube.com/watch?v=zSWdZVtXT7E',
+                'rating': Decimal('9.3'),
+                'votes': 48000
+            },
+            {
+                'title': 'Jawan: Director’s Cut',
+                'description': 'A high-octane action thriller detailing the emotional odyssey of a vigilante commando executing daring public takeovers to force systemic political accountability.',
+                'duration': 171,
+                'language': 'Hindi',
+                'formats': ['2D', 'IMAX', 'Dolby Atmos'],
+                'cert': 'UA',
+                'genres': ['Action', 'Thriller', 'Drama'],
+                'release_date': date(2026, 5, 20),
+                'poster_url': 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=800&q=80',
+                'trailer_url': 'https://www.youtube.com/watch?v=MWOlnZSnXpc',
+                'rating': Decimal('8.4'),
+                'votes': 27800
+            },
+            {
+                'title': 'Inside Out 2',
+                'description': 'Teenager Riley faces turbulent emotional headquarters alterations as Anxiety, Envy, Ennui, and Embarrassment clash with Joy and Sadness.',
+                'duration': 96,
+                'language': 'English',
+                'formats': ['2D', '3D'],
+                'cert': 'U',
+                'genres': ['Animation', 'Comedy', 'Adventure'],
+                'release_date': date(2026, 6, 14),
+                'poster_url': 'https://images.unsplash.com/photo-1514306191717-452ec28c7814?auto=format&fit=crop&w=800&q=80',
+                'trailer_url': 'https://www.youtube.com/watch?v=LEjhY15eCx0',
+                'rating': Decimal('8.7'),
+                'votes': 21500
+            },
+            {
+                'title': 'Godzilla x Kong: The New Empire',
+                'description': 'Two colossal ancient titans clash before joining forces to combat a tyrannical Hollow Earth ape despot commanding a frost titan that threatens the surface realm.',
+                'duration': 115,
+                'language': 'English',
+                'formats': ['2D', '3D', 'IMAX 3D', '4DX'],
+                'cert': 'UA',
+                'genres': ['Action', 'Sci-Fi', 'Adventure'],
+                'release_date': date(2026, 3, 29),
+                'poster_url': 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80',
+                'trailer_url': 'https://www.youtube.com/watch?v=lV1OOlGwExg',
+                'rating': Decimal('8.1'),
+                'votes': 14700
+            },
+            {
+                'title': 'Suzume',
+                'description': 'High school girl Suzume teams up with a mysterious guardian to travel across Japan and latch shut supernatural doorway portals unleashing earthquake disasters.',
+                'duration': 122,
+                'language': 'Japanese',
+                'formats': ['2D', 'IMAX'],
+                'cert': 'U',
+                'genres': ['Animation', 'Fantasy', 'Adventure'],
+                'release_date': date(2026, 4, 21),
+                'poster_url': 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80',
+                'trailer_url': 'https://www.youtube.com/watch?v=5p_hO6v_N18',
+                'rating': Decimal('8.8'),
+                'votes': 18200
+            },
+            {
+                'title': 'Inception: 15th Anniversary Special',
+                'description': 'Dom Cobb specializes in subconscious heist extraction. He is offered an impossible redemption assignment: plant an original idea into a corporate heir mind.',
+                'duration': 148,
+                'language': 'English',
+                'formats': ['2D', 'IMAX 70mm', 'Dolby Atmos'],
+                'cert': 'UA',
+                'genres': ['Sci-Fi', 'Action', 'Thriller'],
+                'release_date': date(2026, 7, 16),
+                'poster_url': 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80',
+                'trailer_url': 'https://www.youtube.com/watch?v=YoHD9XEInc0',
+                'rating': Decimal('9.2'),
+                'votes': 52000
+            },
+            {
+                'title': 'Animal: Park Edition',
+                'description': 'Ranvijay Singh deep-seated paternal adoration spirals into visceral and unchecked brutality as criminal forces attempt to assassinate his business tycoon father.',
+                'duration': 201,
+                'language': 'Hindi',
+                'formats': ['2D', 'Dolby Atmos'],
+                'cert': 'A',
+                'genres': ['Action', 'Crime', 'Drama'],
+                'release_date': date(2026, 2, 14),
+                'poster_url': 'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80',
+                'trailer_url': 'https://www.youtube.com/watch?v=Dydmpfo68DA',
+                'rating': Decimal('8.0'),
+                'votes': 25100
+            },
+            {
                 'title': 'Fighter: Aerial Combat',
-                'description': 'An aspiring young man and his fellow aviators face danger and high-stakes missions as they forge brotherhood and protect their homeland in supersonic fighter jets.',
+                'description': 'Top Air Force aviators unite as the Air Dragons quick-response squadron, navigating aerial dogfights and intense camaraderie defending international airspace.',
                 'duration': 166,
                 'language': 'Hindi',
                 'formats': ['2D', '3D', 'IMAX 3D'],
@@ -258,11 +458,39 @@ class Command(BaseCommand):
                 'rating': Decimal('8.2'),
                 'votes': 8400
             },
+            {
+                'title': 'Chandu Champion',
+                'description': 'The incredible true biographical journey of Murlikant Petkar, an Olympic boxer and soldier who overcame severe battle wounds to become India first Paralympic gold medalist.',
+                'duration': 143,
+                'language': 'Hindi',
+                'formats': ['2D'],
+                'cert': 'U',
+                'genres': ['Biography', 'Drama', 'Action'],
+                'release_date': date(2026, 6, 14),
+                'poster_url': 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=800&q=80',
+                'trailer_url': 'https://www.youtube.com/watch?v=kYJ6gVbX680',
+                'rating': Decimal('8.5'),
+                'votes': 17300
+            },
+            {
+                'title': 'Furiosa: A Mad Max Saga',
+                'description': 'Young Furiosa is snatched from the Green Place of Many Mothers and falls into the hands of a great Biker Horde led by the Warlord Dementus through the Wasteland.',
+                'duration': 148,
+                'language': 'English',
+                'formats': ['2D', 'IMAX 3D', 'Dolby Atmos'],
+                'cert': 'A',
+                'genres': ['Action', 'Adventure', 'Sci-Fi'],
+                'release_date': date(2026, 5, 24),
+                'poster_url': 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=800&q=80',
+                'trailer_url': 'https://www.youtube.com/watch?v=XJMuhwVlca4',
+                'rating': Decimal('8.6'),
+                'votes': 23400
+            },
         ]
 
         created_movies = []
         for m_data in movies_data:
-            movie, _ = Movie.objects.get_or_create(
+            movie, created = Movie.objects.get_or_create(
                 title=m_data['title'],
                 defaults={
                     'description': m_data['description'],
@@ -274,43 +502,76 @@ class Command(BaseCommand):
                     'poster_url': m_data['poster_url'],
                     'trailer_url': m_data['trailer_url'],
                     'rating_average': m_data['rating'],
-                    'votes_count': m_data['votes']
+                    'votes_count': m_data['votes'],
+                    'is_active': True
                 }
             )
+            if not created:
+                # Update attributes to ensure up-to-date posters and descriptions
+                movie.description = m_data['description']
+                movie.duration_minutes = m_data['duration']
+                movie.language = m_data['language']
+                movie.format_types = m_data['formats']
+                movie.certification = m_data['cert']
+                movie.poster_url = m_data['poster_url']
+                movie.trailer_url = m_data['trailer_url']
+                movie.rating_average = m_data['rating']
+                movie.votes_count = m_data['votes']
+                movie.is_active = True
+                movie.save()
+
             # Add genres
             for g_name in m_data['genres']:
                 if g_name in genres:
                     movie.genres.add(genres[g_name])
             created_movies.append(movie)
 
-        self.stdout.write(self.style.SUCCESS(f"✓ Seeded {len(created_movies)} movies"))
+        self.stdout.write(self.style.SUCCESS(f"✓ Seeded and updated {len(created_movies)} movies"))
 
-        # 5. Showtimes (Today and next 5 days)
+        # 5. Showtimes (Today and next 7 days across all theatres and screens)
         now = timezone.now()
         base_date = now.date()
         show_times = [
-            time(10, 30),
-            time(14, 15),
-            time(18, 45),
-            time(22, 0)
+            time(9, 45),
+            time(13, 15),
+            time(16, 45),
+            time(20, 15),
+            time(23, 30)
         ]
 
         created_showtimes = []
-        for day_offset in range(5):
+        num_movies = len(created_movies)
+
+        for day_offset in range(7):
             target_date = base_date + timedelta(days=day_offset)
-            for screen in all_screens:
-                for idx, movie in enumerate(created_movies[:4]):
-                    st_time = show_times[(idx + day_offset) % len(show_times)]
+            for s_idx, screen in enumerate(all_screens):
+                # Cycle distinct movies across each screen and day
+                screen_offset = (s_idx * 3 + day_offset * 2) % num_movies
+                movies_for_screen = [
+                    created_movies[(screen_offset + m_idx) % num_movies]
+                    for m_idx in range(len(show_times))
+                ]
+
+                for t_idx, movie in enumerate(movies_for_screen):
+                    st_time = show_times[t_idx]
                     start_dt = timezone.make_aware(datetime.combine(target_date, st_time))
                     end_dt = start_dt + timedelta(minutes=movie.duration_minutes + 25)
 
-                    showtime, _ = Showtime.objects.get_or_create(
+                    exp = '2D'
+                    if 'IMAX' in screen.name:
+                        exp = 'IMAX 3D'
+                    elif '4D' in screen.name or 'MX4D' in screen.name:
+                        exp = '4DX'
+                    elif 'Dolby' in screen.name or 'Macro' in screen.name:
+                        exp = 'Dolby Atmos'
+
+                    showtime, created = Showtime.objects.get_or_create(
                         movie=movie,
                         screen=screen,
                         start_time=start_dt,
                         defaults={
                             'end_time': end_dt,
-                            'experience': 'IMAX 3D' if 'IMAX' in screen.name else '2D',
+                            'experience': exp,
                             'language': movie.language,
                             'price_silver': Decimal('160.00'),
                             'price_gold': Decimal('240.00'),
@@ -320,50 +581,48 @@ class Command(BaseCommand):
                     )
                     created_showtimes.append(showtime)
 
-        self.stdout.write(self.style.SUCCESS(f"✓ Seeded {len(created_showtimes)} showtimes"))
+        self.stdout.write(self.style.SUCCESS(f"✓ Seeded {len(created_showtimes)} showtimes across 7-day schedule"))
 
-        # 6. Pre-book some seats to create a realistic living seat map
-        first_show = created_showtimes[0]
-        seats_to_book = list(first_show.screen.seats.filter(row_label__in=['D', 'E'], seat_number__in=[4, 5, 6]))
-        if seats_to_book and not Booking.objects.filter(showtime=first_show).exists():
-            hold_res = services.hold_seats(
-                showtime_id=first_show.id,
-                seat_ids=[s.id for s in seats_to_book],
-                user=customer_user,
-                hold_minutes=15
+        # 6. Pre-book sample seats for live demonstration
+        upcoming_shows = [s for s in created_showtimes if s.start_time > now]
+        if upcoming_shows:
+            first_show = upcoming_shows[0]
+            seats_to_book = list(first_show.screen.seats.filter(row_label__in=['D', 'E'], seat_number__in=[4, 5, 6]))
+            if seats_to_book and not Booking.objects.filter(showtime=first_show).exists():
+                hold_res = services.hold_seats(
+                    showtime_id=first_show.id,
+                    seat_ids=[s.id for s in seats_to_book],
+                    user=customer_user,
+                    hold_minutes=15
+                )
+                booking = services.confirm_booking(
+                    hold_token=hold_res['hold_token'],
+                    user=customer_user,
+                    payment_method='SIMULATED_UPI'
+                )
+                self.stdout.write(self.style.SUCCESS(f"✓ Seeded demo confirmed booking: {booking.booking_reference}"))
+
+        # 7. Seed NoSQL Collections (movie reviews into document collection)
+        reviews_data = [
+            (created_movies[0].id, 'Aarav Mehta', 9.5, 'Visually breathtaking in IMAX 3D! The score by Hans Zimmer vibrates through the seats. Must watch!', ['IMAX Experience', 'Masterpiece', 'Cinematography'], True),
+            (created_movies[0].id, 'Priya Sharma', 9.0, 'Superb pacing and acting. Timothee and Zendaya had great chemistry.', ['Great Visuals', 'Paisa Vasool'], True),
+            (created_movies[1].id, 'Rohan Joshi', 10.0, 'Christopher Nolan at his pinnacle. Cillian Murphy gave an Oscar-worthy performance.', ['Must Watch', 'Masterpiece'], False),
+            (created_movies[2].id, 'Karan Singhania', 9.2, 'Hugh Jackman and Ryan Reynolds chemistry is out of this world. Nostalgia overload and insane cameos!', ['Blockbuster', 'Hilarious', 'Action Packed'], True),
+            (created_movies[3].id, 'Ananya Sen', 9.1, 'Matt Reeves created a gritty, atmospheric masterpiece. Pattinson is the definitive detective Batman.', ['Dark & Gritty', 'Cinematography'], False),
+            (created_movies[5].id, 'Sneha Patel', 8.8, 'Sarkata gave real chills! Shraddha Kapoor and Rajkummar Rao comedic timing is unmatched.', ['Horror Comedy', 'Family Entertainer'], True),
+            (created_movies[6].id, 'Vikram Reddy', 9.4, 'Allu Arjun rules the big screen! High-voltage background score and unstoppable elevation scenes.', ['Mass Elevation', 'Allu Arjun', 'Wild Action'], True),
+            (created_movies[12].id, 'Meera Nair', 9.0, 'Anxiety as a character was portrayed so accurately. Left the theatre with happy tears!', ['Emotional', 'Heartwarming', 'Animation Peak'], True),
+        ]
+
+        for m_id, u_name, r_val, c_text, t_list, v_b in reviews_data:
+            nosql_service.add_movie_review(
+                movie_id=m_id,
+                username=u_name,
+                rating=r_val,
+                comment=c_text,
+                tags=t_list,
+                verified_booking=v_b
             )
-            booking = services.confirm_booking(
-                hold_token=hold_res['hold_token'],
-                user=customer_user,
-                payment_method='SIMULATED_UPI'
-            )
-            self.stdout.write(self.style.SUCCESS(f"✓ Seeded demo confirmed booking: {booking.booking_reference}"))
 
-        # 7. Seed NoSQL Collections (movie reviews and audit logs)
-        nosql_service.add_movie_review(
-            movie_id=created_movies[0].id,
-            username='Aarav Mehta',
-            rating=9.5,
-            comment='Visually breathtaking in IMAX 3D! The score by Hans Zimmer vibrates through the seats. Must watch!',
-            tags=['IMAX Experience', 'Masterpiece', 'Cinematography'],
-            verified_booking=True
-        )
-        nosql_service.add_movie_review(
-            movie_id=created_movies[0].id,
-            username='Priya Sharma',
-            rating=9.0,
-            comment='Superb pacing and acting. Timothee and Zendaya had great chemistry.',
-            tags=['Great Visuals', 'Paisa Vasool'],
-            verified_booking=True
-        )
-        nosql_service.add_movie_review(
-            movie_id=created_movies[1].id,
-            username='Rohan Joshi',
-            rating=10.0,
-            comment='Christopher Nolan at his pinnacle. Cillian Murphy gave an Oscar-worthy performance.',
-            tags=['Must Watch', 'Masterpiece'],
-            verified_booking=False
-        )
-
-        self.stdout.write(self.style.SUCCESS("✓ Seeded NoSQL movie reviews into document collection"))
+        self.stdout.write(self.style.SUCCESS(f"✓ Seeded {len(reviews_data)} NoSQL reviews into document store"))
         self.stdout.write(self.style.SUCCESS("=== SEEDING COMPLETED SUCCESSFULLY! ==="))
